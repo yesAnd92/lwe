@@ -13,3 +13,14 @@
 
 # Dependency directories (remove the comment below to include it)
 # vendor/
+
+# idea
+.idea
+
+# ignore generate file
+**/lwe-generate-file
+*.tar.gz
+/lwe
+/lwe_linux
+/lwe_mac
+
