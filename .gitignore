@@ -16,7 +16,7 @@
 
 # idea
 .idea
-
+.DS_Store
 # ignore generate file
 **/lwe-generate-file
 *.tar.gz

@@ -13,7 +13,7 @@ lwe是leave work early的缩写，也就是"早点下班"！🤣🤣🤣
 
 ### 使用安装包
 
-到release页获取对应平台的版本，然后把它添加到你使用机器的环境变量中即可使用！
+到[release](https://github.com/yesAnd92/lwe/releases)页获取对应平台的版本，然后把它添加到你使用机器的环境变量中即可使用！
 
 ### Homebrew
 
@@ -154,7 +154,9 @@ lwe es [可选参数] <SQL语句>
 *   [ ] having support
 
 ❌ update
+
 ❌ delete
+
 ❌ insert
 
 es使用起来非常简单
@@ -196,12 +198,20 @@ lwe es -p 'select * from user where age >18  order by create_time desc  limit 10
 ```
 <h3 id="3">3、获取给定值的md5值</h3>
 这个命令非常的简单，返回给定值的md5值，如果未给定值则随机返回一个md5值
+
 > lwe md5 [给定的串]
+
+```bash
+lwe md5 yesAnd
+```
+
 
 ## 说明
 1.使用[spf13/cobra](github.com/spf13/cobra)库来方便的构建命令行工具
+
 2.es子命令实现借助了[sqlparser](github.com/xwb1989/sqlparser)库来解析SQL语句，一个库很优秀的解析SQL库
-3.sql转换成dsl，曹大的[elasticsql](hhttps://github.com/cch123/elasticsql)项目已经是一个很成熟好用的轮子了，lwe也大量借鉴了它的实现思路；没直接调用的原因是想自己练手，同时后续增减功能也更加灵活
+
+3.sql转换成dsl，曹大的[elasticsql](https://github.com/cch123/elasticsql)项目已经是一个很成熟好用的轮子了，lwe也大量借鉴了它的实现思路；没直接调用这个库的原因是想自己练手，同时后续增减功能也更加灵活
 
 ## RoadMap
 - fmt 根据需求支持更多类型的转换
