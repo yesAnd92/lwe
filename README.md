@@ -1,5 +1,6 @@
 lwe是leave work early的缩写，也就是"早点下班"！🤣🤣🤣
-它是一个帮助程序员提高工作效率的跨平台命令行工具，欢迎提issue、提好玩或者使用的功能需求，最好能直接参与进来，大家一起努力，争取早点下班!!! 💪💪💪
+它是一个帮助开发者提高工作效率的跨平台命令行工具，或者把它当做go入门学习的项目也是合适的！
+总之，欢迎提issue、提好玩或者使用的功能需求，最好能直接参与到项目中，大家一起努力，争取早点下班!!! 💪💪💪
 
 ## 功能概览
 
@@ -113,7 +114,7 @@ public class StudentInfo implements Serializable {
 		//仅展示格式，省略部分字段
 ```
 
-指定`-t=go`生成对一个的结构体：
+指定`-t=go`生成对应的结构体：
 
 ```go
 //StudentInfo 学生信息
@@ -159,7 +160,7 @@ lwe es [可选参数] <SQL语句>
 
 ❌ insert
 
-es使用起来非常简单
+es子命令的使用也非常简单：
 
 ```bash
 lwe es -p 'select * from user where age >18  order by create_time desc  limit 10,10'
@@ -199,8 +200,10 @@ lwe es -p 'select * from user where age >18  order by create_time desc  limit 10
 <h3 id="3">3、获取给定值的md5值</h3>
 这个命令非常的简单，返回给定值的md5值，如果未给定值则随机返回一个md5值
 
-> lwe md5 [给定的串]
-
+```bash
+lwe md5 [给定的串]
+```
+如：
 ```bash
 lwe md5 yesAnd
 ```
