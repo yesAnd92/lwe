@@ -1,10 +1,10 @@
 lwe是leave work early的缩写，也就是"早点下班"！🤣🤣🤣
 它是一个帮助开发者提高工作效率的跨平台命令行工具，或者把它当做go入门学习的项目也是合适的！
-总之，欢迎提issue、提好玩或者使用的功能需求，最好能直接参与到项目中，大家一起努力，争取早点下班!!! 💪💪💪
+总之，欢迎提issue、提好玩或者使用的功能需求，最好能直接PR参与到项目中，大家一起努力，争取早点下班!!! 💪💪💪
 
 ## 功能概览
 
-[1.支持由建表SQL语句转换成Java Bean、Go对应的结构体、Json等](#1)
+[1.支持由建表SQL语句转换成Java Bean、Go结构体、Json等](#1)
 
 [2.支持将查询SQL语句转换成ElasticSearch查询的DSL语言](#2)
 
@@ -12,19 +12,25 @@ lwe是leave work early的缩写，也就是"早点下班"！🤣🤣🤣
 
 ## 安装
 
-### 使用安装包
+### 下载编译后的可执行文件
 
-到[release](https://github.com/yesAnd92/lwe/releases)页获取对应平台的版本，然后把它添加到你使用机器的环境变量中即可使用！
+到[release](https://github.com/yesAnd92/lwe/releases)页获取对应平台的版本，在终端上即可使用该二进制文件！
 
-Mac平台添加到环境变量的方法:
+当然，也可以将二进制文件配置到环境变量中，这样可以随时随地使用二进制文件
+
+#### Mac平台添加到环境变量的方法:
+
 ```bash
-cp <lwe文件路径> /usr/local/bin
+cp <下载的lwe文件路径> /usr/local/bin
 ```
+将下载好的lwe_Mac文件直接cp到`/usr/local/bin`目录下，即可在终端下使用了
 > 最好将lwe_Mac重名成lwe，方便使用
 
 >执行cp命令时，通常需要提升权限，可以在`cp`命令前增加`sudo`来解决
-> 
-将下载好的lwe_Mac文件直接cp到`/usr/local/bin`目录下，即可在终端下使用了
+ 
+
+#### Win平台添加到环境变量的方法:
+可以参照maven的配置方法
 
 ### Homebrew
 
