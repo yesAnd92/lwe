@@ -59,7 +59,7 @@ version     Print the version number of lwe
 ```
 ### help
 
-lwe命令以及其子命令都可以使用-h参数查看命令的使用帮助
+lwe命令以及其子命令都可以使用`-h`参数查看命令的使用帮助
 
 
 <h3 id="1">1、建表语句生成Java Bean实体、Go 结构体等</h3>
@@ -85,7 +85,7 @@ CREATE TABLE 'student_info' (
 
 > 另外，实际使用中最好使用比如Navicat等工具导出的建表语句，识别率会更高。自己手写的可能由于语法或者拼写错误导致错误识别！
 
-你可以使用以下命令来生成所需要的文件
+你可以使用以下命令来生成Java的实体Bean
 
 ```bash
 lwe fmt -t=java -a=yesAnd user.sql
@@ -130,7 +130,7 @@ public class StudentInfo implements Serializable {
     //仅展示格式，省略部分字段
 ```
 
-指定`-t=go`生成对应的结构体：
+同样的，指定`-t=go`生成对应的结构体：
 
 ```go
 //StudentInfo 学生信息
@@ -176,7 +176,7 @@ lwe es [可选参数] <SQL语句>
 
 ❌ insert
 
-es子命令的使用也非常简单：
+es子命令的使用也非常简单，例如：
 
 ```bash
 lwe es -p 'select * from user where age >18  order by create_time desc  limit 10,10'
