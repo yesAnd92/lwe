@@ -8,6 +8,10 @@ import (
 	"lwe/handler/es"
 )
 
+const (
+	CURL_TPL = `curl -XPOST -H "Content-Type: application/json" -u {username}:{password} {ip:port}/%s/_search?pretty -d '%s' `
+)
+
 /**
 * es命令
 * 将sql语句转译成dsl语句
@@ -29,11 +33,10 @@ var (
 				return
 			}
 
-			var dsl, esType, urlMethod string
+			var dsl, esType string
 			switch stmt.(type) {
 			case *sqlparser.Select:
 				dsl, esType, err = es.HandleSelect(stmt.(*sqlparser.Select))
-				urlMethod = fmt.Sprintf("POST /%s/_search", esType)
 			case *sqlparser.Delete:
 				fmt.Println("Delete syntax is not supported this version!")
 				return
@@ -49,8 +52,6 @@ var (
 				fmt.Println(err)
 				return
 			}
-			//输出请求路径，比如 POST /index_type/_search
-			fmt.Println(urlMethod)
 
 			if fmtPretty {
 				//需要美化
@@ -59,8 +60,7 @@ var (
 				pr, _ := json.MarshalIndent(re, "", "  ")
 				dsl = string(pr)
 			}
-
-			fmt.Println(dsl)
+			fmt.Printf(CURL_TPL, esType, dsl)
 		},
 	}
 )
@@ -68,4 +68,7 @@ var (
 func init() {
 
 	esCmd.PersistentFlags().BoolVarP(&fmtPretty, "pretty", "p", false, "Beautify DSL")
+	//esCmd.PersistentFlags().BoolVarP(&fmtPretty, "password", "pwd", false, "Generate curl with user and password")
 }
+
+//curl -u elastic:vvSenEiKz5MSsEgzfR4k -XPOST -H "Content-Type: application/json" http://172.24.198.24:9200/index_media/_search?pretty -d '{"query":{"bool":{"must":[{"range":{"createtime":{"gt":"2020-01-01 00:00:00"}}}]}},"from":0,"size":10}'
