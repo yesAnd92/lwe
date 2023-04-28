@@ -68,7 +68,4 @@ var (
 func init() {
 
 	esCmd.PersistentFlags().BoolVarP(&fmtPretty, "pretty", "p", false, "Beautify DSL")
-	//esCmd.PersistentFlags().BoolVarP(&fmtPretty, "password", "pwd", false, "Generate curl with user and password")
 }
-
-//curl -u elastic:vvSenEiKz5MSsEgzfR4k -XPOST -H "Content-Type: application/json" http://172.24.198.24:9200/index_media/_search?pretty -d '{"query":{"bool":{"must":[{"range":{"createtime":{"gt":"2020-01-01 00:00:00"}}}]}},"from":0,"size":10}'
