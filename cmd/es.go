@@ -8,6 +8,10 @@ import (
 	"lwe/handler/es"
 )
 
+const (
+	CURL_TPL = `curl -XPOST -H "Content-Type: application/json" -u {username}:{password} {ip:port}/%s/_search?pretty -d '%s' `
+)
+
 /**
 * es命令
 * 将sql语句转译成dsl语句
@@ -29,11 +33,10 @@ var (
 				return
 			}
 
-			var dsl, esType, urlMethod string
+			var dsl, esType string
 			switch stmt.(type) {
 			case *sqlparser.Select:
 				dsl, esType, err = es.HandleSelect(stmt.(*sqlparser.Select))
-				urlMethod = fmt.Sprintf("POST /%s/_search", esType)
 			case *sqlparser.Delete:
 				fmt.Println("Delete syntax is not supported this version!")
 				return
@@ -49,8 +52,6 @@ var (
 				fmt.Println(err)
 				return
 			}
-			//输出请求路径，比如 POST /index_type/_search
-			fmt.Println(urlMethod)
 
 			if fmtPretty {
 				//需要美化
@@ -59,8 +60,7 @@ var (
 				pr, _ := json.MarshalIndent(re, "", "  ")
 				dsl = string(pr)
 			}
-
-			fmt.Println(dsl)
+			fmt.Printf(CURL_TPL, esType, dsl)
 		},
 	}
 )

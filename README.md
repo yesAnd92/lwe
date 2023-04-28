@@ -27,7 +27,7 @@ cp <下载的lwe文件路径> /usr/local/bin
 > 最好将lwe_Mac重名成lwe，方便使用
 
 >执行cp命令时，通常需要提升权限，可以在`cp`命令前增加`sudo`来解决
- 
+
 
 #### Win平台添加到环境变量的方法:
 可以参照maven的配置方法
@@ -81,7 +81,7 @@ CREATE TABLE 'student_info' (
 				) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='学生信息';
 ```
 
-> 一个SQL文件中支持多个创建语句;
+> 一个SQL文件中支持多个创建语句批量生成目标文件;
 
 > 另外，实际使用中最好使用比如Navicat等工具导出的建表语句，识别率会更高。自己手写的可能由于语法或者拼写错误导致错误识别！
 
@@ -152,8 +152,7 @@ type StudentInfo struct {
 lwe es [可选参数] <SQL语句> 
 ```
 
-如果经常使用ElasticSearch的dsl在本地做一些查询并且又不想记忆繁琐的语法，这个命令就派上用场了，毕竟大家对SQL语句还是信手拈来的。
-
+这个命令可以帮我们从繁琐的ES查询语法中解脱出来，它可以将sql语句转换成响应的DSL，并且以curl命令的形式输出，这样服务器上也可以方便的使用。
 当前版本支持的SQL操作
 
 ✅select
@@ -188,9 +187,8 @@ lwe es -p 'select * from user where age >18  order by create_time desc  limit 10
 
 生成的结果如下：
 
-```json
-// POST /user/_search
-{
+```bssh
+curl -XPOST -H "Content-Type: application/json" -u {username}:{password} {ip:port}/user/_search?pretty -d '{
   "from": 10,
   "query": {
     "bool": {
@@ -211,8 +209,10 @@ lwe es -p 'select * from user where age >18  order by create_time desc  limit 10
       "create_time": "desc"
     }
   ]
-}
+}'
 ```
+
+
 <h3 id="3">3、获取给定值的md5值</h3>
 这个命令非常的简单，返回给定值的md5值，如果未给定值则随机返回一个md5值
 
@@ -235,7 +235,7 @@ lwe md5 yesAnd
 ## RoadMap
 - fmt 根据需求支持更多类型的转换
 - es 按需增加对insert、update、delete
-......
+  ......
 
 ## 开源协议
 
