@@ -225,7 +225,7 @@ lwe ncx <ncx文件路径>
 ```
 使用ncx命令：
 ```bash
-lwe md5 ./demo.ncx
+lwe ncx ./demo.ncx
 ```
 输出结果：
 ```text
