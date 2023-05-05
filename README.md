@@ -4,11 +4,13 @@ lwe是leave work early的缩写，也就是"早点下班"！🤣🤣🤣
 
 ## 功能概览
 
-[1.支持由建表SQL语句转换成Java Bean、Go结构体、Json等](#1)
+[1.由建表SQL语句转换成Java Bean、Go结构体、Json等](#1)
 
-[2.支持将查询SQL语句转换成ElasticSearch查询的DSL语言](#2)
+[2.将查询SQL语句转换成ElasticSearch查询的DSL语言](#2)
 
-[3.获取给定值的md5值](#3)
+[3.获取Navicat连接配置中的密码](#3)
+
+[4.获取给定值的md5值](#4)
 
 ## 安装
 
@@ -55,6 +57,7 @@ es          Translate SQL to elasticsearch's DSL
 fmt         Generate the specified file based on SQL
 help        Help about any command
 md5         Get a md5 for the given value or  a random md5 value
+ncx         Decrypt password of connection in .ncx file
 version     Print the version number of lwe
 ```
 ### help
@@ -93,19 +96,16 @@ lwe fmt -t=java -a=yesAnd user.sql
 
 其中：
 
-`-a, --author string   Comment for author information will be added to the generated file`,该参数用于指定生成文件的注释中作者的信息。\
-`-t, --target string   The type[java|json|go] of generate the sql (default "java")`,该参数用于指定生成文件类型，目前支持\[java|go|json],默认值是java，即生成Java Bean。
+`-a, --author string   Comment for author information will be added to the generated file`,可选参数，该参数用于指定生成文件的注释中作者的信息。\
+`-t, --target string   The type[java|json|go] of generate the sql (default "java")`,该参数用于指定生成文件类型，目前支持[java|go|json],默认值是java，即生成Java Bean。
 
 执行命令后会在`lwe-generate-file`目录下生成相应的文件`StudentInfo.java`,内容如下：
 
 ```java
+//省略部分字段仅做展示
 import java.util.Date;
-import java.util.List;
-import java.io.Serializable;
-import javax.persistence.Column;
 import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.GeneratedValue;
+...
 
 /**
  * @Description 学生信息
@@ -121,13 +121,9 @@ public class StudentInfo implements Serializable {
     @Column(name = "id" )
     private Integer id;	//用户编号，学号
 
-    public Integer getId() {
-        return id;
-    }
-    public void setId(Integer id) {
-        this.id = id;
-    }
-    //仅展示格式，省略部分字段
+    public Integer getId() { return id;}
+    
+    public void setId(Integer id) {  this.id = id;}
 ```
 
 同样的，指定`-t=go`生成对应的结构体：
@@ -212,8 +208,34 @@ curl -XPOST -H "Content-Type: application/json" -u {username}:{password} {ip:por
 }'
 ```
 
+<h3 id="3">3、获取Navicat连接配置中的密码</h3>
+如果想从Navicat保存的连接中获取对应数据库的用户名/密码，可以使用ncx文件，ncx文件是Navicat导出的连接配置文件，但ncx中的密码是一个加密后的十六进制串，使用ncx命令可以获取对应的明文:
 
-<h3 id="3">3、获取给定值的md5值</h3>
+```bash
+lwe ncx <ncx文件路径>
+```
+> Navicat导出连接的步骤：file->export connections->勾选 export password选项->确定
+
+如： 导出一个名为local-mysql的连接demo.ncx，内容是：
+```xml
+<!--仅节选几个重要字段作为说明展示-->
+<Connections Ver="1.5">
+  <Connection ConnectionName="local-mysql"  ConnType="MYSQL"  Host="127.0.0.1" Port="3306" UserName="root" Password="B75D320B6211468D63EB3B67C9E85933" />
+</Connections>
+```
+使用ncx命令：
+```bash
+lwe md5 ./demo.ncx
+```
+输出结果：
+```text
+-----------local-mysql-----------
+Connection host: 127.0.0.1
+Connection username: root
+Connection password: This is a test
+```
+
+<h3 id="4">4、获取给定值的md5值</h3>
 这个命令非常的简单，返回给定值的md5值，如果未给定值则随机返回一个md5值
 
 ```bash

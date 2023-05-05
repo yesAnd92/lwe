@@ -8,6 +8,12 @@ import (
 	"errors"
 )
 
+const (
+	//Navicat加密时使用的key和iv
+	AES_KEY = "libcckeylibcckey"
+	AES_IV  = "libcciv libcciv "
+)
+
 type NxcConnections struct {
 	Conns   []NxcConn `xml:"Connection"`
 	Version string    `xml:"Ver,attr"`
@@ -40,8 +46,10 @@ func ParseNcx(data []byte) (*NxcConnections, error) {
 	return &cons, nil
 }
 
+//decryptPwd navicat的加密规则可以参照这个文档
+//https://github.com/HyperSine/how-does-navicat-encrypt-password/blob/master/doc/how-does-navicat-encrypt-password.md
 func decryptPwd(encryptTxt string) (string, error) {
-	key := []byte("libcckeylibcckey")
+	key := []byte(AES_KEY)
 	ciphertext, _ := hex.DecodeString(encryptTxt)
 
 	block, err := aes.NewCipher(key)
@@ -49,21 +57,17 @@ func decryptPwd(encryptTxt string) (string, error) {
 		panic(err)
 	}
 
-	// The IV needs to be unique, but not secure. Therefore it's common to
-	// include it at the beginning of the ciphertext.
 	if len(ciphertext) < aes.BlockSize {
 		panic("ciphertext too short")
 	}
-	iv := []byte("libcciv libcciv ")
+	iv := []byte(AES_IV)
 
-	// CBC mode always works in whole blocks.
 	if len(ciphertext)%aes.BlockSize != 0 {
 		panic("ciphertext is not a multiple of the block size")
 	}
 
 	mode := cipher.NewCBCDecrypter(block, iv)
 
-	// CryptBlocks can work in-place if the two arguments are the same.
 	mode.CryptBlocks(ciphertext, ciphertext)
 
 	return unPadding(ciphertext), nil

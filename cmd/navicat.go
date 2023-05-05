@@ -16,9 +16,9 @@ import (
  */
 var (
 	navicatCmd = &cobra.Command{
-		Use:   "navi",
-		Short: "Generate the specified file based on SQL",
-		Long:  `Generate the specified file based on SQL. Such as Java Entity,Go struct and so on`,
+		Use:   "ncx",
+		Short: "Decrypt password of connection in .ncx file",
+		Long:  `The config exported from Navicat is encrypted,ncx command can decrypt it`,
 		Args:  cobra.MatchAll(cobra.ExactArgs(1)),
 		Run: func(cmd *cobra.Command, args []string) {
 			ncxFilePath := args[0]
@@ -37,7 +37,6 @@ var (
 				fmt.Printf("Connection host: %s\n"+
 					"Connection username: %s\n"+
 					"Connection password: %s\n\n", conn.Host, conn.UserName, conn.Password)
-				fmt.Println(conn.SSH)
 			}
 
 		},
