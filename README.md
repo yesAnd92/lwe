@@ -231,6 +231,7 @@ lwe ncx ./demo.ncx
 ```text
 -----------local-mysql-----------
 Connection host: 127.0.0.1
+Connection port: 3306
 Connection username: root
 Connection password: This is a test
 ```

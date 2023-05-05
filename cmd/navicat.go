@@ -34,9 +34,11 @@ var (
 			for _, conn := range ncx.Conns {
 
 				fmt.Printf("-----------%s-----------\n", conn.ConnectionName)
-				fmt.Printf("Connection host: %s\n"+
+				fmt.Printf("DB type:  %s\n"+
+					"Connection host: %s\n"+
+					"Connection port: %s\n"+
 					"Connection username: %s\n"+
-					"Connection password: %s\n\n", conn.Host, conn.UserName, conn.Password)
+					"Connection password: %s\n\n", conn.ConnType, conn.Host, conn.Port, conn.UserName, conn.Password)
 			}
 
 		},
