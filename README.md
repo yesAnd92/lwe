@@ -230,6 +230,7 @@ lwe ncx ./demo.ncx
 输出结果：
 ```text
 -----------local-mysql-----------
+DB type:  MYSQL
 Connection host: 127.0.0.1
 Connection port: 3306
 Connection username: root
