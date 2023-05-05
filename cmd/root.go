@@ -23,4 +23,5 @@ func init() {
 	rootCmd.AddCommand(sqlCmd)
 	rootCmd.AddCommand(md5Cmd)
 	rootCmd.AddCommand(esCmd)
+	rootCmd.AddCommand(navicatCmd)
 }
