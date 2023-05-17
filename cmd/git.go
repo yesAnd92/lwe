@@ -19,7 +19,7 @@ var (
 		Long:  `The config exported from Navicat is encrypted,ncx command can decrypt it`,
 		Args:  cobra.MatchAll(),
 		Run: func(cmd *cobra.Command, args []string) {
-			commitLogs, err := gitcmd.GetCommitLog(committer, recentN)
+			commitLogs, err := gitcmd.GetCommitLog("", committer, recentN)
 			if err != nil {
 				fmt.Println(err)
 				return

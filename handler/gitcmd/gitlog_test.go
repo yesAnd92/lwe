@@ -2,14 +2,12 @@ package gitcmd
 
 import (
 	"fmt"
-	"io/ioutil"
-	"path"
 	"testing"
 )
 
 func TestGetCommit(t *testing.T) {
 
-	commitLogs, err := GetCommitLog("yesand", 20)
+	commitLogs, err := GetCommitLog("", "yesand", 20)
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -33,38 +31,43 @@ func TestGetChangedFile(t *testing.T) {
 	}
 }
 
-func TestGetChangedDir(t *testing.T) {
+//func TestGetChangedDir(t *testing.T) {
+//	beforePwd, _ := os.Getwd()
+//	fmt.Println("切换前工作目录:", beforePwd)
+//	execDir := "D:\\ideaProject\\my\\go_works"
+//
+//	if err := os.Chdir(execDir); err != nil {
+//		log.Fatal(err)
+//	}
+//	pwd, _ := os.Getwd()
+//	fmt.Println("切换后工作目录:", pwd)
+//
+//}
 
-	findPath := "/Users/wangyj/ideaProject"
-	var res []string
-	findGitRepo(findPath, &res)
-	for _, s := range res {
-		fmt.Println(s)
+func TestGetAllGitRepoCommitLog(t *testing.T) {
 
-	}
-}
+	resMap := GetAllGitRepoCommitLog("D:\\ideaProject\\my\\go_works")
+	for k, commitLogs := range resMap {
+		fmt.Println(k)
+		for i, log := range *commitLogs {
+			fmt.Printf("#%d %s\n"+
+				">>%s\n"+
+				"@%s %s \n", i, log.CommitHash, log.CommitMsg, log.Username, log.CommitAt)
 
-func findGitRepo(dir string, res *[]string) {
-	var files []string
-	fileInfo, err := ioutil.ReadDir(dir)
-	if err != nil {
-		//return files, err
-	}
-
-	for _, file := range fileInfo {
-		//当前目录是git仓库，没必要继续遍历
-		if ".git" == file.Name() {
-			//fmt.Println(dir)
-			*res = append(*res, dir)
-			return
+			//if detail {
+			//	filenames, err := gitcmd.GetChangedFile(log.CommitHash)
+			//	if err != nil {
+			//		fmt.Println(err)
+			//	}
+			//	if filenames != nil && len(filenames) > 0 {
+			//		for _, filename := range filenames {
+			//			fmt.Println("- " + filename)
+			//		}
+			//	}
+			//}
+			fmt.Print("\n")
 		}
-		if file.IsDir() {
-			files = append(files, file.Name())
-		}
+
 	}
-	for _, fName := range files {
-		findGitRepo(path.Join(dir, fName), res)
-	}
-	//return files, nil
-	//fmt.Println(files)
+
 }
