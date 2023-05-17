@@ -2,6 +2,8 @@ package gitcmd
 
 import (
 	"fmt"
+	"io/ioutil"
+	"path"
 	"testing"
 )
 
@@ -29,4 +31,40 @@ func TestGetChangedFile(t *testing.T) {
 	for _, filename := range filenames {
 		fmt.Println(filename)
 	}
+}
+
+func TestGetChangedDir(t *testing.T) {
+
+	findPath := "/Users/wangyj/ideaProject"
+	var res []string
+	findGitRepo(findPath, &res)
+	for _, s := range res {
+		fmt.Println(s)
+
+	}
+}
+
+func findGitRepo(dir string, res *[]string) {
+	var files []string
+	fileInfo, err := ioutil.ReadDir(dir)
+	if err != nil {
+		//return files, err
+	}
+
+	for _, file := range fileInfo {
+		//当前目录是git仓库，没必要继续遍历
+		if ".git" == file.Name() {
+			//fmt.Println(dir)
+			*res = append(*res, dir)
+			return
+		}
+		if file.IsDir() {
+			files = append(files, file.Name())
+		}
+	}
+	for _, fName := range files {
+		findGitRepo(path.Join(dir, fName), res)
+	}
+	//return files, nil
+	//fmt.Println(files)
 }
