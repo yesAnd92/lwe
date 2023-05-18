@@ -7,7 +7,6 @@ import (
 	"log"
 	"lwe/utils"
 	"os"
-	"path"
 	"path/filepath"
 	"regexp"
 	"strconv"
@@ -80,11 +79,15 @@ func GetCommitLog(detail bool, recentN int8, dir, author, start, end string) (*[
 	}
 
 	var logs []CommitLog
-	if len(result.String()) == 0 {
+	reStr := result.String()
+	if len(reStr) == 0 {
 		return nil, errors.New("no matching commit log found！")
 	}
-	commitLines := strings.Split(result.String(), "\n")
+
+	commitLines := strings.Split(reStr, "\n")
 	for _, msg := range commitLines {
+		//win环境下会多“'”符号，替换去除
+		msg = strings.Trim(msg, "'")
 		infoArr := strings.Split(msg, "**")
 		//commitAt
 		commitAtMill, _ := strconv.ParseInt(infoArr[2], 10, 64)
@@ -150,7 +153,10 @@ func GetAllGitRepoCommitLog(detail bool, recentN int8, dir, author, start, end s
 		dir = absDir
 	}
 
+	//递归找到所有的git仓库
 	findGitRepo(dir, &res)
+
+	//遍历获取每个仓库的提交信息
 	for _, gitDir := range res {
 		commitLogs, err := GetCommitLog(detail, recentN, gitDir, author, start, end)
 		if err == nil {
@@ -190,6 +196,6 @@ func findGitRepo(dir string, res *[]string) {
 
 	//目录下的子目录递归遍历
 	for _, fName := range files {
-		findGitRepo(path.Join(dir, fName), res)
+		findGitRepo(filepath.Join(dir, fName), res)
 	}
 }

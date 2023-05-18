@@ -27,7 +27,7 @@ func (c *ConsoleOutput) Output(resLogs *[]ResultLog) {
 
 	for _, res := range *resLogs {
 		logs := res.CommitLogs
-		fmt.Printf("Git Repo:%s\n", res.RepoName)
+		fmt.Printf("Git Repo >> %s\n", res.RepoName)
 		for _, log := range *logs {
 			table.Append([]string{log.CommitHash, log.Username, log.CommitMsg, log.CommitAt})
 		}
@@ -51,7 +51,7 @@ func (c *FileOutput) Output(resLogs *[]ResultLog) {
 
 	for _, res := range *resLogs {
 		logs := res.CommitLogs
-		commitData.WriteString(fmt.Sprintf("Git Repo:%s\n", res.RepoName))
+		commitData.WriteString(fmt.Sprintf("Git Repo >> %s\n", res.RepoName))
 		for _, log := range *logs {
 			table.Append([]string{log.CommitHash, log.Username, log.CommitMsg, log.CommitAt})
 		}
