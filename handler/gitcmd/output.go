@@ -3,7 +3,7 @@ package gitcmd
 import (
 	"bytes"
 	"fmt"
-	"github.com/olekukonko/tablewriter"
+	"github.com/jedib0t/go-pretty/v6/table"
 	"log"
 	"os"
 	"path/filepath"
@@ -22,21 +22,21 @@ type ConsoleOutput struct {
 
 func (c *ConsoleOutput) Output(resLogs *[]ResultLog) {
 
-	table := tablewriter.NewWriter(os.Stdout)
-	table.SetHeader([]string{"Hash", "Author", "Commit", "Time"})
+	t := table.NewWriter()
+	t.SetOutputMirror(os.Stdout)
+	t.AppendHeader(table.Row{"Hash", "Author", "Commit", "Time"})
 
-	for _, res := range *resLogs {
+	for idx, res := range *resLogs {
 		logs := res.CommitLogs
-		fmt.Printf("Git Repo >> %s\n", res.RepoName)
+		fmt.Printf("#%d Git Repo >> %s\n", idx+1, res.RepoName)
 		for _, log := range *logs {
-			table.Append([]string{log.CommitHash, log.Username, log.CommitMsg, log.CommitAt})
+			t.AppendRow(table.Row{log.CommitHash, log.Username, log.CommitMsg, log.CommitAt})
 		}
 
-		table.Render()
-		table.ClearRows()
+		t.Render()
+		t.ResetRows()
 		fmt.Println()
 	}
-
 }
 
 type FileOutput struct {
@@ -46,18 +46,19 @@ func (c *FileOutput) Output(resLogs *[]ResultLog) {
 
 	//渲染的分析日志放到buffer中，最后一起写入文件
 	commitData := &bytes.Buffer{}
-	table := tablewriter.NewWriter(commitData)
-	table.SetHeader([]string{"Hash", "Author", "Commit", "Time"})
+	t := table.NewWriter()
+	t.SetOutputMirror(commitData)
+	t.AppendHeader(table.Row{"Hash", "Author", "Commit", "Time"})
 
-	for _, res := range *resLogs {
+	for idx, res := range *resLogs {
 		logs := res.CommitLogs
-		commitData.WriteString(fmt.Sprintf("Git Repo >> %s\n", res.RepoName))
+		commitData.WriteString(fmt.Sprintf("#%d Git Repo >> %s\n", idx+1, res.RepoName))
 		for _, log := range *logs {
-			table.Append([]string{log.CommitHash, log.Username, log.CommitMsg, log.CommitAt})
+			t.AppendRow(table.Row{log.CommitHash, log.Username, log.CommitMsg, log.CommitAt})
 		}
 
-		table.Render()
-		table.ClearRows()
+		t.Render()
+		t.ResetRows()
 		commitData.WriteString("\n")
 	}
 
