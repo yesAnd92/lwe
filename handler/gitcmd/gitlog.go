@@ -3,8 +3,8 @@ package gitcmd
 import (
 	"errors"
 	"fmt"
+	"github.com/spf13/cobra"
 	"io/ioutil"
-	"log"
 	"lwe/utils"
 	"os"
 	"path/filepath"
@@ -18,7 +18,7 @@ const (
 
 	//git log
 	LOG_TPL            = "git --no-pager log  --no-merges "
-	LOG_FORMAT_TPL     = `--format=format:'%h**%an**%ct**%s' ` //使用^*作为分隔符
+	LOG_FORMAT_TPL     = `--format=format:'%h^*%an^*%ct^*%s' ` //使用^*作为分隔符
 	LOG_AUTHOR_TPL     = `--author=%s `
 	LOG_START_DATE_TPL = `--since=%s `
 	LOG_END_DATE_TPL   = `--until=%s `
@@ -44,12 +44,12 @@ type ResultLog struct {
 }
 
 // GetCommitLog 获取提交日志
-func GetCommitLog(detail bool, recentN int8, dir, author, start, end string) (*[]CommitLog, error) {
+func GetCommitLog(detail bool, recentN int16, dir, author, start, end string) (*[]CommitLog, error) {
 
 	if len(dir) > 0 {
 		//指定了目录，切换到指定目录执行命令
 		if err := os.Chdir(dir); err != nil {
-			log.Fatal(err)
+			cobra.CheckErr(err)
 		}
 	}
 
@@ -88,7 +88,7 @@ func GetCommitLog(detail bool, recentN int8, dir, author, start, end string) (*[
 	for _, msg := range commitLines {
 		//win环境下会多“'”符号，替换去除
 		msg = strings.Trim(msg, "'")
-		infoArr := strings.Split(msg, "**")
+		infoArr := strings.Split(msg, "^*")
 		//commitAt
 		commitAtMill, _ := strconv.ParseInt(infoArr[2], 10, 64)
 
@@ -136,7 +136,7 @@ func GetChangedFile(commitId string) ([]string, error) {
 }
 
 // GetAllGitRepoCommitLog 封装所有仓库的提交信息
-func GetAllGitRepoCommitLog(detail bool, recentN int8, dir, author, start, end string) (*[]ResultLog, error) {
+func GetAllGitRepoCommitLog(detail bool, recentN int16, dir, author, start, end string) (*[]ResultLog, error) {
 	var res []string
 	var reLog []ResultLog
 
@@ -148,7 +148,7 @@ func GetAllGitRepoCommitLog(detail bool, recentN int8, dir, author, start, end s
 	if !filepath.IsAbs(dir) {
 		absDir, err := filepath.Abs(dir)
 		if err != nil {
-			panic(err)
+			cobra.CheckErr(err)
 		}
 		dir = absDir
 	}
@@ -167,10 +167,6 @@ func GetAllGitRepoCommitLog(detail bool, recentN int8, dir, author, start, end s
 		}
 	}
 
-	if err := os.Chdir("."); err != nil {
-		log.Fatal(err)
-	}
-
 	return &reLog, nil
 
 }
@@ -179,13 +175,13 @@ func findGitRepo(dir string, res *[]string) {
 	var files []string
 	fileInfo, err := ioutil.ReadDir(dir)
 	if err != nil {
-		panic("dir is wrong: " + dir)
+		cobra.CheckErr(fmt.Errorf(" The dir '%s' is not exist!\n", dir))
+		return
 	}
 
 	for _, file := range fileInfo {
 		//当前目录是git仓库，没必要继续遍历
 		if ".git" == file.Name() {
-			//fmt.Println(dir)
 			*res = append(*res, dir)
 			return
 		}

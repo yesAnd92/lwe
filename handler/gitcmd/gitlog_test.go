@@ -33,7 +33,7 @@ func TestGetChangedFile(t *testing.T) {
 
 func TestGetAllGitRepoCommitLog(t *testing.T) {
 
-	resLogs, _ := GetAllGitRepoCommitLog(false, 10, "/Users/wangyj/ideaProject/work/", "", "", "")
+	resLogs, _ := GetAllGitRepoCommitLog(true, 10, "/Users/wangyj/ideaProject/my", "sadfas", "", "")
 	//resLogs, _ := GetAllGitRepoCommitLog(false, 10, "D:\\ideaProject\\my", "", "", "")
 
 	//控制台
