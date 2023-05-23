@@ -9,7 +9,7 @@ import (
 	"path/filepath"
 )
 
-const REPORT_PATH = "./commit-log-report.txt"
+const REPORT_PATH = "./commit-log.txt"
 
 //输出形式：控制台数据、写入文件
 
