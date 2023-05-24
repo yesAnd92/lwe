@@ -6,7 +6,7 @@ lwe是leave work early的缩写，也就是"早点下班"！🤣🤣🤣
 
 [1.由建表SQL语句转换成Java Bean、Go结构体、Json等](#1)
 
-[2.将查询SQL语句转换成ElasticSearch查询的DSL语言](#2)
+[2.将SQL语句转换成ElasticSearch查询的DSL语言](#2)
 
 [3.获取Navicat连接配置中的密码](#3)
 
@@ -240,9 +240,11 @@ Connection password: This is a test
 
 <h3 id="4">4、增强Git日志功能：查看给定目录下所有git仓库提交日志</h3>
 开发人员可能同时维护多个项目或者一个项目中多个模块在不同git仓库，如果有跨仓库查看多个仓库提交日志的需求，glog子命令就派上用场了。
+
 ```bash
 lwe glog  <仓库所在目录>  [可选参数] 
 ```
+
 > 查询结果对应的是每个git仓库当前使用分支的提交记录
 
 > 如果未指定目录，则在当前目录下搜寻git仓库,另，如果目录层级过深，可能会影响性能
