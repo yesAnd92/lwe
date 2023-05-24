@@ -253,11 +253,12 @@ lwe glog  <仓库所在目录>  [可选参数]
 lwe glog /Users/yesand/work/  -a=yesand -f=false -n=20 -s=2023-05-15 -e=2023-05-19
 ```
 其中：
-`-a, --author string   specify name of committer`,可选参数，该参数用于指定提交者，未指定查询所有提交者。\
-`-f, --file            result output to file,default value is false`,可选参数，该参数决定将查询结果写到文件中，默认在控制台输出。\
-`-n, --recentN int16   specify the number of commit log for each git repo.`,可选参数，该参数指定每个仓库查询最近N条的提交记录。\
-`-s, --start string    specify the start of commit date. eg.'yyyy-MM-dd'`,可选参数，该参数指定筛选提交记录的开始日期，格式：'yyyy-MM-dd'。\
-`-e, --end string      specify the end of commit date. eg.'yyyy-MM-dd'`,可选参数，该参数指定筛选提交记录的结束日期，格式：'yyyy-MM-dd'。\
+
+`-a, --author string`,可选参数，该参数用于指定提交者，未指定查询所有提交者。\
+`-f, --file bool`,可选参数，该参数决定将查询结果写到文件中，默认在控制台输出。\
+`-n, --recentN int16`,可选参数，该参数指定每个仓库查询最近N条的提交记录。\
+`-s, --start string`,可选参数，该参数指定筛选提交记录的开始日期，格式：'yyyy-MM-dd'。\
+`-e, --end string`,可选参数，该参数指定筛选提交记录的结束日期，格式：'yyyy-MM-dd'。\
 
 结果:示例
 
