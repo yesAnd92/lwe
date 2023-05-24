@@ -18,7 +18,7 @@ const (
 
 	//git log
 	LOG_TPL            = "git --no-pager log  --no-merges "
-	LOG_FORMAT_TPL     = `--format=format:'%h*^*%an*^*%ct*^*%s' ` //使用*^*作为分隔符
+	LOG_FORMAT_TPL     = `--format=format:'%h*-*%an*-*%ct*-*%s' ` //使用*-*作为分隔符
 	LOG_AUTHOR_TPL     = `--author=%s `
 	LOG_START_DATE_TPL = `--since=%s `
 	LOG_END_DATE_TPL   = `--until=%s `
@@ -88,7 +88,7 @@ func GetCommitLog(detail bool, recentN int16, dir, author, start, end string) (*
 	for _, msg := range commitLines {
 		//win环境下会多“'”符号，替换去除
 		msg = strings.Trim(msg, "'")
-		infoArr := strings.Split(msg, "*^*")
+		infoArr := strings.Split(msg, "*-*")
 		//commitAt
 		commitAtMill, _ := strconv.ParseInt(infoArr[2], 10, 64)
 

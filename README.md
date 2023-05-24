@@ -245,14 +245,12 @@ lwe glog  <仓库所在目录>  [可选参数]
 ```
 > 查询结果对应的是每个git仓库当前使用分支的提交记录
 
-> 如果指定的目录层级过深，可能会影响性能
-
-> 如果未指定目录，则在当前目录下搜寻git仓库 
+> 如果未指定目录，则在当前目录下搜寻git仓库,另，如果目录层级过深，可能会影响性能
 
 如：写周报时，需要查看自己近一周在哪些仓库提交了哪些代码,来辅助我写总结，假定我的工作目录在/Users/yesand/work/
 
 ```bash
-lwe md5 /Users/yesand/work/  -a=yesand -f=false -n=20 -s=2023-05-15 -e=2023-05-19
+lwe glog /Users/yesand/work/  -a=yesand -f=false -n=20 -s=2023-05-15 -e=2023-05-19
 ```
 其中：
 `-a, --author string   specify name of committer`,可选参数，该参数用于指定提交者，未指定查询所有提交者。\
