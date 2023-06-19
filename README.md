@@ -12,6 +12,8 @@ lwe是leave work early的缩写，也就是"早点下班"！🤣🤣🤣
 
 [4.增强Git日志功能：查看给定目录下所有git仓库提交日志](#4)
 
+[5.其它小工具](#4)
+
 ## 安装
 
 ### 下载编译后的可执行文件
@@ -278,6 +280,27 @@ lwe glog /Users/yesand/work/  -a=yesand -f=false -n=20 -s=2023-05-15 -e=2023-05-
 ...
 ```
 
+<h3 id="5">5、其它小工具</h3>
+一些小的功能
+
+<h4>格式化请求url</h4>
+有时请求的url很长，不利于我们找到目标参数，可以使用url命令进行格式化，增加请求的可读性
+示例：
+```bash
+lwe url  http://api.demo.com/api/user/getList?platform=ios&signature=bd7e1fd4e65e8199fd817006e709fb33&currentTimeMillis=1685673384000&pageNum=1
+```
+格式化结果：
+```text
+Host: api.demo.com
+Path: /api/user/getList
+-----------------------
+pageNum                 1
+platform                ios
+signature               bd7e1fd4e65e8199fd817006e709fb33
+currentTimeMillis       1685673384000
+```
+
+> 某些bash下请求url需要用' '引起来才能正常使用
 
 
 ## 说明
