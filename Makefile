@@ -38,5 +38,11 @@ clean:
 	rm -rf ./*.gz
 
 
+#安装到当前mac
+installMac:
+	go build
+	sudo -S rm /usr/local/bin/lwe
+	sudo cp ./lwe /usr/local/bin/
+
 # 发版命令
 # make release VERSION=1.0.0
