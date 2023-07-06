@@ -6,6 +6,7 @@ import (
 	"encoding/hex"
 	"encoding/xml"
 	"errors"
+	"github.com/spf13/cobra"
 )
 
 const (
@@ -37,10 +38,8 @@ func ParseNcx(data []byte) (*NxcConnections, error) {
 	}
 	for idx := range cons.Conns {
 
-		decrPwd, decrErr := decryptPwd(cons.Conns[idx].Password)
-		if decrErr != nil {
-			decrPwd = "can not decrypt password!"
-		}
+		decrPwd := decryptPwd(cons.Conns[idx].Password)
+
 		cons.Conns[idx].Password = decrPwd
 	}
 	return &cons, nil
@@ -48,7 +47,7 @@ func ParseNcx(data []byte) (*NxcConnections, error) {
 
 //decryptPwd navicat的加密规则可以参照这个文档
 //https://github.com/HyperSine/how-does-navicat-encrypt-password/blob/master/doc/how-does-navicat-encrypt-password.md
-func decryptPwd(encryptTxt string) (string, error) {
+func decryptPwd(encryptTxt string) string {
 	key := []byte(AES_KEY)
 	ciphertext, _ := hex.DecodeString(encryptTxt)
 
@@ -58,7 +57,7 @@ func decryptPwd(encryptTxt string) (string, error) {
 	}
 
 	if len(ciphertext) < aes.BlockSize {
-		panic("ciphertext too short")
+		cobra.CheckErr("Decrypt password failed! Please confirm export connection with password.")
 	}
 	iv := []byte(AES_IV)
 
@@ -70,7 +69,7 @@ func decryptPwd(encryptTxt string) (string, error) {
 
 	mode.CryptBlocks(ciphertext, ciphertext)
 
-	return unPadding(ciphertext), nil
+	return unPadding(ciphertext)
 }
 
 // unPadding  remove redundant padding data
