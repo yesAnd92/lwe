@@ -25,5 +25,5 @@ func init() {
 	rootCmd.AddCommand(esCmd)
 	rootCmd.AddCommand(navicatCmd)
 	rootCmd.AddCommand(gitCmd)
-	rootCmd.AddCommand(gdpCmd)
+	rootCmd.AddCommand(dpCmd)
 }
