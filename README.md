@@ -10,7 +10,7 @@ lwe是leave work early的缩写，也就是"早点下班"！🤣🤣🤣
 
 [3.获取Navicat连接配置中的密码](#3)
 
-[4.增强Git日志功能：查看给定目录下所有git仓库提交日志](#4)
+[4.Git增强功能：glog、gl](#4)
 
 [5.其它小工具](#5)
 
@@ -242,7 +242,9 @@ Connection username: root
 Connection password: This is a test
 ```
 
-<h3 id="4">4、增强Git日志功能：查看给定目录下所有git仓库提交日志</h3>
+<h3 id="4">4、Git增强功能：glog、gl</h3>
+#### glog 增强Git日志功能
+查看给定目录下所有git仓库提交日志 
 开发人员可能同时维护多个项目或者一个项目中多个模块在不同git仓库，如果有跨仓库查看多个仓库提交日志的需求，glog子命令就派上用场了。
 
 ```bash
@@ -264,7 +266,7 @@ lwe glog /Users/yesand/work/  -a=yesand -f=false -n=20 -s=2023-05-15 -e=2023-05-
 `-f, --file bool`,可选参数，该参数决定将查询结果写到文件中，默认在控制台输出。\
 `-n, --recentN int16`,可选参数，该参数指定每个仓库查询最近N条的提交记录。\
 `-s, --start string`,可选参数，该参数指定筛选提交记录的开始日期，格式：'yyyy-MM-dd'。\
-`-e, --end string`,可选参数，该参数指定筛选提交记录的结束日期，格式：'yyyy-MM-dd'。\
+`-e, --end string`,可选参数，该参数指定筛选提交记录的结束日期，格式：'yyyy-MM-dd'。
 
 结果:示例
 
@@ -281,6 +283,13 @@ lwe glog /Users/yesand/work/  -a=yesand -f=false -n=20 -s=2023-05-15 -e=2023-05-
 #2 Git Repo >> /Users/yesand/work/xxx
 ...
 ```
+
+#### gl 增强拉取代码功能
+拉取给定目录下的所有git仓库最新代码(使用的git pull --rebase的方式)
+```bash
+lwe gl [仓库所在目录]
+```
+> 如果当前仓库存在未提交的文件，则跳过此仓库的更新
 
 <h3 id="5">5、其它小工具</h3>
 一些小的功能

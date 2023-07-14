@@ -18,7 +18,7 @@ import (
 
 var cmdArg = make([]string, 2)
 
-//根据操作系统环境初始化cmd关闭命令行的参数
+// 根据操作系统环境初始化cmd关闭命令行的参数
 func init() {
 	if runtime.GOOS == "windows" {
 		cmdArg[0] = "cmd"
@@ -56,7 +56,7 @@ func RunCmd(cmdLine string, timeout ...time.Duration) *Result {
 	go func() { done <- cmd.Wait() }()
 	select {
 	case re.err = <-done:
-		//出现异常
+		//正常执行完，或者出现异常
 		timer.Stop()
 	case <-timer.C:
 		//时间到期
