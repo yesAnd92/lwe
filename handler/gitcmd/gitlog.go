@@ -4,9 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/spf13/cobra"
-	"io/ioutil"
 	"lwe/utils"
-	"os"
 	"path/filepath"
 	"regexp"
 	"strconv"
@@ -17,7 +15,7 @@ import (
 const (
 
 	//git log
-	LOG_TPL            = "git --no-pager log  --no-merges "
+	LOG_TPL            = "git -C %s --no-pager log  --no-merges "
 	LOG_FORMAT_TPL     = `--format=format:'%h*-*%an*-*%ct*-*%s' ` //使用*-*作为分隔符
 	LOG_AUTHOR_TPL     = `--author=%s `
 	LOG_START_DATE_TPL = `--since=%s `
@@ -37,7 +35,7 @@ type CommitLog struct {
 	FilesChanged []string //changed file arr
 }
 
-//ResultLog 封装日志分析结果
+// ResultLog 封装日志分析结果
 type ResultLog struct {
 	RepoName   string //git repository name
 	CommitLogs *[]CommitLog
@@ -46,15 +44,10 @@ type ResultLog struct {
 // GetCommitLog 获取提交日志
 func GetCommitLog(detail bool, recentN int16, dir, author, start, end string) (*[]CommitLog, error) {
 
-	if len(dir) > 0 {
-		//指定了目录，切换到指定目录执行命令
-		if err := os.Chdir(dir); err != nil {
-			cobra.CheckErr(err)
-		}
-	}
-
 	//使用bytes.Buffer这种方式拼接字符串会%!h(MISSING)？
-	var cmdline = LOG_TPL
+	//指定仓库地址
+	var cmdline = fmt.Sprintf(LOG_TPL, dir)
+
 	if recentN >= 0 {
 		cmdline += fmt.Sprintf(LOG_RECENTN_TPL, recentN)
 	}
@@ -140,10 +133,6 @@ func GetAllGitRepoCommitLog(detail bool, recentN int16, dir, author, start, end 
 	var res []string
 	var reLog []ResultLog
 
-	//由于操作中切换了工作目录，结束后重新定位到当前工作目录
-	currWd, _ := os.Getwd()
-	defer os.Chdir(currWd)
-
 	//相对路径转换成绝对路径进行处理
 	if !filepath.IsAbs(dir) {
 		absDir, err := filepath.Abs(dir)
@@ -168,30 +157,5 @@ func GetAllGitRepoCommitLog(detail bool, recentN int16, dir, author, start, end 
 	}
 
 	return &reLog, nil
-
 }
 
-func findGitRepo(dir string, res *[]string) {
-	var files []string
-	fileInfo, err := ioutil.ReadDir(dir)
-	if err != nil {
-		cobra.CheckErr(fmt.Errorf(" The dir '%s' is not exist!\n", dir))
-		return
-	}
-
-	for _, file := range fileInfo {
-		//当前目录是git仓库，没必要继续遍历
-		if ".git" == file.Name() {
-			*res = append(*res, dir)
-			return
-		}
-		if file.IsDir() {
-			files = append(files, file.Name())
-		}
-	}
-
-	//目录下的子目录递归遍历
-	for _, fName := range files {
-		findGitRepo(filepath.Join(dir, fName), res)
-	}
-}
