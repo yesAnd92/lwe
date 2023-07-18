@@ -50,11 +50,11 @@ var (
 		},
 	}
 
-	gplCmd = &cobra.Command{
+	glCmd = &cobra.Command{
 		Use:   "gl",
 		Short: "Update all git repository under the given dir ",
 		Long:  `Update all git repository under the given dir ,the repository that has modified files will not be updated!`,
-		Args:  cobra.MatchAll(cobra.MinimumNArgs(1)),
+		Args:  cobra.MatchAll(cobra.MinimumNArgs(0)),
 		Run: func(cmd *cobra.Command, args []string) {
 
 			var dir = "."
