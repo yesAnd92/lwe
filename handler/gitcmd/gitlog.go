@@ -3,9 +3,7 @@ package gitcmd
 import (
 	"errors"
 	"fmt"
-	"github.com/spf13/cobra"
 	"lwe/utils"
-	"path/filepath"
 	"regexp"
 	"strconv"
 	"strings"
@@ -134,13 +132,7 @@ func GetAllGitRepoCommitLog(detail bool, recentN int16, dir, author, start, end 
 	var reLog []ResultLog
 
 	//相对路径转换成绝对路径进行处理
-	if !filepath.IsAbs(dir) {
-		absDir, err := filepath.Abs(dir)
-		if err != nil {
-			cobra.CheckErr(err)
-		}
-		dir = absDir
-	}
+	dir = utils.ToAbsPath(dir)
 
 	//递归找到所有的git仓库
 	findGitRepo(dir, &res)
@@ -158,4 +150,3 @@ func GetAllGitRepoCommitLog(detail bool, recentN int16, dir, author, start, end 
 
 	return &reLog, nil
 }
-

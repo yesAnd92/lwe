@@ -25,8 +25,9 @@ func init() {
 	rootCmd.AddCommand(esCmd)
 	rootCmd.AddCommand(navicatCmd)
 	rootCmd.AddCommand(dpCmd)
+	rootCmd.AddCommand(urlCmd)
 	rootCmd.AddCommand(glogCmd)
 	rootCmd.AddCommand(gplCmd)
-	rootCmd.AddCommand(urlCmd)
+	rootCmd.AddCommand(gclCmd)
 
 }

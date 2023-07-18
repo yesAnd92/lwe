@@ -16,6 +16,10 @@ var (
 	start     string  //开始时间
 	end       string  //结束时间
 
+	//gcl
+	clonePath string //克隆到哪个目录
+	token     string //克隆所需要的token
+
 	glogCmd = &cobra.Command{
 		Use:   "glog",
 		Short: "Get all git repository commit log under the given dir ",
@@ -62,6 +66,25 @@ var (
 
 		},
 	}
+
+	gclCmd = &cobra.Command{
+		Use:   "gcl",
+		Short: "Update all git repository under the given dir ",
+		Long:  `Update all git repository under the given dir ,the repository that has modified files will not be updated!`,
+		Args:  cobra.MatchAll(cobra.MinimumNArgs(1)),
+		Run: func(cmd *cobra.Command, args []string) {
+			if len(token) == 0 {
+				cobra.CheckErr("please confirm token is not empty!")
+			}
+			var dir = "."
+			if len(args) > 1 {
+				dir = args[1]
+			}
+
+			gitcmd.CloneGroup(args[0], token, dir)
+
+		},
+	}
 )
 
 func init() {
@@ -72,4 +95,6 @@ func init() {
 	glogCmd.PersistentFlags().StringVarP(&start, "start", "s", "", "specify the start of commit date. eg.'yyyy-MM-dd'")
 	glogCmd.PersistentFlags().StringVarP(&end, "end", "e", "", "specify the end of commit date. eg.'yyyy-MM-dd'")
 	glogCmd.PersistentFlags().Int16VarP(&recentN, "recentN", "n", 10, "specify the number of commit log for each git repo.")
+
+	gclCmd.PersistentFlags().StringVarP(&token, "token", "t", "", "private token")
 }

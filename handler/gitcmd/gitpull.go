@@ -2,9 +2,7 @@ package gitcmd
 
 import (
 	"fmt"
-	"github.com/spf13/cobra"
 	"lwe/utils"
-	"path/filepath"
 	"time"
 )
 
@@ -52,13 +50,7 @@ func UpdateAllGitRepo(dir string) {
 	var res []string
 
 	//相对路径转换成绝对路径进行处理
-	if !filepath.IsAbs(dir) {
-		absDir, err := filepath.Abs(dir)
-		if err != nil {
-			cobra.CheckErr(err)
-		}
-		dir = absDir
-	}
+	dir = utils.ToAbsPath(dir)
 
 	//递归找到所有的git仓库
 	findGitRepo(dir, &res)
