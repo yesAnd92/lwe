@@ -1,4 +1,4 @@
-module lwe
+module github.com/yesAnd92/lwe
 
 go 1.18
 
