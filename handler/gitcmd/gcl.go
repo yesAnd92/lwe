@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"github.com/micro-plat/lib4go/net/http"
 	"github.com/spf13/cobra"
-	"lwe/utils"
+	"github.com/yesAnd92/lwe/utils"
 	"net/url"
 	"os"
 	"time"

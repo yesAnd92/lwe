@@ -3,7 +3,7 @@ package sql
 import (
 	"encoding/json"
 	"fmt"
-	"lwe/utils"
+	"github.com/yesAnd92/lwe/utils"
 	"time"
 )
 

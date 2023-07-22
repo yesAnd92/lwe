@@ -1,7 +1,7 @@
 package cmd
 
 import "github.com/spf13/cobra"
-import "lwe/handler/url"
+import "github.com/yesAnd92/lwe/handler/url"
 
 var urlCmd = &cobra.Command{
 	Use:   "url",

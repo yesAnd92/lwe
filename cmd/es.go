@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"github.com/spf13/cobra"
 	"github.com/xwb1989/sqlparser"
-	"lwe/handler/es"
+	"github.com/yesAnd92/lwe/handler/es"
 )
 
 const (

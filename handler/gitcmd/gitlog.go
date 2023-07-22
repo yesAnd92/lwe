@@ -3,7 +3,7 @@ package gitcmd
 import (
 	"errors"
 	"fmt"
-	"lwe/utils"
+	"github.com/yesAnd92/lwe/utils"
 	"regexp"
 	"strconv"
 	"strings"
