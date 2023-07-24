@@ -1,7 +1,7 @@
 package java
 
 import (
-	"lwe/utils"
+	"github.com/yesAnd92/lwe/utils"
 	"text/template"
 )
 

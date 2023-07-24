@@ -6,8 +6,8 @@ import (
 	"errors"
 	"fmt"
 	"github.com/spf13/cobra"
+	"github.com/yesAnd92/lwe/handler/navicat"
 	"io"
-	"lwe/handler/navicat"
 	"os"
 )
 

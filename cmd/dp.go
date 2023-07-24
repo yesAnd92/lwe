@@ -2,7 +2,7 @@ package cmd
 
 import (
 	"github.com/spf13/cobra"
-	"lwe/handler/dp"
+	"github.com/yesAnd92/lwe/handler/dp"
 )
 
 /**
