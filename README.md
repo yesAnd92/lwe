@@ -10,7 +10,7 @@ lwe是leave work early的缩写，也就是"早点下班"！🤣🤣🤣
 
 [3.获取Navicat连接配置中的密码](#3)
 
-[4.Git增强功能：glog、gl](#4)
+[4.Git增强功能：glog、gl、gcl、gst](#4)
 
 [5.其它小工具](#5)
 
@@ -57,13 +57,17 @@ Usage: lwe [command]
 
 Available Commands:
 completion  Generate the autocompletion script for the specified shell
-es          Translate SQL to elasticsearch's DSL
-fmt         Generate the specified file based on SQL
-glog        Get all git repository commit log under the given dir 
-help        Help about any command
-md5         Get a md5 for the given value or  a random md5 value
-ncx         Decrypt password of connection in .ncx file
-version     Print the version number of lwe
+  es          Translate SQL to elasticsearch's DSL
+  fmt         Generate the specified file based on SQL
+  gcl         Update all git repository under the given dir 
+  gl          Update all git repository under the given dir 
+  glog        Get all git repository commit log under the given dir 
+  gst         Get all git repository status under the given dir 
+  help        Help about any command
+  md5         Get a md5 for the given value or  a random md5 value
+  ncx         Decrypt password of connection in .ncx file
+  url         format request url to increase readability
+  version     Print the version number of lwe
 ```
 ### help
 
@@ -242,7 +246,7 @@ Connection username: root
 Connection password: This is a test
 ```
 
-<h3 id="4">4、Git增强功能：glog、gl</h3>
+<h3 id="4">4、Git增强功能：glog、gl、gcl、gst</h3>
 #### glog 增强Git日志功能
 查看给定目录下所有git仓库提交日志 
 开发人员可能同时维护多个项目或者一个项目中多个模块在不同git仓库，如果有跨仓库查看多个仓库提交日志的需求，glog子命令就派上用场了。
@@ -290,6 +294,21 @@ lwe glog /Users/yesand/work/  -a=yesand -f=false -n=20 -s=2023-05-15 -e=2023-05-
 lwe gl [仓库所在目录]
 ```
 > 如果当前仓库存在未提交的文件，则跳过此仓库的更新
+
+#### gst 增强git status功能
+查看给定目录下的所有git仓库状态
+```bash
+lwe gst [仓库所在目录]
+```
+
+#### gcl 增强git clone功能
+支持克隆gitlab 中整个group下所有的项目，避免挨个克隆的繁琐
+```bash
+lwe gcl <group地址> -t=<privatetoken> 
+```
+> 此功能需要提供gitlab中的private_token
+> 如果当前仓库已存在则跳过克隆
+
 
 <h3 id="5">5、其它小工具</h3>
 一些小的功能
