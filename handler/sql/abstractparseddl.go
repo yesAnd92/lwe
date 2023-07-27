@@ -3,7 +3,7 @@ package sql
 import (
 	"errors"
 	"fmt"
-	"lwe/utils"
+	"github.com/yesAnd92/lwe/utils"
 	"regexp"
 	"strings"
 	"time"

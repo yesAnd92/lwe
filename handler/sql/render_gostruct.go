@@ -3,9 +3,9 @@ package sql
 import (
 	"bytes"
 	"fmt"
+	golang "github.com/yesAnd92/lwe/templates/golang"
+	"github.com/yesAnd92/lwe/utils"
 	"log"
-	golang "lwe/templates/golang"
-	"lwe/utils"
 	"os"
 	"os/exec"
 	"path/filepath"

@@ -5,8 +5,8 @@ import (
 	"errors"
 	"fmt"
 	"github.com/spf13/cobra"
+	"github.com/yesAnd92/lwe/handler/sql"
 	"io"
-	"lwe/handler/sql"
 	"os"
 	"strings"
 )

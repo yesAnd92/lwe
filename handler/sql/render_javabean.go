@@ -2,9 +2,9 @@ package sql
 
 import (
 	"fmt"
+	"github.com/yesAnd92/lwe/templates/java"
+	"github.com/yesAnd92/lwe/utils"
 	"log"
-	"lwe/templates/java"
-	"lwe/utils"
 	"os"
 	"path/filepath"
 	"text/template"
