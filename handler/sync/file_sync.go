@@ -2,6 +2,7 @@ package sync
 
 import (
 	"fmt"
+	"github.com/jedib0t/go-pretty/v6/table"
 	"io"
 	"os"
 	"strings"
@@ -14,8 +15,6 @@ type void struct{}
 func compareDir(sourceDir, targetDir string) {
 	wg := sync.WaitGroup{}
 	wg.Add(2)
-	//var sFilePath = &[]string{}
-	//var tFilePath = &[]string{}
 	var sourceFileSet = make(map[string]void)
 	var targetFileSet = make(map[string]void)
 	go func() {
@@ -29,18 +28,65 @@ func compareDir(sourceDir, targetDir string) {
 	}()
 	wg.Wait()
 
-	fmt.Println(sourceFileSet)
-	fmt.Println(targetFileSet)
-	//收集targetDir中已经有的文件
-
 	//var common = &[]string{}
-	//var sUnique = &[]string{}
-	//var tUnique = &[]string{}
+	var commonSet = make(map[string]void)
+	var sUnique = &[]string{}
+	var tUnique = &[]string{}
 
 	if len(sourceFileSet) < len(targetFileSet) {
-
+		for s := range sourceFileSet {
+			rlvSource := strings.TrimPrefix(s, sourceDir)
+			if _, ok := targetFileSet[targetDir+rlvSource]; ok {
+				//common
+				commonSet[rlvSource] = void{}
+			}
+		}
+	} else {
+		for t := range targetFileSet {
+			rlvTarget := strings.TrimPrefix(t, targetDir)
+			if _, ok := sourceFileSet[sourceDir+rlvTarget]; ok {
+				//common
+				commonSet[rlvTarget] = void{}
+			}
+		}
 	}
 
+	for s := range sourceFileSet {
+		sp := strings.TrimPrefix(s, sourceDir)
+		if _, ok := commonSet[sp]; !ok {
+			*sUnique = append(*sUnique, sp)
+		}
+	}
+
+	for t := range targetFileSet {
+		tp := strings.TrimPrefix(t, targetDir)
+		if _, ok := commonSet[tp]; !ok {
+			*tUnique = append(*tUnique, tp)
+		}
+	}
+
+	fmt.Println(commonSet)
+	fmt.Println(sUnique)
+	fmt.Println(tUnique)
+
+	t := table.NewWriter()
+	t.SetOutputMirror(os.Stdout)
+	t.AppendHeader(table.Row{"Source", " VS", "Target"})
+
+	for k, _ := range commonSet {
+		t.AppendRow(table.Row{sourceDir + k, "<==>", targetDir + k})
+	}
+
+	for _, v := range *sUnique {
+		t.AppendRow(table.Row{sourceDir + v, "===>", ""})
+	}
+
+	for _, v := range *tUnique {
+		t.AppendRow(table.Row{"", "<===", targetDir + v})
+	}
+
+	t.Render()
+	fmt.Println()
 }
 
 func findAllFile(dir string, re map[string]void) {
