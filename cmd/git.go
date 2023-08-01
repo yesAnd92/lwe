@@ -68,8 +68,8 @@ var (
 
 	gclCmd = &cobra.Command{
 		Use:   "gcl",
-		Short: "Update all git repository under the given dir ",
-		Long:  `Update all git repository under the given dir ,the repository that has modified files will not be updated!`,
+		Short: "Git clone all git repository under the given git group ",
+		Long:  `Git clone all git repository under the given git group `,
 		Args:  cobra.MatchAll(cobra.MinimumNArgs(1)),
 		Run: func(cmd *cobra.Command, args []string) {
 			if len(token) == 0 {

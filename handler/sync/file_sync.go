@@ -3,7 +3,7 @@ package sync
 import (
 	"fmt"
 	"github.com/jedib0t/go-pretty/v6/table"
-	"io"
+	"github.com/yesAnd92/lwe/utils"
 	"os"
 	"strings"
 	"sync"
@@ -12,7 +12,32 @@ import (
 // struct{}不占用空间
 type void struct{}
 
-func compareDir(sourceDir, targetDir string) {
+type CompareThenDoIfa interface {
+	Do(*Fsync)
+}
+
+type Fsync struct {
+	sourceDir string
+	targetDir string
+	commonSet map[string]void
+	sUnique   *[]string
+	tUnique   *[]string
+}
+
+func InitFsync(sourceDir, targetDir string) *Fsync {
+	return &Fsync{
+		sourceDir: utils.ToAbsPath(sourceDir),
+		targetDir: utils.ToAbsPath(targetDir),
+		commonSet: make(map[string]void),
+		sUnique:   &[]string{},
+		tUnique:   &[]string{},
+	}
+}
+
+func (f *Fsync) DiffDir() {
+	sourceDir := f.sourceDir
+	targetDir := f.targetDir
+
 	wg := sync.WaitGroup{}
 	wg.Add(2)
 	var sourceFileSet = make(map[string]void)
@@ -28,17 +53,12 @@ func compareDir(sourceDir, targetDir string) {
 	}()
 	wg.Wait()
 
-	//var common = &[]string{}
-	var commonSet = make(map[string]void)
-	var sUnique = &[]string{}
-	var tUnique = &[]string{}
-
 	if len(sourceFileSet) < len(targetFileSet) {
 		for s := range sourceFileSet {
 			rlvSource := strings.TrimPrefix(s, sourceDir)
 			if _, ok := targetFileSet[targetDir+rlvSource]; ok {
 				//common
-				commonSet[rlvSource] = void{}
+				f.commonSet[rlvSource] = void{}
 			}
 		}
 	} else {
@@ -46,51 +66,84 @@ func compareDir(sourceDir, targetDir string) {
 			rlvTarget := strings.TrimPrefix(t, targetDir)
 			if _, ok := sourceFileSet[sourceDir+rlvTarget]; ok {
 				//common
-				commonSet[rlvTarget] = void{}
+				f.commonSet[rlvTarget] = void{}
 			}
 		}
 	}
 
 	for s := range sourceFileSet {
 		sp := strings.TrimPrefix(s, sourceDir)
-		if _, ok := commonSet[sp]; !ok {
-			*sUnique = append(*sUnique, sp)
+		if _, ok := f.commonSet[sp]; !ok {
+			*f.sUnique = append(*f.sUnique, sp)
 		}
 	}
 
 	for t := range targetFileSet {
 		tp := strings.TrimPrefix(t, targetDir)
-		if _, ok := commonSet[tp]; !ok {
-			*tUnique = append(*tUnique, tp)
+		if _, ok := f.commonSet[tp]; !ok {
+			*f.tUnique = append(*f.tUnique, tp)
 		}
 	}
+}
 
-	fmt.Println(commonSet)
-	fmt.Println(sUnique)
-	fmt.Println(tUnique)
+func (f *Fsync) Sync(thenDo CompareThenDoIfa) {
+	thenDo.Do(f)
+}
 
+type DisplayCompareThenDo struct {
+}
+
+func (d *DisplayCompareThenDo) Do(fsync *Fsync) {
 	t := table.NewWriter()
 	t.SetOutputMirror(os.Stdout)
 	t.AppendHeader(table.Row{"Source", " VS", "Target"})
 
-	for k, _ := range commonSet {
+	sourceDir := fsync.sourceDir
+	targetDir := fsync.targetDir
+
+	for k, _ := range fsync.commonSet {
 		t.AppendRow(table.Row{sourceDir + k, "<==>", targetDir + k})
 	}
 
-	for _, v := range *sUnique {
+	for _, v := range *fsync.sUnique {
 		t.AppendRow(table.Row{sourceDir + v, "===>", ""})
 	}
 
-	for _, v := range *tUnique {
+	for _, v := range *fsync.tUnique {
 		t.AppendRow(table.Row{"", "<===", targetDir + v})
 	}
 
-	t.Render()
+	if t.Length() > 0 {
+		t.Render()
+	} else {
+		fmt.Println("Source and target dir are empty dir!")
+	}
 	fmt.Println()
 }
 
-func findAllFile(dir string, re map[string]void) {
+type CopyCompareThenDo struct {
+}
 
+func (c *CopyCompareThenDo) Do(fsync *Fsync) {
+
+	sourceDir := fsync.sourceDir
+	targetDir := fsync.targetDir
+
+	//source unique to target
+	for _, path := range *fsync.sUnique {
+		written, err := utils.Copy(sourceDir+path, targetDir+path)
+		if err != nil {
+			fmt.Println(err)
+			continue
+		} else {
+			fmt.Printf("%s\tcopy finished!,total:%2fKB\n", targetDir+path, float64(written)/1014)
+		}
+	}
+	fmt.Println("All file copy finished!")
+
+}
+
+func findAllFile(dir string, re map[string]void) {
 	// 打开目录并获取文件信息
 	walk(dir, re)
 
@@ -114,34 +167,7 @@ func walk(dir string, pathMap map[string]void) {
 			walk(dir+"/"+file.Name(), pathMap)
 		} else {
 			pathMap[dir+"/"+file.Name()] = void{}
-			//*filePaths = append(*filePaths, dir+"/"+file.Name())
 		}
 
 	}
-}
-
-func copy() {
-	// 创建源文件
-	_, _ = os.Create("src.txt")
-	// 打开源文件
-	file1, err1 := os.Open("src.txt")
-	if err1 != nil {
-		fmt.Println(err1)
-	}
-
-	// 创建目标文件
-	file2, err2 := os.OpenFile("dest.txt", os.O_RDWR|os.O_CREATE, os.ModePerm)
-	if err2 != nil {
-		fmt.Println(err2)
-	}
-	//使用结束关闭文件
-	defer file1.Close()
-	defer file2.Close()
-	n, e := io.Copy(file2, file1)
-	if e != nil {
-		fmt.Println(e)
-	} else {
-		fmt.Println("拷贝成功。。。，拷贝字节数：", n)
-	}
-
 }
