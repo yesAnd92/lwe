@@ -3,7 +3,7 @@ package sql
 import (
 	"bytes"
 	"fmt"
-	golang "github.com/yesAnd92/lwe/templates/golang"
+	"github.com/yesAnd92/lwe/templates"
 	"github.com/yesAnd92/lwe/utils"
 	"log"
 	"os"
@@ -19,7 +19,7 @@ type GoStructRenderData struct {
 
 func NewGoStructRenderData() *GoStructRenderData {
 	//加载实体对应的模板
-	goStructTpl := golang.InitGoStructTpl()
+	goStructTpl := templates.InitGoStructTpl()
 	return &GoStructRenderData{
 		goStructTpl: goStructTpl,
 	}
