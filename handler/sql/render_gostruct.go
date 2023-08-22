@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"github.com/yesAnd92/lwe/templates"
 	"github.com/yesAnd92/lwe/utils"
+	"go/format"
 	"log"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"text/template"
 )
@@ -66,9 +66,8 @@ func (g *GoStructRenderData) RenderData(objInfos []*ObjInfo) {
 		log.Println("Create go file err", err)
 		return
 	}
-	f.Write(bf.Bytes())
+	//按照go的风格进行格式化
+	fmtBfBytes, e := format.Source(bf.Bytes())
 
-	//使用go提供的fmt命令对生成的文件进行格式化
-	cmd := exec.Command("go", "fmt", fileName)
-	cmd.Run()
+	f.Write(fmtBfBytes)
 }
