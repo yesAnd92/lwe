@@ -9,10 +9,11 @@ import (
 
 var (
 	md5Cmd = &cobra.Command{
-		Use:   "md5",
-		Short: "Get a md5 for the given value or  a random md5 value",
-		Long:  `Get a md5 for the given value. If not specify value ,it will give a random md5 value`,
-		Args:  cobra.MatchAll(cobra.ExactArgs(1)),
+		Use:     `md5`,
+		Short:   `Get a md5 for the given value or  a random md5 value`,
+		Long:    `Get a md5 for the given value. If not specify value ,it will give a random md5 value`,
+		Example: `lwe md5 yourValue`,
+		Args:    cobra.MatchAll(cobra.ExactArgs(1)),
 		Run: func(cmd *cobra.Command, args []string) {
 			specifyValue := args[0]
 			sum := md5.Sum([]byte(specifyValue))

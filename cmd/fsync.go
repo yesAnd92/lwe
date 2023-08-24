@@ -9,10 +9,11 @@ var (
 	dryrRun bool
 
 	fsyncCmd = &cobra.Command{
-		Use:   "fsync",
-		Short: "Sync file from source dir to target dir",
-		Long:  `Sync file from source dir to target dir,and it will skip same name file`,
-		Args:  cobra.MatchAll(cobra.ExactArgs(2)),
+		Use:     `fsync`,
+		Short:   `Sync file from source dir to target dir`,
+		Long:    `Sync file from source dir to target dir,and it will skip same name file`,
+		Example: `lwe fsync sourceDir targetDir [-d=true]`,
+		Args:    cobra.MatchAll(cobra.ExactArgs(2)),
 		Run: func(cmd *cobra.Command, args []string) {
 			sourceDir := args[0]
 			targetDir := args[1]
