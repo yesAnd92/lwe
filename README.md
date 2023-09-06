@@ -26,12 +26,7 @@ lwe是leave work early的缩写，也就是"早点下班"！🤣🤣🤣
 
 ## 使用姿势
 
-你可以输入`lwe` 查看lwe命令的使用方式，有哪些子命令及其各自对的功能描述
-
-```bash
-lwe
-```
-得到使用提示：
+你可以输入`lwe` 查看lwe命令的使用方式，有哪些子命令及其各自对的功能描述 ，得到使用提示：
 ```
 Usage: lwe [command]
 
@@ -45,11 +40,8 @@ completion  Generate the autocompletion script for the specified shell
  .....
 ```
 如果你想查看lwe子命令的功能和使用方式，可以使用`-h`参数查看命令的使用帮助
+，如：`lwe es -h`
 
-如：
-```bash
-lwe es -h
-```
 
 <h3 id="1">1、建表语句生成Java Bean实体、Go 结构体等</h3>
 
