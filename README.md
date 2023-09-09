@@ -1,5 +1,5 @@
 lwe是leave work early的缩写，也就是"早点下班"！🤣🤣🤣
-它是一个帮助开发者提高工作效率的跨平台命令行工具，或者把它当做go入门学习的项目也是合适的！
+它是一个帮助开发者提高工作效率的跨平台命令行工具，当然你把它当做go入门学习的项目也是合适的！
 总之，欢迎提issue、提好玩或者使用的功能需求，最好能直接PR参与到项目中，大家一起努力，争取早点下班!!! 💪💪💪
 
 ## 功能概览
@@ -8,11 +8,9 @@ lwe是leave work early的缩写，也就是"早点下班"！🤣🤣🤣
 
 [2.将SQL语句转换成ElasticSearch查询的DSL语言](#2)
 
-[3.获取Navicat连接配置中的密码](#3)
+[3.Git增强功能：glog、gl、gcl、gst](#3)
 
-[4.Git增强功能：glog、gl、gcl、gst](#4)
-
-[5.其它小工具](#5)
+[其它小工具](#4)
 
 ## 安装
 
@@ -20,38 +18,15 @@ lwe是leave work early的缩写，也就是"早点下班"！🤣🤣🤣
 
 到[release](https://github.com/yesAnd92/lwe/releases)页获取对应平台的版本，在终端上即可使用该二进制文件！
 
-当然，也可以将二进制文件配置到环境变量中，这样可以随时随地使用二进制文件
+如果你经常使用lwe，更推荐的方式是将二进制文件配置到环境变量中，这样可以随时随地使用二进制文件
 
-#### Mac平台添加到环境变量的方法:
-
-```bash
-cp <下载的lwe文件路径> /usr/local/bin
-```
-将下载好的lwe_Mac文件直接cp到`/usr/local/bin`目录下，即可在终端下使用了
-> 最好将lwe_Mac重名成lwe，方便使用
-
->执行cp命令时，通常需要提升权限，可以在`cp`命令前增加`sudo`来解决
-
-
-#### Win平台添加到环境变量的方法:
-可以参照maven的配置方法
-
->windows平台可能会被防火墙误识别成有害程序，建议关闭防火墙
-
-### Homebrew
-
-Mac平台后续支持从Homebrew直接安装
-
-### 使用源码编译
-
-源码下载到本地，使用go build或者make命令进行编译，生成可用的二进制文件，make 的其它使用命令可以参见makefile文件
-
-> 本地编译需要go环境
+更多的安装方式和注意事项，查查阅[Wiki](https://github.com/yesAnd92/lwe/wiki/0.%E5%AE%89%E8%A3%85%E3%80%81%E9%85%8D%E7%BD%AE%E4%BD%BF%E7%94%A8)
 
 
 
 ## 使用姿势
 
+你可以输入`lwe` 查看lwe命令的使用方式，有哪些子命令及其各自对的功能描述：
 ```
 Usage: lwe [command]
 
@@ -62,94 +37,29 @@ completion  Generate the autocompletion script for the specified shell
   gcl         Update all git repository under the given dir 
   gl          Update all git repository under the given dir 
   glog        Get all git repository commit log under the given dir 
-  gst         Get all git repository status under the given dir 
-  help        Help about any command
-  md5         Get a md5 for the given value or  a random md5 value
-  ncx         Decrypt password of connection in .ncx file
-  url         format request url to increase readability
-  version     Print the version number of lwe
+ .....
 ```
-### help
-
-lwe命令以及其子命令都可以使用`-h`参数查看命令的使用帮助
+如果你想查看lwe子命令的功能和使用方式，可以使用`-h`参数查看命令的使用帮助
+，如：`lwe es -h`
 
 
 <h3 id="1">1、建表语句生成Java Bean实体、Go 结构体等</h3>
 
-```bash
-lwe fmt [可选参数] <建表语句的文件路径> 
+如果我们已经有了表结构，使用建表语句生成对应的实体可以大大减少我们"无脑且重复"工作。
+目前支持生成的结构包括Java、Go、Json。
+
+使用方式：
+
+```text
+Usage:
+lwe fmt [flags]
+
+Examples:
+lwe fmt sql-file-path [-t=java|go|json] [-a=yesAnd]
 ```
+详细使用说明，可以查阅[Wiki](https://github.com/yesAnd92/lwe/wiki/1.%E5%BB%BA%E8%A1%A8SQL%E8%AF%AD%E5%8F%A5%E7%94%9F%E6%88%90%E4%B8%8D%E7%94%A8%E8%AF%AD%E8%A8%80%E6%89%80%E9%9C%80%E5%AE%9E%E4%BD%93)
 
-例如当前目录下，有个user.sql建表语句，内容如下：
 
-```sql
-CREATE TABLE 'student_info' (
-				  'id' int(11) NOT NULL AUTO_INCREMENT COMMENT '用户编号,学号',
-				  'class_id' varchar(255) NOT NULL COMMENT '班级id',
-				  'user_name' varchar(255) NOT NULL COMMENT '用户名',
-				  'status' tinyint(1) NOT NULL COMMENT '状态',
-				  'create_time' datetime NOT NULL COMMENT '创建时间',
-				  PRIMARY KEY ('id') 
-				) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='学生信息';
-```
-
-> 一个SQL文件中支持多个创建语句批量生成目标文件;
-
-> 另外，实际使用中最好使用比如Navicat等工具导出的建表语句，识别率会更高。自己手写的可能由于语法或者拼写错误导致错误识别！
-
-你可以使用以下命令来生成Java的实体Bean
-
-```bash
-lwe fmt -t=java -a=yesAnd user.sql
-```
-
-其中：
-
-`-a, --author string   Comment for author information will be added to the generated file`,可选参数，该参数用于指定生成文件的注释中作者的信息。\
-`-t, --target string   The type[java|json|go] of generate the sql (default "java")`,该参数用于指定生成文件类型，目前支持[java|go|json],默认值是java，即生成Java Bean。
-
-执行命令后会在`lwe-generate-file`目录下生成相应的文件`StudentInfo.java`,内容如下：
-
-```java
-//省略部分字段仅做展示
-import java.util.Date;
-import javax.persistence.Id;
-...
-
-/**
- * @Description 学生信息
- * @Author  yesAnd
- * @Date  2023/04/17 10:28
- */
-@Table ( name ="student_info" )
-public class StudentInfo implements Serializable {
-
-    private static final long serialVersionUID = 1L;
-    
-    @Id 
-    @Column(name = "id" )
-    private Integer id;	//用户编号，学号
-
-    public Integer getId() { return id;}
-    
-    public void setId(Integer id) {  this.id = id;}
-```
-
-同样的，指定`-t=go`生成对应的结构体：
-
-```go
-//StudentInfo 学生信息
-type StudentInfo struct {
-	Id         int       `gorm:"primary_key;" json:"id"` //用户编号，学号
-	ClassId    string    `gorm:"" json:"classId"`        //班级id
-	UserName   string    `gorm:"" json:"userName"`       //用户名
-	Status     int64     `gorm:"" json:"status"`         //状态
-	CreateTime time.Time `gorm:"" json:"createTime"`     //创建时间
-
-}
-```
-
-###
 
 <h3 id="2">2、SQL语句生成DSL语句</h3>
 
@@ -160,179 +70,122 @@ lwe es [可选参数] <SQL语句>
 这个命令可以帮我们从繁琐的ES查询语法中解脱出来，它可以将sql语句转换成响应的DSL，并且以curl命令的形式输出，这样服务器上也可以方便的使用。
 当前版本支持的SQL操作
 
-✅select
+使用方式：
 
-*   [x] and&#x20;
-*   [x] or&#x20;
-*   [x] \=&#x20;
-*   [x] <  <=  >  >=
-*   [x] in  not in
-*   [x] like   not like
-*   [x] order by&#x20;
-*   [x] limit
-*   [ ] group by
-*   [ ] join&#x20;
-*   [ ] having support
-
-❌ update
-
-❌ delete
-
-❌ insert
-
-es子命令的使用也非常简单，例如：
-
-```bash
-lwe es -p 'select * from user where age >18  order by create_time desc  limit 10,10'
-```
-
-其中：
-
-`-p, --pretty   Beautify DSL`,该参数用于美化生成的DSL结果
-
-生成的结果如下：
-
-```bssh
-curl -XPOST -H "Content-Type: application/json" -u {username}:{password} {ip:port}/user/_search?pretty -d '{
-  "from": 10,
-  "query": {
-    "bool": {
-      "must": [
-        {
-          "range": {
-            "age": {
-              "gt": "18"
-            }
-          }
-        }
-      ]
-    }
-  },
-  "size": 10,
-  "sort": [
-    {
-      "create_time": "desc"
-    }
-  ]
-}'
-```
-
-<h3 id="3">3、获取Navicat连接配置中的密码</h3>
-如果想从Navicat保存的连接中获取对应数据库的用户名/密码，可以使用ncx文件，ncx文件是Navicat导出的连接配置文件，但ncx中的密码是一个加密后的十六进制串，使用ncx命令可以获取对应的明文:
-
-```bash
-lwe ncx <ncx文件路径>
-```
-> Navicat导出连接的步骤：file->export connections->勾选 export password选项->确定
-
-如： 导出一个名为local-mysql的连接demo.ncx，内容是：
-```xml
-<!--仅节选几个重要字段作为说明展示-->
-<Connections Ver="1.5">
-  <Connection ConnectionName="local-mysql"  ConnType="MYSQL"  Host="127.0.0.1" Port="3306" UserName="root" Password="B75D320B6211468D63EB3B67C9E85933" />
-</Connections>
-```
-使用ncx命令：
-```bash
-lwe ncx ./demo.ncx
-```
-输出结果：
 ```text
------------local-mysql-----------
-DB type:  MYSQL
-Connection host: 127.0.0.1
-Connection port: 3306
-Connection username: root
-Connection password: This is a test
-```
+Usage:
+  lwe es [flags]
 
-<h3 id="4">4、Git增强功能：glog、gl、gcl、gst</h3>
+Examples:
+lwe es 'select * from user where age >18' [-p=true]
+```
+详细使用说明，可以查阅[Wiki](https://github.com/yesAnd92/lwe/wiki/2.%E5%B0%86SQL%E8%AF%AD%E5%8F%A5%E8%BD%AC%E6%8D%A2%E6%88%90ElasticSearch%E6%9F%A5%E8%AF%A2%E7%9A%84DSL%E8%AF%AD%E8%A8%80)
+
+
+<h3 id="3">3、Git增强功能：glog、gl、gcl、gst</h3>
+这里是几个围绕git相关的增强命令，基本都是在原语义上增加了一些跨git仓库的操作
+
+Git增强功能详细使用说明，可以查阅[Wiki](https://github.com/yesAnd92/lwe/wiki/3.Git%E5%A2%9E%E5%BC%BA%E5%8A%9F%E8%83%BD)
+
+
 #### glog 增强Git日志功能
 查看给定目录下所有git仓库提交日志 
-开发人员可能同时维护多个项目或者一个项目中多个模块在不同git仓库，如果有跨仓库查看多个仓库提交日志的需求，glog子命令就派上用场了。
+开发人员通常会在多个git仓库下工作，经常会有同时查看多个git仓库提交日志的需求，glog子命令就派上用场了。
 
-```bash
-lwe glog  <仓库所在目录>  [可选参数] 
-```
-
-> 查询结果对应的是每个git仓库当前使用分支的提交记录
-
-> 如果未指定目录，则在当前目录下搜寻git仓库,另，如果目录层级过深，可能会影响性能
-
-如：写周报时，需要查看自己近一周在哪些仓库提交了哪些代码,来辅助我写总结，假定我的工作目录在/Users/yesand/work/
-
-```bash
-lwe glog /Users/yesand/work/  -a=yesand -f=false -n=20 -s=2023-05-15 -e=2023-05-19
-```
-其中：
-
-`-a, --author string`,可选参数，该参数用于指定提交者，未指定查询所有提交者。\
-`-f, --file bool`,可选参数，该参数决定将查询结果写到文件中，默认在控制台输出。\
-`-n, --recentN int16`,可选参数，该参数指定每个仓库查询最近N条的提交记录。\
-`-s, --start string`,可选参数，该参数指定筛选提交记录的开始日期，格式：'yyyy-MM-dd'。\
-`-e, --end string`,可选参数，该参数指定筛选提交记录的结束日期，格式：'yyyy-MM-dd'。
-
-结果:示例
+使用方式：
 
 ```text
-#1 Git Repo >> /Users/yesand/work/lwe
-+---------+--------+-----------------------------------------+---------------------+
-| HASH    | AUTHOR | COMMIT                                  | TIME                |
-+---------+--------+-----------------------------------------+---------------------+
-| bf67fcd | yesand | 完善命令提示&交互提示                      | 2023-05-19 17:21:34 |
-| 3739c60 | yesand | 优化build后的二进制文件大小                 | 2023-05-19 09:44:14|
-| 7a2ca47 | yesand | 以表格形式输出提交记录更换为go-pretty库      | 2023-05-19 09:21:26 |
-+---------+--------+-----------------------------------------+---------------------+
+Usage:
+  lwe glog [flags]
 
-#2 Git Repo >> /Users/yesand/work/xxx
-...
+Examples:
+lwe glog [git repo dir] [-a=yesAnd] [-n=50] [-s=2023-08-04] [-e=2023-08-04]
 ```
+
 
 #### gl 增强拉取代码功能
 拉取给定目录下的所有git仓库最新代码(使用的git pull --rebase的方式)
-```bash
-lwe gl [仓库所在目录]
-```
-> 如果当前仓库存在未提交的文件，则跳过此仓库的更新
 
-#### gst 增强git status功能
-查看给定目录下的所有git仓库状态
-```bash
-lwe gst [仓库所在目录]
+
+
+使用方式：
+```text
+Usage:
+  lwe gl [flags]
+
+Examples:
+lwe gl [git repo dir]
 ```
 
 #### gcl 增强git clone功能
-支持克隆gitlab 中整个group下所有的项目，避免挨个克隆的繁琐
-```bash
-lwe gcl <group地址> -t=<privatetoken> 
+使用方式：
+```text
+Usage:
+  lwe gcl [flags]
+
+Examples:
+lwe gcl gitGroupUrl [dir for this git group] -t=yourToken
 ```
-> 此功能需要提供gitlab中的private_token
-> 如果当前仓库已存在则跳过克隆
+
+#### gst 查看指定目录下所有git仓库状态
+查看给定目录下的所有git仓库状态
+
+使用方式：
+```text
+Usage:
+  lwe gst [flags]
+
+Examples:
+lwe gst [your git repo dir]
+```
 
 
-<h3 id="5">5、其它小工具</h3>
-一些小的功能
+<h3 id="4">其它小工具</h3>
+一些非常实用的功能
 
 <h4>格式化请求url</h4>
 有时请求的url很长，不利于我们找到目标参数，可以使用url命令进行格式化，增加请求的可读性
-示例：
 
-```bash
-lwe url  http://api.demo.com/api/user/getList?platform=ios&signature=bd7e1fd4e65e8199fd817006e709fb33&currentTimeMillis=1685673384000&pageNum=1
-```
-格式化结果：
+使用方式：
 
 ```text
-Host: api.demo.com
-Path: /api/user/getList
------------------------
-pageNum                 1
-platform                ios
-signature               bd7e1fd4e65e8199fd817006e709fb33
-currentTimeMillis       1685673384000
+Usage:
+  lwe url [flags]
+
+Examples:
+lwe url yourUrl
+```
+详细使用说明，可以查阅[Wiki](https://github.com/yesAnd92/lwe/wiki/%E5%85%B6%E5%AE%83%E5%B0%8F%E5%B7%A5%E5%85%B7#%E6%A0%BC%E5%BC%8F%E5%8C%96%E8%AF%B7%E6%B1%82url)
+
+
+<h4>获取Navicat连接配置中的密码</h4>
+如果想从Navicat保存的连接中获取对应数据库的用户名/密码，可以使用ncx文件，ncx文件是Navicat导出的连接配置文件，但ncx中的密码是一个加密后的十六进制串，使用ncx命令可以获取对应的明文
+
+使用方式：
+
+```text
+Usage:
+lwe ncx [flags]
+
+Examples:
+lwe ncx ncx-file-path
+```
+详细使用说明，可以查阅[Wiki](https://github.com/yesAnd92/lwe/wiki/%E5%85%B6%E5%AE%83%E5%B0%8F%E5%B7%A5%E5%85%B7#%E8%8E%B7%E5%8F%96navicat%E8%BF%9E%E6%8E%A5%E9%85%8D%E7%BD%AE%E4%B8%AD%E7%9A%84%E5%AF%86%E7%A0%81)
+
+<h4>同步两个目录下文件</h4>
+如果你有备份文件的习惯，这个工具可能会帮到你，它可以将源目录文件下的新增的文件同步到备份目录，省去了你逐层文件夹逐个文件去手动同步。
+
+使用方式：
+```text
+Usage:
+lwe fsync [flags]
+
+Examples:
+lwe fsync sourceDir targetDir [-d=true]
 ```
 
-> 某些bash下请求url需要用' '引起来才能正常使用
+详细使用说明，可以查阅[Wiki](https://github.com/yesAnd92/lwe/wiki/%E5%85%B6%E5%AE%83%E5%B0%8F%E5%B7%A5%E5%85%B7#%E5%90%8C%E6%AD%A5%E4%B8%A4%E4%B8%AA%E7%9B%AE%E5%BD%95%E4%B8%8B%E6%96%87%E4%BB%B6)
+
 
 
 ## 说明

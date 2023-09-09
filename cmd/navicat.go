@@ -16,10 +16,11 @@ import (
  */
 var (
 	navicatCmd = &cobra.Command{
-		Use:   "ncx",
-		Short: "Decrypt password of connection in .ncx file",
-		Long:  `The config exported from Navicat is encrypted,ncx command can decrypt it`,
-		Args:  cobra.MatchAll(cobra.ExactArgs(1)),
+		Use:     `ncx`,
+		Short:   `Decrypt password of connection in .ncx file`,
+		Long:    `The config exported from Navicat is encrypted,ncx command can decrypt it`,
+		Example: `lwe ncx ncx-file-path `,
+		Args:    cobra.MatchAll(cobra.ExactArgs(1)),
 		Run: func(cmd *cobra.Command, args []string) {
 			ncxFilePath := args[0]
 			data, dataErr := getNcxData(ncxFilePath)

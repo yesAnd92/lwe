@@ -19,10 +19,11 @@ const (
 var (
 	fmtPretty bool
 	esCmd     = &cobra.Command{
-		Use:   "es",
-		Short: "Translate SQL to elasticsearch's DSL",
-		Long:  `Translate SQL to elasticsearch's DSL`,
-		Args:  cobra.MatchAll(cobra.ExactArgs(1)),
+		Use:     `es`,
+		Short:   `Translate SQL to elasticsearch's DSL`,
+		Long:    `Translate SQL to elasticsearch's DSL`,
+		Example: `lwe es 'select * from user where age >18' [-p=true]`,
+		Args:    cobra.MatchAll(cobra.ExactArgs(1)),
 		Run: func(cmd *cobra.Command, args []string) {
 			sql := args[0]
 			//使用sqlparse对SQL进行解析

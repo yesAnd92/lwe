@@ -29,5 +29,6 @@ func init() {
 	rootCmd.AddCommand(glCmd)
 	rootCmd.AddCommand(gclCmd)
 	rootCmd.AddCommand(gstCmd)
+	rootCmd.AddCommand(fsyncCmd)
 
 }

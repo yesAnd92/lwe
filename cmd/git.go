@@ -20,10 +20,11 @@ var (
 	token string //克隆所需要的token
 
 	glogCmd = &cobra.Command{
-		Use:   "glog",
-		Short: "Get all git repository commit log under the given dir ",
-		Long:  `Get all git repository commit log under the given dir ,and  specify author，date etc. supported!`,
-		Args:  cobra.MatchAll(),
+		Use:     `glog`,
+		Short:   `Get all git repository commit log under the given dir `,
+		Long:    `Get all git repository commit log under the given dir ,and  specify author，date etc. supported!`,
+		Example: `lwe glog [git repo dir] [-a=yesAnd] [-n=50] [-s=2023-08-04] [-e=2023-08-04]`,
+		Args:    cobra.MatchAll(),
 		Run: func(cmd *cobra.Command, args []string) {
 
 			var dir = "."
@@ -50,10 +51,11 @@ var (
 	}
 
 	glCmd = &cobra.Command{
-		Use:   "gl",
-		Short: "Update all git repository under the given dir ",
-		Long:  `Update all git repository under the given dir ,the repository that has modified files will not be updated!`,
-		Args:  cobra.MatchAll(cobra.MinimumNArgs(0)),
+		Use:     `gl`,
+		Short:   `Update all git repository under the given dir `,
+		Long:    `Update all git repository under the given dir ,the repository that has modified files will not be updated!`,
+		Example: `lwe gl [git repo dir]`,
+		Args:    cobra.MatchAll(cobra.MinimumNArgs(0)),
 		Run: func(cmd *cobra.Command, args []string) {
 
 			var dir = "."
@@ -67,10 +69,11 @@ var (
 	}
 
 	gclCmd = &cobra.Command{
-		Use:   "gcl",
-		Short: "Update all git repository under the given dir ",
-		Long:  `Update all git repository under the given dir ,the repository that has modified files will not be updated!`,
-		Args:  cobra.MatchAll(cobra.MinimumNArgs(1)),
+		Use:     `gcl`,
+		Short:   `Git clone all git repository under the given git group `,
+		Long:    `Git clone all git repository under the given git group `,
+		Example: `lwe gcl gitGroupUrl [dir for this git group] -t=yourToken`,
+		Args:    cobra.MatchAll(cobra.MinimumNArgs(1)),
 		Run: func(cmd *cobra.Command, args []string) {
 			if len(token) == 0 {
 				cobra.CheckErr("please confirm token is not empty!")
@@ -86,10 +89,11 @@ var (
 	}
 
 	gstCmd = &cobra.Command{
-		Use:   "gst",
-		Short: "Get all git repository status under the given dir ",
-		Long:  `Get all git repository status under the given dir `,
-		Args:  cobra.MatchAll(cobra.MinimumNArgs(0)),
+		Use:     `gst`,
+		Short:   `Get all git repository status under the given dir `,
+		Long:    `Get all git repository status under the given dir `,
+		Example: `lwe gst [your git repo dir]`,
+		Args:    cobra.MatchAll(cobra.MinimumNArgs(0)),
 		Run: func(cmd *cobra.Command, args []string) {
 
 			var dir = "."

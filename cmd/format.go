@@ -19,10 +19,11 @@ var (
 	target string
 	author string
 	sqlCmd = &cobra.Command{
-		Use:   "fmt",
-		Short: "Generate the specified file based on SQL",
-		Long:  `Generate the specified file based on SQL. Such as Java Entity,Go struct and so on`,
-		Args:  cobra.MatchAll(cobra.ExactArgs(1)),
+		Use:     `fmt`,
+		Short:   `Generate the specified file based on SQL`,
+		Long:    `Generate the specified file based on SQL. Such as Java Entity,Go struct and so on`,
+		Example: `lwe fmt sql-file-path [-t=java|go|json] [-a=yesAnd]`,
+		Args:    cobra.MatchAll(cobra.ExactArgs(1)),
 		Run: func(cmd *cobra.Command, args []string) {
 			sqlFilePath := args[0]
 			sqlCtxList, err := DataCleansing(sqlFilePath)
@@ -47,12 +48,6 @@ var (
 		},
 	}
 )
-
-func init() {
-
-	sqlCmd.PersistentFlags().StringVarP(&target, "target", "t", "java", "The type[java|json|go] of generate the sql")
-	sqlCmd.PersistentFlags().StringVarP(&author, "author", "a", "", "Comment for author information will be added to the generated file")
-}
 
 func GetParser(target string) (sql.IParseDDL, error) {
 	var handle sql.IParseDDL
@@ -104,4 +99,10 @@ func DataCleansing(sqlFilePath string) (ctxList []string, err error) {
 		}
 	}
 	return sqlCtxArr, nil
+}
+
+func init() {
+
+	sqlCmd.PersistentFlags().StringVarP(&target, "target", "t", "java", "The type[java|json|go] of generate the sql")
+	sqlCmd.PersistentFlags().StringVarP(&author, "author", "a", "", "Comment for author information will be added to the generated file")
 }

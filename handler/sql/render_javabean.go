@@ -2,7 +2,7 @@ package sql
 
 import (
 	"fmt"
-	"github.com/yesAnd92/lwe/templates/java"
+	"github.com/yesAnd92/lwe/templates"
 	"github.com/yesAnd92/lwe/utils"
 	"log"
 	"os"
@@ -17,7 +17,7 @@ type JavaRenderData struct {
 
 func NewJavaRenderData() *JavaRenderData {
 	//加载实体对应的模板
-	javaTpl := java.InitJavaTpl()
+	javaTpl := templates.InitJavaTpl()
 	return &JavaRenderData{
 		JavaTpl: javaTpl,
 	}
