@@ -157,7 +157,7 @@ func walk(dir string, pathMap map[string]void) {
 		return
 	}
 	for _, file := range dirEntry {
-		//根据文件或文件夹名是否"."开头判断是否隐藏内容，隐藏在不同步
+		//根据文件或文件夹名是否"."开头判断是否隐藏内容，隐藏暂不同步
 		if strings.HasPrefix(file.Name(), ".") {
 			continue
 		}
