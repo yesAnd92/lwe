@@ -1,6 +1,9 @@
 package pdf
 
 import (
+	"errors"
+	"fmt"
+	"github.com/pdfcpu/pdfcpu/pkg/pdfcpu/types"
 	"path/filepath"
 	"strings"
 )
@@ -10,7 +13,7 @@ func HandlePdfMerge(filenames []string) error {
 	return nil
 }
 
-func parseMergeArg(args []string) ([]string, error) {
+func ParseMergeArg(args []string) ([]string, error) {
 
 	var mergeParams []string
 
@@ -35,4 +38,27 @@ func parseMergeArg(args []string) ([]string, error) {
 	}
 
 	return mergeParams, nil
+}
+
+func HasPdfExtension(filename string) bool {
+
+	return strings.HasSuffix(strings.ToLower(filename), ".pdf")
+}
+
+func HasImgExtension(fileName string) bool {
+	ext := strings.ToLower(filepath.Ext(fileName))
+	return types.MemberOf(ext, []string{".png", ".webp", ".tif", ".tiff", ".jpg", ".jpeg"})
+}
+
+func CheckCorrectFileExtension(filenames []string) (error, bool) {
+
+	for _, file := range filenames {
+		if HasPdfExtension(file) || HasImgExtension(file) {
+			continue
+		}
+
+		return errors.New(fmt.Sprintf("Not support this file : %s ", file)), false
+	}
+
+	return nil, true
 }

@@ -3,6 +3,7 @@ package cmd
 import (
 	"github.com/spf13/cobra"
 	"github.com/yesAnd92/lwe/handler/pdf"
+	"strings"
 )
 
 /**
@@ -23,13 +24,23 @@ var (
 				cobra.CheckErr("Please re-check syntax and try it again!")
 			}
 
+			if len(strings.TrimSpace(args[0])) == 0 || !pdf.HasPdfExtension(args[0]) {
+				cobra.CheckErr("Please ensure the output is a file with a. pdf suffix!")
+			}
+
 			var infiles []string
 
-			//check file format
-
-			err := pdf.HandlePdfMerge(infiles)
+			infiles, err := pdf.ParseMergeArg(args)
 			if err != nil {
+				cobra.CheckErr("Please ensure the input file is correct!")
+			}
+
+			if err, f := pdf.CheckCorrectFileExtension(infiles); f {
 				cobra.CheckErr(err)
+			}
+			mergeErr := pdf.HandlePdfMerge(infiles)
+			if err != nil {
+				cobra.CheckErr(mergeErr)
 			}
 
 		},
