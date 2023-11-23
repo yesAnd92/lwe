@@ -3,13 +3,13 @@ package gitcmd
 import (
 	"fmt"
 	"github.com/spf13/cobra"
-	"io/ioutil"
+	"os"
 	"path/filepath"
 )
 
 func findGitRepo(dir string, res *[]string) {
 	var files []string
-	fileInfo, err := ioutil.ReadDir(dir)
+	fileInfo, err := os.ReadDir(dir)
 	if err != nil {
 		cobra.CheckErr(fmt.Errorf(" The dir '%s' is not exist!\n", dir))
 		return
