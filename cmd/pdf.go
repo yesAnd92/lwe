@@ -24,7 +24,8 @@ var (
 				cobra.CheckErr("Please re-check syntax and try it again!")
 			}
 
-			if len(strings.TrimSpace(args[0])) == 0 || !pdf.HasPdfExtension(args[0]) {
+			outPdf := strings.TrimSpace(args[0])
+			if len(outPdf) == 0 || !pdf.HasPdfExtension(outPdf) {
 				cobra.CheckErr("Please ensure the output is a file with a. pdf suffix!")
 			}
 
@@ -38,7 +39,7 @@ var (
 			if err, f := pdf.CheckCorrectFileExtension(infiles); f {
 				cobra.CheckErr(err)
 			}
-			mergeErr := pdf.HandlePdfMerge(infiles)
+			mergeErr := pdf.HandlePdfMerge(outPdf, infiles)
 			if err != nil {
 				cobra.CheckErr(mergeErr)
 			}
