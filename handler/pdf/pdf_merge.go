@@ -8,7 +8,44 @@ import (
 	"strings"
 )
 
-func HandlePdfMerge(filenames []string) error {
+func HandlePdfMerge(outPdf string, filenames []string) error {
+
+	size := len(filenames)
+	for i := 0; i < size; {
+		file := filenames[i]
+		var tmpImgFiles []string
+
+		if HasImgExtension(file) {
+			tmpImgFiles = append(tmpImgFiles, file)
+			for j := i + 1; j < size; j++ {
+				if HasImgExtension(filenames[j]) {
+					tmpImgFiles = append(tmpImgFiles, filenames[j])
+
+					continue
+				}
+				break
+			}
+			i += len(tmpImgFiles)
+			fmt.Println(" merge img:", tmpImgFiles)
+		}
+
+		var tmpPdfFiles []string
+		if HasPdfExtension(file) {
+			tmpPdfFiles = append(tmpPdfFiles, file)
+			for j := i + 1; j < size; j++ {
+				if HasPdfExtension(filenames[j]) {
+					tmpPdfFiles = append(tmpPdfFiles, filenames[j])
+
+					continue
+				}
+
+				break
+			}
+			i += len(tmpPdfFiles)
+			fmt.Println(" merge pdf:", tmpPdfFiles)
+		}
+
+	}
 
 	return nil
 }
