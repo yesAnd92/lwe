@@ -15,9 +15,48 @@ var (
 
 	pdfMergeCmd = &cobra.Command{
 		Use:     `pdfm`,
-		Short:   `Get all git repository commit log under the given dir `,
-		Long:    `Get all git repository commit log under the given dir ,and  specify author，date etc. supported!`,
-		Example: `lwe pdfm [-m] out.pdf in1.pdf,in2.jpg,in3.pdf...`,
+		Short:   `Merge PDF or images into one PDF file`,
+		Long:    `Merge multiple PDF or images(png|jpg|jpeg) into one PDF file in a gaven order`,
+		Example: `lwe pdfm [-m] out.pdf in1.pdf,in2.jpg,*.png,in3.pdf...`,
+		Args:    cobra.MatchAll(),
+		Run: func(cmd *cobra.Command, args []string) {
+
+			if len(args) < 2 {
+				cobra.CheckErr("Please re-check syntax and try it again!")
+			}
+
+			outPdf := strings.TrimSpace(args[0])
+			if len(outPdf) == 0 || !pdf.HasPdfExtension(outPdf) {
+				cobra.CheckErr("Please ensure the output is a file with a. pdf suffix!")
+			}
+
+			var infiles []string
+
+			infiles, err := pdf.ParseMergeArg(args)
+			if err != nil {
+				cobra.CheckErr("Please ensure the input file is correct!")
+			}
+
+			if err, f := pdf.CheckCorrectFileExtension(infiles); f {
+				cobra.CheckErr(err)
+			}
+			mergeErr := pdf.HandlePdfMerge(outPdf, infiles)
+			if mergeErr != nil {
+				go func() {
+					//remove out.pdf when error occurs
+					os.Remove(outPdf)
+				}()
+				cobra.CheckErr(mergeErr)
+			}
+
+		},
+	}
+
+	pdfCutCmd = &cobra.Command{
+		Use:     `pdfc`,
+		Short:   `Extract selected pages from pdf files`,
+		Long:    `Extract selected pages from PDF files into single page PDFs,or merge PDFs into one page PDF`,
+		Example: `lwe pdfc [-m] in.pdf 2,3,5,7-9,15...`,
 		Args:    cobra.MatchAll(),
 		Run: func(cmd *cobra.Command, args []string) {
 
