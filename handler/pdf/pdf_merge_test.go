@@ -14,7 +14,13 @@ func Test_parseMergeArg(t *testing.T) {
 		{
 			name: "case 1",
 			args: args{
-				args: []string{"", "bookletTest.pdf", "github.png", "testdata/*.jpg"},
+				args: []string{"", "testdata/bookletTest.pdf", "testdata/github.png", "testdata/*.jpg"},
+			},
+		},
+		{
+			name: "case 2",
+			args: args{
+				args: []string{"", "testdata/*.pdf"},
 			},
 		},
 	}
@@ -46,6 +52,22 @@ func TestHandlePdfMerge(t *testing.T) {
 			args: args{
 				outPdf:    "",
 				filenames: []string{"a.pdf", "b.jpg", "c.jpg", "d.jpg", "e.pdf", "f.pdf"},
+			}},
+		{name: "case 2",
+			args: args{
+				outPdf:    "",
+				filenames: []string{"a.pdf", "b.jpg"},
+			}},
+		{name: "case 3",
+			args: args{
+				outPdf:    "",
+				filenames: []string{"a.pdf"},
+			}},
+
+		{name: "case 4",
+			args: args{
+				outPdf:    "testdata/out/out.pdf",
+				filenames: []string{"testdata/lwe.jpg", "testdata/zineTest.pdf", "testdata/github.png"},
 			}},
 	}
 	for _, tt := range tests {

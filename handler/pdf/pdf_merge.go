@@ -3,12 +3,31 @@ package pdf
 import (
 	"errors"
 	"fmt"
+	"github.com/pdfcpu/pdfcpu/pkg/api"
+	"github.com/pdfcpu/pdfcpu/pkg/pdfcpu"
 	"github.com/pdfcpu/pdfcpu/pkg/pdfcpu/types"
 	"path/filepath"
 	"strings"
 )
 
+var DEFALUT_IMPORT_CONFIG *pdfcpu.Import
+
+func init() {
+	DEFALUT_IMPORT_CONFIG = &pdfcpu.Import{
+		PageDim:  types.PaperSize["A4"],
+		PageSize: "A4",
+		Pos:      types.Full,
+		Scale:    0.5,
+		InpUnit:  types.POINTS,
+	}
+}
+
 func HandlePdfMerge(outPdf string, filenames []string) error {
+
+	//f, err := os.Create(outPdf)
+	//if err != nil {
+	//	return err
+	//}
 
 	size := len(filenames)
 	for i := 0; i < size; {
@@ -26,7 +45,12 @@ func HandlePdfMerge(outPdf string, filenames []string) error {
 				break
 			}
 			i += len(tmpImgFiles)
-			fmt.Println(" merge img:", tmpImgFiles)
+			//fmt.Println(" merge img:", tmpImgFiles)
+
+			err := api.ImportImagesFile(tmpImgFiles, outPdf, DEFALUT_IMPORT_CONFIG, nil)
+			if err != nil {
+				return err
+			}
 		}
 
 		var tmpPdfFiles []string
@@ -38,15 +62,17 @@ func HandlePdfMerge(outPdf string, filenames []string) error {
 
 					continue
 				}
-
 				break
 			}
 			i += len(tmpPdfFiles)
-			fmt.Println(" merge pdf:", tmpPdfFiles)
+			//fmt.Println(" merge pdf:", tmpPdfFiles)
+
+			if err := api.MergeAppendFile(tmpPdfFiles, outPdf, nil); err != nil {
+				return err
+			}
 		}
 
 	}
-
 	return nil
 }
 

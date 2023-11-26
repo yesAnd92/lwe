@@ -3,6 +3,7 @@ package cmd
 import (
 	"github.com/spf13/cobra"
 	"github.com/yesAnd92/lwe/handler/pdf"
+	"os"
 	"strings"
 )
 
@@ -40,7 +41,11 @@ var (
 				cobra.CheckErr(err)
 			}
 			mergeErr := pdf.HandlePdfMerge(outPdf, infiles)
-			if err != nil {
+			if mergeErr != nil {
+				go func() {
+					//remove out.pdf when error occurs
+					os.Remove(outPdf)
+				}()
 				cobra.CheckErr(mergeErr)
 			}
 
