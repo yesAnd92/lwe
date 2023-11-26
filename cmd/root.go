@@ -30,5 +30,6 @@ func init() {
 	rootCmd.AddCommand(gclCmd)
 	rootCmd.AddCommand(gstCmd)
 	rootCmd.AddCommand(fsyncCmd)
+	rootCmd.AddCommand(pdfMergeCmd)
 
 }
