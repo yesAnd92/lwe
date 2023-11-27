@@ -27,7 +27,7 @@ var (
 
 			outPdf := strings.TrimSpace(args[0])
 			if len(outPdf) == 0 || !pdf.HasPdfExtension(outPdf) {
-				cobra.CheckErr("Please ensure the output is a file with a. pdf suffix!")
+				cobra.CheckErr("Please ensure the output is a file with .pdf suffix!")
 			}
 
 			var infiles []string
@@ -56,35 +56,34 @@ var (
 		Use:     `pdfc`,
 		Short:   `Extract selected pages from pdf files`,
 		Long:    `Extract selected pages from PDF files into single page PDFs,or merge PDFs into one page PDF`,
-		Example: `lwe pdfc [-m] in.pdf 2,3,5,7-9,15...`,
+		Example: `lwe pdfc [-m] in.pdf outDir 2,3,5,7-9,15...`,
 		Args:    cobra.MatchAll(),
 		Run: func(cmd *cobra.Command, args []string) {
 
-			if len(args) < 2 {
+			if len(args) != 3 {
 				cobra.CheckErr("Please re-check syntax and try it again!")
 			}
 
-			outPdf := strings.TrimSpace(args[0])
-			if len(outPdf) == 0 || !pdf.HasPdfExtension(outPdf) {
-				cobra.CheckErr("Please ensure the output is a file with a. pdf suffix!")
+			inPdf := args[0]
+			if len(inPdf) == 0 || !pdf.HasPdfExtension(inPdf) {
+				cobra.CheckErr("Please ensure the input is a file with .pdf suffix!")
 			}
 
-			var infiles []string
+			outDir := args[1]
+			//if os.{
+			//	cobra.CheckErr("Please ensure the outDir is directory!")
+			//}
 
-			infiles, err := pdf.ParseMergeArg(args)
+			selectedPages, err := pdf.ParseCutArg(args[2])
 			if err != nil {
-				cobra.CheckErr("Please ensure the input file is correct!")
+				cobra.CheckErr("Please ensure the page Nums you input is correct!")
 			}
 
-			if err, f := pdf.CheckCorrectFileExtension(infiles); f {
-				cobra.CheckErr(err)
+			if f := pdf.HasPdfExtension(inPdf); f {
+				cobra.CheckErr("Please ensure the inPdf you input is a PDF file!")
 			}
-			mergeErr := pdf.HandlePdfMerge(outPdf, infiles)
+			mergeErr := pdf.HandlePdfCut(inPdf, outDir, selectedPages)
 			if mergeErr != nil {
-				go func() {
-					//remove out.pdf when error occurs
-					os.Remove(outPdf)
-				}()
 				cobra.CheckErr(mergeErr)
 			}
 
