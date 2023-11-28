@@ -11,13 +11,13 @@ import (
 * pdf命令相关功能
  */
 var (
-	dirMode bool = false
+	merge bool = false
 
 	pdfMergeCmd = &cobra.Command{
 		Use:     `pdfm`,
 		Short:   `Merge PDF or images into one PDF file`,
 		Long:    `Merge multiple PDF or images(png|jpg|jpeg) into one PDF file in a gaven order`,
-		Example: `lwe pdfm [-m] out.pdf in1.pdf,in2.jpg,*.png,in3.pdf...`,
+		Example: `lwe pdfm  out.pdf in1.pdf,in2.jpg,*.png,in3.pdf...`,
 		Args:    cobra.MatchAll(),
 		Run: func(cmd *cobra.Command, args []string) {
 
@@ -70,19 +70,13 @@ var (
 			}
 
 			outDir := args[1]
-			//if os.{
-			//	cobra.CheckErr("Please ensure the outDir is directory!")
-			//}
 
 			selectedPages, err := pdf.ParseCutArg(args[2])
 			if err != nil {
 				cobra.CheckErr("Please ensure the page Nums you input is correct!")
 			}
 
-			if f := pdf.HasPdfExtension(inPdf); f {
-				cobra.CheckErr("Please ensure the inPdf you input is a PDF file!")
-			}
-			mergeErr := pdf.HandlePdfCut(inPdf, outDir, selectedPages)
+			mergeErr := pdf.HandlePdfCut(inPdf, outDir, selectedPages, merge)
 			if mergeErr != nil {
 				cobra.CheckErr(mergeErr)
 			}
@@ -93,13 +87,6 @@ var (
 
 func init() {
 
-	//gitCmd.PersistentFlags().BoolVarP(&detail, "detail", "d", false, "")
-	//glogCmd.PersistentFlags().BoolVarP(&file, "file", "f", false, "result output to file,default value is false (meaning output to console). ")
-	//glogCmd.PersistentFlags().StringVarP(&committer, "author", "a", "", "specify name of committer ")
-	//glogCmd.PersistentFlags().StringVarP(&start, "start", "s", "", "specify the start of commit date. eg.'yyyy-MM-dd'")
-	//glogCmd.PersistentFlags().StringVarP(&end, "end", "e", "", "specify the end of commit date. eg.'yyyy-MM-dd'")
-	//glogCmd.PersistentFlags().Int16VarP(&recentN, "recentN", "n", 10, "specify the number of commit log for each git repo.")
-	//
-	////gcl
-	//gclCmd.PersistentFlags().StringVarP(&token, "token", "t", "", "private token")
+	pdfCutCmd.PersistentFlags().BoolVarP(&merge, "merge", "m", false, "merge all selected pages into one PDF")
+
 }

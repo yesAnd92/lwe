@@ -52,9 +52,9 @@ func TestSplite(t *testing.T) {
 	}
 }
 
-func TestSplitLowLevel(t *testing.T) {
+func TestExtractPagesFile(t *testing.T) {
 
-	msg := "TestSplitLowLevel"
+	msg := "ExtractPagesFile"
 	inFile := filepath.Join(indir, "bookletTest.pdf")
 
 	// Extract a page span.
