@@ -24,16 +24,12 @@ func init() {
 
 func HandlePdfMerge(outPdf string, filenames []string) error {
 
-	//f, err := os.Create(outPdf)
-	//if err != nil {
-	//	return err
-	//}
-
 	size := len(filenames)
 	for i := 0; i < size; {
 		file := filenames[i]
 		var tmpImgFiles []string
 
+		//same type file merge in one operation
 		if HasImgExtension(file) {
 			tmpImgFiles = append(tmpImgFiles, file)
 			for j := i + 1; j < size; j++ {
@@ -45,7 +41,6 @@ func HandlePdfMerge(outPdf string, filenames []string) error {
 				break
 			}
 			i += len(tmpImgFiles)
-			//fmt.Println(" merge img:", tmpImgFiles)
 
 			err := api.ImportImagesFile(tmpImgFiles, outPdf, DEFALUT_IMPORT_CONFIG, nil)
 			if err != nil {
@@ -65,7 +60,6 @@ func HandlePdfMerge(outPdf string, filenames []string) error {
 				break
 			}
 			i += len(tmpPdfFiles)
-			//fmt.Println(" merge pdf:", tmpPdfFiles)
 
 			if err := api.MergeAppendFile(tmpPdfFiles, outPdf, nil); err != nil {
 				return err
@@ -76,15 +70,17 @@ func HandlePdfMerge(outPdf string, filenames []string) error {
 	return nil
 }
 
-func ParseMergeArg(args []string) ([]string, error) {
+func ParseMergeArg(arg string) ([]string, error) {
 
 	var mergeParams []string
 
-	for i := 1; i < len(args); i++ {
-		arg := args[i]
+	//multiple PDF file are separated by ","
+	argArr := strings.Split(arg, ",")
+	for i := 0; i < len(argArr); i++ {
+		in := argArr[i]
 		//support "*" match files
-		if strings.Contains(arg, "*") {
-			matches, err := filepath.Glob(arg)
+		if strings.Contains(in, "*") {
+			matches, err := filepath.Glob(in)
 			if err != nil {
 				return nil, err
 			}
@@ -96,7 +92,7 @@ func ParseMergeArg(args []string) ([]string, error) {
 			continue
 		}
 
-		mergeParams = append(mergeParams, arg)
+		mergeParams = append(mergeParams, in)
 
 	}
 

@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"bytes"
 	"github.com/spf13/cobra"
 )
 
@@ -15,6 +16,23 @@ var (
 // Execute executes the root command.
 func Execute() error {
 	return rootCmd.Execute()
+}
+
+// ExecuteCommand executes the  command
+func executeCommand(cmd *cobra.Command, args ...string) (outBf *bytes.Buffer, err error) {
+	root := rootCmd
+	root.AddCommand(cmd)
+
+	outBf = new(bytes.Buffer)
+	root.SetOut(outBf)
+	root.SetErr(outBf)
+	root.SetArgs(args)
+
+	err = root.Execute()
+	if err != nil {
+		return nil, err
+	}
+	return outBf, err
 }
 
 func init() {

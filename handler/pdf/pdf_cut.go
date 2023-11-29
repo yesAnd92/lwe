@@ -53,6 +53,7 @@ func HandlePdfCut(inPdf, outDir string, selectedPages []string, merge bool) erro
 	if err != nil {
 		return err
 	}
+
 	if merge {
 
 		originName := strings.TrimSuffix(filepath.Base(inPdf), ".pdf")
@@ -65,10 +66,8 @@ func HandlePdfCut(inPdf, outDir string, selectedPages []string, merge bool) erro
 		}
 
 		defer func() {
-			fmt.Println(matches)
 			for _, p := range matches {
 				os.Remove(p)
-				fmt.Println("---", p)
 			}
 		}()
 

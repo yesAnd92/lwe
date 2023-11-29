@@ -1,10 +1,12 @@
 package pdf
 
-import "testing"
+import (
+	"testing"
+)
 
 func Test_parseMergeArg(t *testing.T) {
 	type args struct {
-		args []string
+		args string
 	}
 	tests := []struct {
 		name string
@@ -14,13 +16,13 @@ func Test_parseMergeArg(t *testing.T) {
 		{
 			name: "case 1",
 			args: args{
-				args: []string{"", "testdata/bookletTest.pdf", "testdata/github.png", "testdata/*.jpg"},
+				args: "testdata/bookletTest.pdf, testdata/github.png, testdata/*.jpg",
 			},
 		},
 		{
 			name: "case 2",
 			args: args{
-				args: []string{"", "testdata/*.pdf"},
+				args: "testdata/*.pdf",
 			},
 		},
 	}
