@@ -6,7 +6,7 @@ lwe是leave work early的缩写，也就是"早点下班"！🤣🤣🤣
 
 ## 功能
 
-[Git增强功能：glog、gl、gcl、gst](#git)
+[Git增强多仓库操作能力：glog、gl、gcl、gst](#git)
 
 [由建表SQL语句转换成Java Bean、Go结构体、Json等](#fmt)
 
@@ -38,7 +38,7 @@ lwe是leave work early的缩写，也就是"早点下班"！🤣🤣🤣
 如果对某个子命令感兴趣，可以使用`-h`参数查看命令的使用示例 ，如：`lwe glog -h`
 
 
-<h3 id="git">Git增强功能：glog、gl、gcl、gst</h3>
+<h3 id="git">Git增强多仓库操作能力：glog、gl、gcl、gst</h3>
 这里是几个围绕git相关的增强命令，基本都是在原语义上增加了一些跨git仓库的操作
 
 Git增强功能详细使用说明，可以查阅[Wiki](https://github.com/yesAnd92/lwe/wiki/3.Git%E5%A2%9E%E5%BC%BA%E5%8A%9F%E8%83%BD)
@@ -126,7 +126,7 @@ lwe pdfm out.pdf in1.pdf,in2.jpg,*.png,in3.pdf ...
 
 
 #### pdfc 从PDF中截取指定的页
-按照指定的文件顺序，将多个PDF、图片文件合并成一个PDF文件
+按照指定的页码，从PDF中截取对应的页生成PDF文件
 
 使用方式：
 ```text
