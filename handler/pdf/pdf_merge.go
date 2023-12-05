@@ -77,7 +77,7 @@ func ParseMergeArg(arg string) ([]string, error) {
 	//multiple PDF file are separated by ","
 	argArr := strings.Split(arg, ",")
 	for i := 0; i < len(argArr); i++ {
-		in := argArr[i]
+		in := strings.TrimSpace(argArr[i])
 		//support "*" match files
 		if strings.Contains(in, "*") {
 			matches, err := filepath.Glob(in)

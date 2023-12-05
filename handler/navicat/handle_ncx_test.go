@@ -55,11 +55,7 @@ func Test_decryptPwd(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := decryptPwd(tt.args.encryptTxt)
-			if err != nil {
-				t.Errorf("decryptPwd() error %e", err)
-				return
-			}
+			got := decryptPwd(tt.args.encryptTxt)
 			if !reflect.DeepEqual(got, tt.args.expect) {
 				t.Errorf("except:%s\n actual:%s", tt.args.expect, got)
 			}
