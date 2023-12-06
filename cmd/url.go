@@ -10,6 +10,10 @@ var urlCmd = &cobra.Command{
 	Example: `lwe url yourUrl`,
 	Args:    cobra.MatchAll(cobra.ExactArgs(1)),
 	Run: func(cmd *cobra.Command, args []string) {
-		url.HandleUrlPathParams(args[0])
+		params, err := url.HandleUrlPathParams(args[0])
+		if err != nil {
+			cobra.CheckErr(err)
+		}
+		url.FmtPrint(params)
 	},
 }
