@@ -2,39 +2,92 @@ package gitcmd
 
 import (
 	"fmt"
+	"os"
+	"reflect"
 	"testing"
 )
 
-func TestGetCommit(t *testing.T) {
+const testGitDir = "."
 
-	commitLogs, err := GetCommitLog(false, 10, ".", "yesand", "", "")
-	if err != nil {
-		fmt.Println(err)
-		return
+func TestGetCommitLog(t *testing.T) {
+	type args struct {
+		detail  bool
+		recentN int16
+		dir     string
+		author  string
+		start   string
+		end     string
 	}
-
-	for _, log := range *commitLogs {
-		fmt.Printf("-----------Hash:%s-----------\n", log.CommitHash)
-		fmt.Printf("@%s  %s\n"+
-			"commit msg: %s\n\n", log.Username, log.CommitAt, log.CommitMsg)
+	tests := []struct {
+		name    string
+		args    args
+		wantErr bool
+	}{
+		// TODO: Add test cases.
+		{
+			name: "case 1",
+			args: args{
+				detail:  false,
+				recentN: 3,
+				dir:     testGitDir,
+			},
+			wantErr: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := GetCommitLog(tt.args.detail, tt.args.recentN, tt.args.dir, tt.args.author, tt.args.start, tt.args.end)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("GetCommitLog() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			for _, log := range *got {
+				fmt.Printf("-----------Hash:%s-----------\n", log.CommitHash)
+				fmt.Printf("@%s  %s\n"+
+					"commit msg: %s\n\n", log.Username, log.CommitAt, log.CommitMsg)
+			}
+		})
 	}
 }
 
 func TestGetChangedFile(t *testing.T) {
-	filenames, err := GetChangedFile("6f635d7")
-	if err != nil {
-		fmt.Println(err)
-		return
+	type args struct {
+		commitId string
 	}
-	for _, filename := range filenames {
-		fmt.Println(filename)
+	tests := []struct {
+		name    string
+		args    args
+		want    []string
+		wantErr bool
+	}{
+		// TODO: Add test cases.
+		{
+			name: "case 1",
+			args: args{
+				//current lwe git repository commit id 6f635d7
+				commitId: "6f635d7",
+			},
+			want:    []string{".gitignore", "README.md"},
+			wantErr: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := GetChangedFile(tt.args.commitId)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("GetChangedFile() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("GetChangedFile() got = %v, want %v", got, tt.want)
+			}
+		})
 	}
 }
 
-func TestGetAllGitRepoCommitLog(t *testing.T) {
+func TestGetAllGitRepoCommitLog2(t *testing.T) {
 
-	resLogs, _ := GetAllGitRepoCommitLog(true, 10, "/Users/wangyj/ideaProject/my", "", "", "")
-	//resLogs, _ := GetAllGitRepoCommitLog(false, 10, "D:\\ideaProject\\my", "", "", "")
+	resLogs, _ := GetAllGitRepoCommitLog(true, 3, testGitDir, "", "", "")
 
 	//控制台
 	console := ConsoleOutput{}
@@ -44,4 +97,51 @@ func TestGetAllGitRepoCommitLog(t *testing.T) {
 	file := FileOutput{}
 	file.Output(resLogs)
 
+}
+
+func TestGetAllGitRepoCommitLog(t *testing.T) {
+	type args struct {
+		detail  bool
+		recentN int16
+		dir     string
+		author  string
+		start   string
+		end     string
+	}
+	tests := []struct {
+		name    string
+		args    args
+		wantErr bool
+	}{
+		// TODO: Add test cases.
+		{
+			name: "case 1",
+			args: args{
+				detail:  false,
+				recentN: 3,
+				dir:     testGitDir,
+			},
+			wantErr: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := GetAllGitRepoCommitLog(tt.args.detail, tt.args.recentN, tt.args.dir, tt.args.author, tt.args.start, tt.args.end)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("GetAllGitRepoCommitLog() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+
+			defer func() {
+				os.Remove(REPORT_PATH)
+			}()
+			//控制台
+			console := ConsoleOutput{}
+			console.Output(got)
+
+			//写文件
+			file := FileOutput{}
+			file.Output(got)
+		})
+	}
 }
