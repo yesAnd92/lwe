@@ -93,10 +93,16 @@ func TestGetAllGitRepoCommitLog2(t *testing.T) {
 	console := ConsoleOutput{}
 	console.Output(resLogs)
 
+	defer func() {
+		os.Remove(REPORT_PATH)
+	}()
 	//写文件
 	file := FileOutput{}
 	file.Output(resLogs)
 
+	if _, err := os.Stat(REPORT_PATH); err != nil {
+		t.Error("file not exist >>>", REPORT_PATH)
+	}
 }
 
 func TestGetAllGitRepoCommitLog(t *testing.T) {
@@ -142,6 +148,9 @@ func TestGetAllGitRepoCommitLog(t *testing.T) {
 			//写文件
 			file := FileOutput{}
 			file.Output(got)
+			if _, err := os.Stat(REPORT_PATH); err != nil {
+				t.Error("file not exist >>>", REPORT_PATH)
+			}
 		})
 	}
 }

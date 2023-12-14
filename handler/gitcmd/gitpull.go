@@ -6,15 +6,6 @@ import (
 	"time"
 )
 
-// git pull
-const (
-
-	//查看仓库状态，结果以简短形式呈现
-	STATUS_CHECK_TPL = "git -C %s status -s"
-	//更新仓库
-	GIT_PULL = `git -C %s pull --rebase`
-)
-
 func updateRepo(dir string) (string, error) {
 
 	//指定仓库地址
