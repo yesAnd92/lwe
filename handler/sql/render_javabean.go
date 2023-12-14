@@ -6,6 +6,7 @@ import (
 	"github.com/yesAnd92/lwe/utils"
 	"log"
 	"os"
+	path2 "path"
 	"path/filepath"
 	"text/template"
 )
@@ -47,7 +48,7 @@ func (m *JavaRenderData) RenderData(objInfos []*ObjInfo) {
 
 	for _, objInfo := range objInfos {
 		//使用objName作为生成的文件名
-		fileName := fmt.Sprintf(GENERATE_JAVA_FILENAME, objInfo.ObjName)
+		fileName := fmt.Sprintf(path2.Join(GENERATE_DIR, GENERATE_JAVA_FILENAME), objInfo.ObjName)
 		path, _ := filepath.Abs(fileName)
 		f, err := os.Create(path)
 		defer f.Close()

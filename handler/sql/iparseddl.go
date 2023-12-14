@@ -15,14 +15,14 @@ type IParseDDL interface {
 	RenderData(info []*ObjInfo)
 }
 
-//定义sql所用的常量
+// 定义sql所用的常量
 const (
 	//生成文件所在的目录
 	GENERATE_DIR = `./lwe-generate-file`
 	//生成JAVA文件名
-	GENERATE_JAVA_FILENAME = GENERATE_DIR + "/%s.java"
+	GENERATE_JAVA_FILENAME = "%s.java"
 	//生成Go文件名
-	GENERATE_GO_FILENAME = GENERATE_DIR + "/lwe_struct.go"
+	GENERATE_GO_FILENAME = "lwe_struct.go"
 	//go模板头内容
 	GO_TPL_HEAD = `package lwe  
 					import ("time")`
