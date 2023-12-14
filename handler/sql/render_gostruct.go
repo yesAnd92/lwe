@@ -8,6 +8,7 @@ import (
 	"go/format"
 	"log"
 	"os"
+	path2 "path"
 	"path/filepath"
 	"text/template"
 )
@@ -57,7 +58,7 @@ func (g *GoStructRenderData) RenderData(objInfos []*ObjInfo) {
 	}
 
 	//使用objName作为生成的文件名
-	fileName := GENERATE_GO_FILENAME
+	fileName := path2.Join(GENERATE_DIR, GENERATE_GO_FILENAME)
 	path, _ := filepath.Abs(fileName)
 	f, err := os.Create(path)
 	defer f.Close()

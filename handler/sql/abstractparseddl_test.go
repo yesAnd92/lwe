@@ -1,11 +1,13 @@
 package sql
 
 import (
+	"os"
+	"path"
 	"testing"
 )
 
-func GetTestCase() []string {
-	return []string{
+var (
+	sqlTextArr = []string{
 		// TODO: Add test cases.
 		`CREATE TABLE 'student_info' (
 				  'id' int(11) NOT NULL AUTO_INCREMENT COMMENT '用户编号,学号',
@@ -33,29 +35,59 @@ func GetTestCase() []string {
                   UNIQUE KEY 'userId' ('user_id'),
 				  KEY 'createTime' ('create_time') USING BTREE COMMENT '创建时间索引'
 				) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='角色关联表 ';`}
-}
+)
 
-//测试所有
-func TestCreateParseSql_All(t *testing.T) {
-	TestCreateParseSql_Json(t)
-	TestCreateParseSql_GoStruct(t)
-	TestCreateParseSql_Java(t)
-}
-
-//json
-func TestCreateParseSql_Json(t *testing.T) {
-	jsonRender := NewJsonRenderData()
-	DoParse(jsonRender, GetTestCase(), nil)
-}
-
-//go
-func TestCreateParseSql_GoStruct(t *testing.T) {
-	goRender := NewGoStructRenderData()
-	DoParse(goRender, GetTestCase(), nil)
-}
-
-//java
-func TestCreateParseSql_Java(t *testing.T) {
-	goRender := NewJavaRenderData()
-	DoParse(goRender, GetTestCase(), nil)
+func TestDoParse(t *testing.T) {
+	type args struct {
+		parse      IParseDDL
+		sqlTextArr []string
+		args       map[string]interface{}
+	}
+	tests := []struct {
+		name string
+		args args
+		want []string
+	}{
+		// TODO: Add test cases.
+		{
+			name: "json",
+			args: args{
+				parse:      NewJsonRenderData(),
+				sqlTextArr: sqlTextArr,
+				args:       nil,
+			},
+			want: []string{},
+		},
+		{
+			name: "java",
+			args: args{
+				parse:      NewJavaRenderData(),
+				sqlTextArr: sqlTextArr,
+				args:       nil,
+			},
+			want: []string{"ClassInfo.java", "StudentInfo.java", "TemplateRole.java"},
+		},
+		{
+			name: "go",
+			args: args{
+				parse:      NewGoStructRenderData(),
+				sqlTextArr: sqlTextArr,
+				args:       nil,
+			},
+			want: []string{"lwe_struct.go"},
+		},
+	}
+	defer func() {
+		os.RemoveAll(GENERATE_DIR)
+	}()
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			DoParse(tt.args.parse, tt.args.sqlTextArr, tt.args.args)
+			for _, p := range tt.want {
+				if f, err := os.Stat(path.Join(GENERATE_DIR, p)); err != nil || f.Size() == 0 {
+					t.Errorf("file >>> %s is not except", p)
+				}
+			}
+		})
+	}
 }
