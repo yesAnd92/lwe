@@ -10,20 +10,6 @@ import (
 	"time"
 )
 
-const (
-
-	//git log
-	LOG_TPL            = "git -C %s --no-pager log  --no-merges "
-	LOG_FORMAT_TPL     = `--format=format:'%h*-*%an*-*%ct*-*%s' ` //使用*-*作为分隔符
-	LOG_AUTHOR_TPL     = `--author=%s `
-	LOG_START_DATE_TPL = `--since=%s `
-	LOG_END_DATE_TPL   = `--until=%s `
-	LOG_RECENTN_TPL    = `-n %d `
-
-	//git show
-	SHOW_TPL = "git show %s"
-)
-
 // CommitLog 提交记录
 type CommitLog struct {
 	CommitHash   string   //abbreviated commit hash

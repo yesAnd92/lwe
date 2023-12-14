@@ -7,12 +7,6 @@ import (
 	"time"
 )
 
-// git status
-const (
-	// STATUS_TPL 查看仓库状态
-	STATUS_TPL = "git -C %s status"
-)
-
 // checkRepoClean 查看当前仓库状态
 func printRepoStatus(dir string) {
 	var cmdline = fmt.Sprintf(STATUS_TPL, dir)

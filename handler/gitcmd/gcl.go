@@ -11,15 +11,6 @@ import (
 	"time"
 )
 
-var (
-	// CLONE_TPL git clone
-	CLONE_TPL = "git clone %s %s"
-
-	// GITLAB_GROUP_DETAIL git lab group api
-	//gitlab接口文档  https://docs.gitlab.com/ee/api/groups.html#details-of-a-group
-	GITLAB_GROUP_DETAIL = "%s://%s/api/v4/groups%s?private_token=%s"
-)
-
 type ProjectInfo struct {
 	HttpUrlToRepo string
 	Path          string

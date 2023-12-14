@@ -13,7 +13,7 @@ func TestGetAllGitRepoStatus(t *testing.T) {
 		// TODO: Add test cases.
 		{
 			name: "",
-			args: args{dir: "/Users/wangyj/ideaProject/my"},
+			args: args{dir: "."},
 		},
 	}
 	for _, tt := range tests {
