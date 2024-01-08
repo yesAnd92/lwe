@@ -18,11 +18,6 @@ func findGitRepo(dir string, res *[]string) {
 	//check the dir is under git repo
 	if result := utils.RunCmd(EXIST_GIT_REPO, time.Second*10); len(*res) == 0 && result.String() == "true" {
 
-		//if result.Err() != nil {
-		//	cobra.CheckErr(result.Err())
-		//}
-
-		fmt.Println(">>>>", result.String())
 		*res = append(*res, dir)
 	}
 }

@@ -2,7 +2,6 @@ package sql
 
 import (
 	"bytes"
-	"fmt"
 	"github.com/yesAnd92/lwe/templates"
 	"github.com/yesAnd92/lwe/utils"
 	"go/format"
@@ -38,15 +37,8 @@ func (g *GoStructRenderData) CovertSyntax(objInfos []*ObjInfo) {
 }
 
 func (g *GoStructRenderData) RenderData(objInfos []*ObjInfo) {
-	_, e := os.Stat(GENERATE_DIR)
-	if os.IsNotExist(e) {
-		//不存在，则新建一个目录
-		err := os.Mkdir(GENERATE_DIR, os.ModePerm)
-		if err != nil {
-			fmt.Printf("mkdir failed![%v]\n", err)
-			return
-		}
-	}
+
+	utils.MkdirIfNotExist(GENERATE_DIR)
 
 	//生成的多个结构体先放到buffer中，最后一起写入文件
 	bf := &bytes.Buffer{}
@@ -68,7 +60,7 @@ func (g *GoStructRenderData) RenderData(objInfos []*ObjInfo) {
 		return
 	}
 	//按照go的风格进行格式化
-	fmtBfBytes, e := format.Source(bf.Bytes())
+	fmtBfBytes, _ := format.Source(bf.Bytes())
 
 	f.Write(fmtBfBytes)
 }

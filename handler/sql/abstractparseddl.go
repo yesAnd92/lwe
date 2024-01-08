@@ -29,6 +29,8 @@ func DoParse(parse IParseDDL, sqlTextArr []string, args map[string]interface{}) 
 
 	//渲染数据
 	parse.RenderData(objInfos)
+
+	fmt.Println("Parse result >> " + utils.ToAbsPath(GENERATE_DIR))
 }
 
 func (a AbstractParseDDL) ParseDDL(sqlText string, args map[string]interface{}) (*ObjInfo, error) {

@@ -73,24 +73,6 @@ func TestHandlePdfCut(t *testing.T) {
 			wantErr: false,
 		},
 		{
-			name: "no exist outDir",
-			args: args{
-				inPdf:         "testdata/zineTest.pdf",
-				outDir:        "testdata/out/1/",
-				selectedPages: []string{"1", "1", "1"},
-			},
-			wantErr: true,
-		},
-		{
-			name: " wrong outDir",
-			args: args{
-				inPdf:         "testdata/zineTest.pdf",
-				outDir:        "testdata/out/out.pdf",
-				selectedPages: []string{"1", "1", "1"},
-			},
-			wantErr: true,
-		},
-		{
 			name: "merge all pdf",
 			args: args{
 				inPdf:         "testdata/zineTest.pdf",

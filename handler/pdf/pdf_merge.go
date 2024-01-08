@@ -6,6 +6,7 @@ import (
 	"github.com/pdfcpu/pdfcpu/pkg/api"
 	"github.com/pdfcpu/pdfcpu/pkg/pdfcpu"
 	"github.com/pdfcpu/pdfcpu/pkg/pdfcpu/types"
+	"github.com/yesAnd92/lwe/utils"
 	"path/filepath"
 	"strings"
 )
@@ -65,7 +66,7 @@ func HandlePdfMerge(outPdf string, filenames []string) error {
 				return err
 			}
 		}
-
+		fmt.Println("PDF merge result >> " + utils.ToAbsPath(outPdf))
 	}
 	return nil
 }
