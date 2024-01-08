@@ -36,15 +36,7 @@ func (m *JavaRenderData) CovertSyntax(objInfos []*ObjInfo) {
 }
 
 func (m *JavaRenderData) RenderData(objInfos []*ObjInfo) {
-	_, e := os.Stat(GENERATE_DIR)
-	if os.IsNotExist(e) {
-		//不存在，则新建一个目录
-		err := os.Mkdir(GENERATE_DIR, os.ModePerm)
-		if err != nil {
-			fmt.Printf("mkdir failed![%v]\n", err)
-			return
-		}
-	}
+	utils.MkdirIfNotExist(GENERATE_DIR)
 
 	for _, objInfo := range objInfos {
 		//使用objName作为生成的文件名

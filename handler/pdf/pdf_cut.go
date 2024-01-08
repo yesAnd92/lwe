@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/pdfcpu/pdfcpu/pkg/api"
+	"github.com/yesAnd92/lwe/utils"
 	"os"
 	"path/filepath"
 	"strconv"
@@ -49,6 +50,8 @@ func ParseCutArg(args string) ([]string, error) {
 
 func HandlePdfCut(inPdf, outDir string, selectedPages []string, merge bool) error {
 
+	utils.MkdirIfNotExist(outDir)
+
 	err := api.ExtractPagesFile(inPdf, outDir, selectedPages, nil)
 	if err != nil {
 		return err
@@ -79,6 +82,8 @@ func HandlePdfCut(inPdf, outDir string, selectedPages []string, merge bool) erro
 			return err
 		}
 	}
+
+	fmt.Println("PDF cut result >> " + utils.ToAbsPath(outDir))
 
 	return nil
 }

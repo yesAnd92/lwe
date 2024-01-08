@@ -86,5 +86,5 @@ func (c *FileOutput) Output(resLogs *[]ResultLog) {
 	}
 	f.Write(commitData.Bytes())
 
-	fmt.Println("Commit has finished >> " + path)
+	fmt.Println("Commit log has finished >> " + path)
 }

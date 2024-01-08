@@ -1,7 +1,9 @@
 package utils
 
 import (
+	"fmt"
 	"github.com/spf13/cobra"
+	"os"
 	"path/filepath"
 )
 
@@ -17,4 +19,14 @@ func ToAbsPath(path string) string {
 		path = absDir
 	}
 	return path
+}
+
+func MkdirIfNotExist(dir string) {
+
+	if _, e := os.Stat(dir); os.IsNotExist(e) {
+		err := os.MkdirAll(dir, os.ModePerm)
+		if err != nil {
+			panic(fmt.Sprintf("mkdir failed![%v]\n", err))
+		}
+	}
 }
