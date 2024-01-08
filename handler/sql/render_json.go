@@ -8,7 +8,7 @@ import (
 )
 
 type JsonRenderData struct {
-	AbstractParseDDL
+	*BaseParseDDL
 }
 
 func NewJsonRenderData() *JsonRenderData {
