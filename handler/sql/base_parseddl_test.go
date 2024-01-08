@@ -39,7 +39,7 @@ var (
 
 func TestDoParse(t *testing.T) {
 	type args struct {
-		parse      IParseDDL
+		target     string
 		sqlTextArr []string
 		args       map[string]interface{}
 	}
@@ -52,7 +52,7 @@ func TestDoParse(t *testing.T) {
 		{
 			name: "json",
 			args: args{
-				parse:      NewJsonRenderData(),
+				target:     "json",
 				sqlTextArr: sqlTextArr,
 				args:       nil,
 			},
@@ -61,7 +61,7 @@ func TestDoParse(t *testing.T) {
 		{
 			name: "java",
 			args: args{
-				parse:      NewJavaRenderData(),
+				target:     "java",
 				sqlTextArr: sqlTextArr,
 				args:       nil,
 			},
@@ -70,7 +70,7 @@ func TestDoParse(t *testing.T) {
 		{
 			name: "go",
 			args: args{
-				parse:      NewGoStructRenderData(),
+				target:     "go",
 				sqlTextArr: sqlTextArr,
 				args:       nil,
 			},
@@ -80,9 +80,11 @@ func TestDoParse(t *testing.T) {
 	defer func() {
 		os.RemoveAll(GENERATE_DIR)
 	}()
+
+	parse := &BaseParseDDL{}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			DoParse(tt.args.parse, tt.args.sqlTextArr, tt.args.args)
+			parse.DoParse(tt.args.target, tt.args.sqlTextArr, tt.args.args)
 			for _, p := range tt.want {
 				if f, err := os.Stat(path.Join(GENERATE_DIR, p)); err != nil || f.Size() == 0 {
 					t.Errorf("file >>> %s is not except", p)

@@ -13,7 +13,7 @@ import (
 )
 
 type GoStructRenderData struct {
-	AbstractParseDDL
+	*BaseParseDDL
 	goStructTpl *template.Template
 }
 

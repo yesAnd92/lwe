@@ -12,7 +12,7 @@ import (
 )
 
 type JavaRenderData struct {
-	AbstractParseDDL
+	*BaseParseDDL
 	JavaTpl *template.Template
 }
 

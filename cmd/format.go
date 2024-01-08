@@ -31,39 +31,18 @@ var (
 				cobra.CheckErr(fmt.Errorf("can't find SQL file: %s", sqlFilePath))
 			}
 
-			//由target参数找到对应的handle
-			handle, err := GetParser(target)
-			if err != nil {
-				cobra.CheckErr(err)
-			}
-
 			//设置作者参数
 			params := make(map[string]interface{})
 			if len(author) > 0 {
 				params["author"] = author
 			}
 
-			sql.DoParse(handle, sqlCtxList, params)
+			parse := &sql.BaseParseDDL{}
+			parse.DoParse(target, sqlCtxList, params)
 			fmt.Println("File generated successfully!")
 		},
 	}
 )
-
-func GetParser(target string) (sql.IParseDDL, error) {
-	var handle sql.IParseDDL
-	switch target {
-	case "java":
-		handle = sql.NewJavaRenderData()
-	case "go":
-		handle = sql.NewGoStructRenderData()
-	case "json":
-		handle = sql.NewJsonRenderData()
-	}
-	if handle == nil {
-		return nil, errors.New("target " + target + " param error!")
-	}
-	return handle, nil
-}
 
 // DataCleansing 清洗数据，摘取create语句
 func DataCleansing(sqlFilePath string) (ctxList []string, err error) {

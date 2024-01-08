@@ -3,37 +3,61 @@ package sql
 import (
 	"errors"
 	"fmt"
+	"github.com/spf13/cobra"
 	"github.com/yesAnd92/lwe/utils"
 	"regexp"
 	"strings"
 	"time"
 )
 
-// AbstractParseDDL IParseDDL 接口抽象实现
-type AbstractParseDDL struct {
+// BaseParseDDL IParseDDL 接口抽象实现
+type BaseParseDDL struct {
 }
 
 // DoParse 定义了整个解析、生成的流程
-func DoParse(parse IParseDDL, sqlTextArr []string, args map[string]interface{}) {
+func (a *BaseParseDDL) DoParse(target string, sqlTextArr []string, args map[string]interface{}) {
+
+	//由target参数找到对应的handle
+	handle, err := GetParser(target)
+	if err != nil {
+		cobra.CheckErr(err)
+	}
+
 	//解析ddl文本
 	var objInfos = make([]*ObjInfo, 0)
 	for _, sqlText := range sqlTextArr {
-		objInfo, err := parse.ParseDDL(sqlText, args)
+		objInfo, err := handle.ParseDDL(sqlText, args)
 		if err != nil {
 			fmt.Println(err)
 		}
 		objInfos = append(objInfos, objInfo)
 	}
 	//适配不同的生成类型，由子类实现
-	parse.CovertSyntax(objInfos)
+	handle.CovertSyntax(objInfos)
 
 	//渲染数据
-	parse.RenderData(objInfos)
+	handle.RenderData(objInfos)
 
 	fmt.Println("Parse result >> " + utils.ToAbsPath(GENERATE_DIR))
 }
 
-func (a AbstractParseDDL) ParseDDL(sqlText string, args map[string]interface{}) (*ObjInfo, error) {
+func GetParser(target string) (IParseDDL, error) {
+	var handle IParseDDL
+	switch target {
+	case "java":
+		handle = NewJavaRenderData()
+	case "go":
+		handle = NewGoStructRenderData()
+	case "json":
+		handle = NewJsonRenderData()
+	}
+	if handle == nil {
+		return nil, errors.New("target " + target + " param error!")
+	}
+	return handle, nil
+}
+
+func (a *BaseParseDDL) ParseDDL(sqlText string, args map[string]interface{}) (*ObjInfo, error) {
 
 	if sqlText == "" {
 		return nil, errors.New("SQL不能为空")
@@ -170,12 +194,12 @@ func (a AbstractParseDDL) ParseDDL(sqlText string, args map[string]interface{}) 
 	return obj, nil
 }
 
-func (a AbstractParseDDL) CovertSyntax(info *ObjInfo) {
+func (a *BaseParseDDL) CovertSyntax(info *ObjInfo) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (a AbstractParseDDL) RenderData(info *ObjInfo) {
+func (a *BaseParseDDL) RenderData(info *ObjInfo) {
 	//TODO implement me
 	panic("implement me")
 }
