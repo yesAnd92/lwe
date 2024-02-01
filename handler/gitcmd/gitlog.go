@@ -12,6 +12,7 @@ import (
 
 // CommitLog 提交记录
 type CommitLog struct {
+	Branch       string   //Branch
 	CommitHash   string   //abbreviated commit hash
 	Username     string   //username
 	CommitAt     string   //commit time
@@ -28,9 +29,59 @@ type ResultLog struct {
 // GetCommitLog 获取提交日志
 func GetCommitLog(detail bool, recentN int16, dir, author, start, end string) (*[]CommitLog, error) {
 
+	var logs []CommitLog
+
+	branchInfo := ListRepoAllBranch(dir)
+
+	// find all branch commit log
+	for _, branch := range branchInfo.branchs {
+
+		cmdline := buildCmdline(dir, branch, recentN, author, start, end)
+
+		result := utils.RunCmd(cmdline, time.Second*30)
+		if result.Err() != nil {
+			return nil, result.Err()
+		}
+
+		reStr := result.String()
+		if len(reStr) == 0 {
+			return nil, errors.New("no matching commit log found！")
+		}
+
+		commitLines := strings.Split(reStr, "\n")
+		for _, msg := range commitLines {
+			//win环境下会多“'”符号，替换去除
+			msg = strings.Trim(msg, "'")
+			infoArr := strings.Split(msg, "*-*")
+			//commitAt
+			commitAtMill, _ := strconv.ParseInt(infoArr[2], 10, 64)
+
+			log := CommitLog{
+				Branch:     branch,
+				CommitHash: infoArr[0],
+				Username:   infoArr[1],
+				CommitAt:   time.UnixMilli(commitAtMill * 1000).Format("2006-01-02 15:04:05"),
+				CommitMsg:  infoArr[3],
+			}
+
+			//change file
+			if detail {
+				filesChanged, err := GetChangedFile(infoArr[0])
+				if err == nil {
+					log.FilesChanged = filesChanged
+				}
+			}
+
+			logs = append(logs, log)
+		}
+	}
+	return &logs, nil
+}
+
+func buildCmdline(dir string, branch string, recentN int16, author string, start string, end string) string {
 	//使用bytes.Buffer这种方式拼接字符串会%!h(MISSING)？
 	//指定仓库地址
-	var cmdline = fmt.Sprintf(LOG_TPL, dir)
+	var cmdline = fmt.Sprintf(LOG_TPL, dir, branch)
 
 	if recentN >= 0 {
 		cmdline += fmt.Sprintf(LOG_RECENTN_TPL, recentN)
@@ -49,44 +100,7 @@ func GetCommitLog(detail bool, recentN int16, dir, author, start, end string) (*
 	if len(end) > 0 {
 		cmdline += fmt.Sprintf(LOG_END_DATE_TPL, end)
 	}
-
-	result := utils.RunCmd(cmdline, time.Second*30)
-	if result.Err() != nil {
-		return nil, result.Err()
-	}
-
-	var logs []CommitLog
-	reStr := result.String()
-	if len(reStr) == 0 {
-		return nil, errors.New("no matching commit log found！")
-	}
-
-	commitLines := strings.Split(reStr, "\n")
-	for _, msg := range commitLines {
-		//win环境下会多“'”符号，替换去除
-		msg = strings.Trim(msg, "'")
-		infoArr := strings.Split(msg, "*-*")
-		//commitAt
-		commitAtMill, _ := strconv.ParseInt(infoArr[2], 10, 64)
-
-		log := CommitLog{
-			CommitHash: infoArr[0],
-			Username:   infoArr[1],
-			CommitAt:   time.UnixMilli(commitAtMill * 1000).Format("2006-01-02 15:04:05"),
-			CommitMsg:  infoArr[3],
-		}
-
-		//change file
-		if detail {
-			filesChanged, err := GetChangedFile(infoArr[0])
-			if err == nil {
-				log.FilesChanged = filesChanged
-			}
-		}
-
-		logs = append(logs, log)
-	}
-	return &logs, nil
+	return cmdline
 }
 
 // GetChangedFile 获取本次提交变动的文件名

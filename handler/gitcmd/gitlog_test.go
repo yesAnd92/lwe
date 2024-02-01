@@ -42,9 +42,8 @@ func TestGetCommitLog(t *testing.T) {
 				return
 			}
 			for _, log := range *got {
-				fmt.Printf("-----------Hash:%s-----------\n", log.CommitHash)
-				fmt.Printf("@%s  %s\n"+
-					"commit msg: %s\n\n", log.Username, log.CommitAt, log.CommitMsg)
+				fmt.Printf("Branch:%s-----------Hash:%s-----------\n", log.Branch, log.CommitHash)
+				fmt.Printf("@%s  %s commit msg: %s\n\n", log.Username, log.CommitAt, log.CommitMsg)
 			}
 		})
 	}

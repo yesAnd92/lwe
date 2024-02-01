@@ -4,8 +4,10 @@ import (
 	"fmt"
 	"github.com/spf13/cobra"
 	"github.com/yesAnd92/lwe/utils"
+	"log"
 	"os"
 	"path/filepath"
+	"strings"
 	"time"
 )
 
@@ -50,4 +52,48 @@ func nextGitRepo(dir string, res *[]string) {
 	for _, fName := range files {
 		nextGitRepo(filepath.Join(dir, fName), res)
 	}
+}
+
+type branchInfo struct {
+	curr    string
+	branchs []string
+}
+
+// ListRepoAllBranch list all git Branch under repository
+func ListRepoAllBranch(repo string) (re *branchInfo) {
+
+	// get current dir
+	originalDir, _ := os.Getwd()
+
+	err := os.Chdir(repo)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// change to original dir
+	defer os.Chdir(originalDir)
+
+	var curr string
+	var branchs []string
+
+	if result := utils.RunCmd(GIT_BRANCH, time.Second*10); result.Err() == nil {
+
+		branchSplit := strings.Split(result.String(), "\n")
+		for _, branch := range branchSplit {
+			branch = strings.TrimSpace(branch)
+			//  current Branch mark with '*'
+			if strings.HasPrefix(branch, "*") {
+				branch = strings.ReplaceAll(branch, "* ", "")
+				curr = branch
+			}
+			branchs = append(branchs, branch)
+
+		}
+
+		re = &branchInfo{
+			curr:    curr,
+			branchs: branchs,
+		}
+	}
+	return
 }
