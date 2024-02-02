@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/yesAnd92/lwe/utils"
 	"regexp"
+	"sort"
 	"strconv"
 	"strings"
 	"time"
@@ -75,7 +76,33 @@ func GetCommitLog(detail bool, recentN int16, dir, author, start, end string) (*
 			logs = append(logs, log)
 		}
 	}
-	return &logs, nil
+
+	//merge same commit log in different branch
+	mergeLog := mergeAndSortCommitLog(&logs, int(recentN))
+
+	return &mergeLog, nil
+}
+
+func mergeAndSortCommitLog(logs *[]CommitLog, n int) []CommitLog {
+
+	var uniqueLogs []CommitLog
+	seen := make(map[string]struct{})
+	for _, log := range *logs {
+		if _, ok := seen[log.CommitHash]; !ok {
+			seen[log.CommitHash] = struct{}{}
+			uniqueLogs = append(uniqueLogs, log)
+		}
+	}
+
+	sort.Slice(uniqueLogs, func(i, j int) bool {
+		return uniqueLogs[i].CommitAt > uniqueLogs[j].CommitAt
+	})
+
+	if len(uniqueLogs) < n {
+		n = len(uniqueLogs)
+	}
+
+	return uniqueLogs[:n]
 }
 
 func buildCmdline(dir string, branch string, recentN int16, author string, start string, end string) string {
