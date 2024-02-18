@@ -5,7 +5,7 @@ package gitcmd
 var (
 
 	//git log
-	LOG_TPL            = "git -C %s --no-pager log  --no-merges "
+	LOG_TPL            = "git -C %s --no-pager log %s --no-merges "
 	LOG_FORMAT_TPL     = `--format=format:'%h*-*%an*-*%ct*-*%s' ` //使用*-*作为分隔符
 	LOG_AUTHOR_TPL     = `--author=%s `
 	LOG_START_DATE_TPL = `--since=%s `
@@ -33,4 +33,7 @@ var (
 
 	// Determine if the current directory is a git repository
 	EXIST_GIT_REPO = "git rev-parse --is-inside-work-tree"
+
+	//git Branch
+	GIT_BRANCH = `git branch`
 )

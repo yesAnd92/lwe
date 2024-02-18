@@ -24,7 +24,7 @@ func (c *ConsoleOutput) Output(resLogs *[]ResultLog) {
 
 	t := table.NewWriter()
 	t.SetOutputMirror(os.Stdout)
-	t.AppendHeader(table.Row{"Hash", "Author", "Commit", "Time"})
+	t.AppendHeader(table.Row{"Branch", "Hash", "Author", "Commit", "Time"})
 
 	if *resLogs == nil {
 		fmt.Printf("No matching commit log found in this git repo\n")
@@ -36,7 +36,7 @@ func (c *ConsoleOutput) Output(resLogs *[]ResultLog) {
 		fmt.Printf("#%d Git Repo >> %s\n", idx+1, res.RepoName)
 
 		for _, log := range *logs {
-			t.AppendRow(table.Row{log.CommitHash, log.Username, log.CommitMsg, log.CommitAt})
+			t.AppendRow(table.Row{log.Branch, log.CommitHash, log.Username, log.CommitMsg, log.CommitAt})
 		}
 
 		t.Render()
