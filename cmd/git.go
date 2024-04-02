@@ -15,6 +15,7 @@ var (
 	recentN   int16   //指定查询仓库数量
 	start     string  //开始时间
 	end       string  //结束时间
+	branchs   bool    //show all branch,default show current branch
 
 	//gcl
 	token string //克隆所需要的token
@@ -23,7 +24,7 @@ var (
 		Use:     `glog`,
 		Short:   `Get all git repository commit log under the given dir `,
 		Long:    `Get all git repository commit log under the given dir ,and  specify author，date etc. supported!`,
-		Example: `lwe glog [git repo dir] [-a=yesAnd] [-n=50] [-s=2023-08-04] [-e=2023-08-04]`,
+		Example: `lwe glog [git repo dir] [-a=yesAnd] [-n=50] [-s=2023-08-04] [-e=2023-08-04] [-ab=ture]`,
 		Args:    cobra.MatchAll(),
 		Run: func(cmd *cobra.Command, args []string) {
 
@@ -32,11 +33,11 @@ var (
 				dir = args[0]
 			}
 
-			if recentN > int16(200) {
-				cobra.CheckErr("recentN can't exceed 200")
+			if recentN > int16(500) {
+				cobra.CheckErr("recentN can't exceed 500")
 			}
 
-			commitLogs, err := gitcmd.GetAllGitRepoCommitLog(detail, recentN, dir, committer, start, end)
+			commitLogs, err := gitcmd.GetAllGitRepoCommitLog(detail, recentN, dir, committer, start, end, branchs)
 			if err != nil {
 				cobra.CheckErr(err)
 			}
@@ -109,12 +110,12 @@ var (
 
 func init() {
 
-	//gitCmd.PersistentFlags().BoolVarP(&detail, "detail", "d", false, "")
 	glogCmd.PersistentFlags().BoolVarP(&file, "file", "f", false, "result output to file,default value is false (meaning output to console). ")
 	glogCmd.PersistentFlags().StringVarP(&committer, "author", "a", "", "specify name of committer ")
 	glogCmd.PersistentFlags().StringVarP(&start, "start", "s", "", "specify the start of commit date. eg.'yyyy-MM-dd'")
 	glogCmd.PersistentFlags().StringVarP(&end, "end", "e", "", "specify the end of commit date. eg.'yyyy-MM-dd'")
-	glogCmd.PersistentFlags().Int16VarP(&recentN, "recentN", "n", 10, "specify the number of commit log for each git repo.")
+	glogCmd.PersistentFlags().Int16VarP(&recentN, "recentN", "n", 10, "specify the number of commit log for each git repo. Limit 500 ")
+	glogCmd.PersistentFlags().BoolVarP(&branchs, "branchs", "b", false, "show all branch logs,default is false (meaning show current branch). ")
 
 	//gcl
 	gclCmd.PersistentFlags().StringVarP(&token, "token", "t", "", "private token")

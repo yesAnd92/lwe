@@ -3,6 +3,7 @@ package gitcmd
 import (
 	"errors"
 	"fmt"
+	"github.com/spf13/cobra"
 	"github.com/yesAnd92/lwe/utils"
 	"regexp"
 	"sort"
@@ -28,11 +29,16 @@ type ResultLog struct {
 }
 
 // GetCommitLog 获取提交日志
-func GetCommitLog(detail bool, recentN int16, dir, author, start, end string) (*[]CommitLog, error) {
+func GetCommitLog(detail bool, recentN int16, dir, author, start, end string, branchs bool) (*[]CommitLog, error) {
 
 	var logs []CommitLog
 
 	branchInfo := ListRepoAllBranch(dir)
+
+	//filter given branch
+	if !branchs {
+		branchInfo.branchs = []string{branchInfo.curr}
+	}
 
 	// find all branch commit log
 	for _, branch := range branchInfo.branchs {
@@ -46,7 +52,7 @@ func GetCommitLog(detail bool, recentN int16, dir, author, start, end string) (*
 
 		reStr := result.String()
 		if len(reStr) == 0 {
-			return nil, errors.New("no matching commit log found！")
+			continue
 		}
 
 		commitLines := strings.Split(reStr, "\n")
@@ -154,7 +160,7 @@ func GetChangedFile(commitId string) ([]string, error) {
 }
 
 // GetAllGitRepoCommitLog 封装所有仓库的提交信息
-func GetAllGitRepoCommitLog(detail bool, recentN int16, dir, author, start, end string) (*[]ResultLog, error) {
+func GetAllGitRepoCommitLog(detail bool, recentN int16, dir, author, start, end string, branchs bool) (*[]ResultLog, error) {
 	var res []string
 	var reLog []ResultLog
 
@@ -166,8 +172,11 @@ func GetAllGitRepoCommitLog(detail bool, recentN int16, dir, author, start, end 
 
 	//遍历获取每个仓库的提交信息
 	for _, gitDir := range res {
-		commitLogs, err := GetCommitLog(detail, recentN, gitDir, author, start, end)
-		if err == nil {
+		commitLogs, err := GetCommitLog(detail, recentN, gitDir, author, start, end, branchs)
+		if err != nil {
+			cobra.CheckErr(err)
+		}
+		if len(*commitLogs) > 0 {
 			reLog = append(reLog, ResultLog{
 				RepoName:   gitDir,
 				CommitLogs: commitLogs,

@@ -17,6 +17,7 @@ func TestGetCommitLog(t *testing.T) {
 		author  string
 		start   string
 		end     string
+		branchs bool
 	}
 	tests := []struct {
 		name    string
@@ -36,7 +37,7 @@ func TestGetCommitLog(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := GetCommitLog(tt.args.detail, tt.args.recentN, tt.args.dir, tt.args.author, tt.args.start, tt.args.end)
+			got, err := GetCommitLog(tt.args.detail, tt.args.recentN, tt.args.dir, tt.args.author, tt.args.start, tt.args.end, tt.args.branchs)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("GetCommitLog() error = %v, wantErr %v", err, tt.wantErr)
 				return
@@ -86,7 +87,7 @@ func TestGetChangedFile(t *testing.T) {
 
 func TestGetAllGitRepoCommitLog2(t *testing.T) {
 
-	resLogs, _ := GetAllGitRepoCommitLog(true, 3, testGitDir, "", "", "")
+	resLogs, _ := GetAllGitRepoCommitLog(true, 3, testGitDir, "", "", "", false)
 
 	//控制台
 	console := ConsoleOutput{}
@@ -112,6 +113,7 @@ func TestGetAllGitRepoCommitLog(t *testing.T) {
 		author  string
 		start   string
 		end     string
+		branchs bool
 	}
 	tests := []struct {
 		name    string
@@ -131,7 +133,7 @@ func TestGetAllGitRepoCommitLog(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := GetAllGitRepoCommitLog(tt.args.detail, tt.args.recentN, tt.args.dir, tt.args.author, tt.args.start, tt.args.end)
+			got, err := GetAllGitRepoCommitLog(tt.args.detail, tt.args.recentN, tt.args.dir, tt.args.author, tt.args.start, tt.args.end, tt.args.branchs)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("GetAllGitRepoCommitLog() error = %v, wantErr %v", err, tt.wantErr)
 				return
