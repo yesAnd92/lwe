@@ -50,5 +50,6 @@ func init() {
 	rootCmd.AddCommand(fsyncCmd)
 	rootCmd.AddCommand(pdfMergeCmd)
 	rootCmd.AddCommand(pdfCutCmd)
+	rootCmd.AddCommand(fileServerCmd)
 
 }
