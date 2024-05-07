@@ -7,11 +7,15 @@ It is a cross-platform command-line tool designed to help developers increase wo
 In short, feel free to submit issues, fun features, or usage feedback. It would be even better if you could directly participate in the project through Pull Requests. Let's all work together and strive for an early finish!!! 💪💪💪
 
 ## Features
-- [Enhanced Git operations for multiple repositories: glog, gl, gcl, gst](#git)
-- Conversion from SQL statements to Java Beans, Go structures, JSON, etc.
-- Transformation of SQL statements into ElasticSearch query DSL language
-- PDF tools: merging multiple images or PDFs, extracting specific pages from PDFs
-- Other small tools
+[Enhanced Git operations for multiple repositories: glog, gl, gcl, gst](#git)
+
+[Conversion from SQL statements to Java Beans, Go structures, JSON, etc.](#fmt)
+
+[Transformation of SQL statements into ElasticSearch query DSL language](#es)
+
+[PDF tools: merging multiple images or PDFs, extracting specific pages from PDFs](#pdf)
+
+[Other small tools](#other)
 - Retrieving passwords from Navicat connection configurations
 - Synchronizing files between two directories
 - Formatting request URLs
@@ -41,7 +45,7 @@ For detailed usage of Git enhanced features, please refer to the Wiki.
   lwe glog [git repo dir] [-a=yesAnd] [-n=50] [-s=2023-08-04] [-e=2023-08-04]
   ```
 
-- **gl**: Enhances the code pulling feature
+#### gl: Enhances the code pulling feature
   Pulls the latest code from all Git repositories in a given directory (using `git pull --rebase`).
 
   usage:
@@ -49,19 +53,19 @@ For detailed usage of Git enhanced features, please refer to the Wiki.
   lwe gl [git repo dir]
   ```
 
-- **gcl**: Enhances the `git clone` feature
+#### gcl: Enhances the `git clone` feature
   usage:
   ```
   lwe gcl gitGroupUrl [dir for this git group] -t=yourToken
   ```
 
-- **gst**: Views the status of all Git repositories in a specified directory
+#### gst: Views the status of all Git repositories in a specified directory
   usage:
   ```
   lwe gst [your git repo dir]
   ```
 
-**SQL Statement Generation of Java Bean Entities, Go Structures, etc.**
+<h3 id="fmt">SQL Statement Generation of Java Bean Entities, Go Structures, etc.</h3>
 If we already have a table structure, generating corresponding entities from the table creation statements can greatly reduce "mindless and repetitive" work. Currently supported structures include Java, Go, and JSON.
 
 usage:
@@ -71,7 +75,7 @@ usage:
 
 For detailed usage instructions, please refer to the Wiki.
 
-**SQL Statement Generation of DSL Statements**
+<h3 id="es">SQL Statement Generation of DSL Statements</h3>
 `lwe es [optional parameters] <SQL statement>`
 
 This command helps us escape the tedious ES query syntax by converting SQL statements into the corresponding DSL and outputting them in the form of curl commands, making it convenient for use on servers as well.
@@ -83,17 +87,17 @@ lwe es 'select * from user where age >18' [-p=true]
 
 For detailed usage instructions, please refer to the Wiki.
 
-**PDF Tools: Merging Multiple Images or PDFs, Extracting Specific Pages from PDFs**
+<h3 id="pdf">PDF Tools: Merging Multiple Images or PDFs, Extracting Specific Pages from PDFs</h3>
 Simple editing of PDFs is a rather common feature, such as merging several PDFs or images into one, or extracting specific pages from a PDF. While this is a paid feature in many office software, LWE provides the capability for simple PDF editing.
 
-- **pdfm**: Merge PDFs or images
+#### pdfm: Merge PDFs or images
   Combines multiple PDF or image files into a single PDF file in a specified order.
   usage:
   ```
   lwe pdfm out.pdf in1.pdf,in2.jpg,*.png,in3.pdf ...
   ```
 
-- **pdfc**: Extract specified pages from a PDF
+#### pdfc: Extract specified pages from a PDF
   Extracts corresponding pages from a PDF and generates a PDF file based on specified page numbers.
   usage:
   ```
@@ -102,23 +106,23 @@ Simple editing of PDFs is a rather common feature, such as merging several PDFs 
 
 For detailed usage instructions, please refer to the Wiki.
 
-**Other Small Tools**
+<h3 id="other">Other Small Tools</h3>
 Some very practical features:
-- Formatting request URLs
+<h4> Formatting request URLs</h4>
   Sometimes the URL for a request can be very long, making it difficult to find the target parameters. The `url` command can be used to format the URL, increasing the readability of the request.
   usage:
   ```
   lwe url yourUrl
   ```
 
-- Retrieving passwords from Navicat connection configurations
+<h4>  Retrieving passwords from Navicat connection configurations</h4>
   If you want to retrieve the username/password for a corresponding database from a connection saved in Navicat, you can use the `ncx` file. The `ncx` file is a connection configuration file exported by Navicat, but the password in the `ncx` file is an encrypted hexadecimal string. The `ncx` command can retrieve the corresponding plaintext.
   usage:
   ```
   lwe ncx ncx-file-path
   ```
 
-- Synchronizing files between two directories
+<h4> Synchronizing files between two directories </h4>
   If you have a habit of backing up files, this tool might help you. It can synchronize newly added files from the source directory to the backup directory, saving you the trouble of manually syncing each folder and file one by one.
   usage:
   ```
@@ -127,17 +131,17 @@ Some very practical features:
 
 For detailed usage instructions, please refer to the Wiki.
 
-**Disclaimer**
+## Disclaimer
 1. The spf13/cobra library is used to conveniently build command-line tools.
 2. The implementation of the `es` subcommand relies on the sqlparser library to parse SQL statements, which is an excellent library for SQL parsing.
 3. The conversion from SQL to DSL heavily borrows from the elasticsql project by Cao Da, which is already a mature and easy-to-use tool. The reason for not directly using this library is to practice on our own and to have more flexibility in adding or removing features later.
 4. The output of Git enhanced command results uses the go-pretty library to tabulate commit information.
 5. The PDF commands are encapsulated based on pdfcpu.
 
-**RoadMap**
+## RoadMap
 - `fmt`: Support more types of conversions as needed.
 - `es`: Add support for insert, update, delete operations as required.
 - ...
 
-**Open Source License**
+## Open Source License
 MIT License
