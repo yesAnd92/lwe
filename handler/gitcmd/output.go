@@ -27,7 +27,7 @@ func (c *ConsoleOutput) Output(resLogs *[]ResultLog) {
 	t.AppendHeader(table.Row{"Branch", "Hash", "Author", "Commit", "Time"})
 
 	if *resLogs == nil {
-		fmt.Printf("No matching commit log found in this git repo\n")
+		fmt.Printf("No matching commit log found in this Dir\n")
 		return
 	}
 
