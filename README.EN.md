@@ -1,4 +1,4 @@
-**[中文文档](README.zh-CN.md)**
+**[中文文档](README.md)**
 
 ## lwe
 LWE stands for "Leave Work Early," which is a lighthearted way of saying "finish work early"! 🤣🤣🤣
@@ -7,6 +7,7 @@ It is a cross-platform command-line tool designed to help developers increase wo
 In short, feel free to submit issues, fun features, or usage feedback. It would be even better if you could directly participate in the project through Pull Requests. Let's all work together and strive for an early finish!!! 💪💪💪
 
 ## Features
+
 [Enhanced Git operations for multiple repositories: glog, gl, gcl, gst](#git)
 
 [Conversion from SQL statements to Java Beans, Go structures, JSON, etc.](#fmt)
@@ -15,17 +16,18 @@ In short, feel free to submit issues, fun features, or usage feedback. It would 
 
 [PDF tools: merging multiple images or PDFs, extracting specific pages from PDFs](#pdf)
 
-[Other small tools](#other)
+[Other utilities](#other)
 - Retrieving passwords from Navicat connection configurations
 - Synchronizing files between two directories
 - Formatting request URLs
 
 ## Installation
-Download the compiled executable files from the release page to use the binary on your platform!
 
-However, a more recommended approach is to configure the binary file to your environment variables, allowing you to use it anytime, anywhere.
+Download the compiled executable  files from the [release](https://github.com/yesAnd92/lwe/releases)
 
-For more installation methods and notes, please refer to the Wiki.
+Usually,the more recommended approach is to configure the binary file to your environment variables, allowing you to use it anytime, anywhere.
+
+For more installation methods and notes, please refer to the [Wiki](https://github.com/yesAnd92/lwe/wiki/0.%E5%AE%89%E8%A3%85%E3%80%81%E9%85%8D%E7%BD%AE%E4%BD%BF%E7%94%A8)
 
 ## Usage
 You can input `lwe` to view the usage of the LWE commands, including the subcommands and their respective functionality descriptions.
@@ -35,32 +37,32 @@ If you're interested in a specific subcommand, you can use the `-h` flag to see 
 <h3 id="git">Git Enhanced Operations for Multiple Repositories: glog, gl, gcl, gst</h3>
 Here are several enhanced commands centered around Git, essentially adding cross-repository operations to the original semantics.
 
-For detailed usage of Git enhanced features, please refer to the Wiki.
+For detailed usage of Git enhanced features, please refer to the [Wiki](https://github.com/yesAnd92/lwe/wiki/3.Git%E5%A2%9E%E5%BC%BA%E5%8A%9F%E8%83%BD)
 
 #### glog: Enhances Git log functionality
-  It allows you to view the commit logs of all Git repositories in a given directory. Developers often work on multiple Git repositories and may need to check the commit logs of several repositories at the same time. The `glog` subcommand comes in handy for such scenarios.
+It allows you to view the commit logs of all Git repositories in a given directory. Developers often work on multiple Git repositories and may need to check the commit logs of several repositories at the same time. The `glog` subcommand comes in handy for such scenarios.
 
-  usage:
+usage:
   ```
   lwe glog [git repo dir] [-a=yesAnd] [-n=50] [-s=2023-08-04] [-e=2023-08-04]
   ```
 
 #### gl: Enhances the code pulling feature
-  Pulls the latest code from all Git repositories in a given directory (using `git pull --rebase`).
+Pulls the latest code from all Git repositories in a given directory (using `git pull --rebase`).
 
-  usage:
+usage:
   ```
   lwe gl [git repo dir]
   ```
 
 #### gcl: Enhances the `git clone` feature
-  usage:
+usage:
   ```
   lwe gcl gitGroupUrl [dir for this git group] -t=yourToken
   ```
 
 #### gst: Views the status of all Git repositories in a specified directory
-  usage:
+usage:
   ```
   lwe gst [your git repo dir]
   ```
@@ -73,7 +75,8 @@ usage:
   lwe fmt sql-file-path [-t=java|go|json] [-a=yesAnd]
   ```
 
-For detailed usage instructions, please refer to the Wiki.
+For detailed usage instructions, please refer to the [Wiki](https://github.com/yesAnd92/lwe/wiki/1.%E5%BB%BA%E8%A1%A8SQL%E8%AF%AD%E5%8F%A5%E7%94%9F%E6%88%90%E4%B8%8D%E7%94%A8%E8%AF%AD%E8%A8%80%E6%89%80%E9%9C%80%E5%AE%9E%E4%BD%93)
+
 
 <h3 id="es">SQL Statement Generation of DSL Statements</h3>
 `lwe es [optional parameters] <SQL statement>`
@@ -85,51 +88,58 @@ Supported SQL operations in the current version:
 lwe es 'select * from user where age >18' [-p=true]
 ```
 
-For detailed usage instructions, please refer to the Wiki.
+For detailed usage instructions, please refer to the [Wiki](https://github.com/yesAnd92/lwe/wiki/2.%E5%B0%86SQL%E8%AF%AD%E5%8F%A5%E8%BD%AC%E6%8D%A2%E6%88%90ElasticSearch%E6%9F%A5%E8%AF%A2%E7%9A%84DSL%E8%AF%AD%E8%A8%80)
 
 <h3 id="pdf">PDF Tools: Merging Multiple Images or PDFs, Extracting Specific Pages from PDFs</h3>
 Simple editing of PDFs is a rather common feature, such as merging several PDFs or images into one, or extracting specific pages from a PDF. While this is a paid feature in many office software, LWE provides the capability for simple PDF editing.
 
 #### pdfm: Merge PDFs or images
-  Combines multiple PDF or image files into a single PDF file in a specified order.
-  usage:
+Combines multiple PDF or image files into a single PDF file in a specified order.
+usage:
   ```
   lwe pdfm out.pdf in1.pdf,in2.jpg,*.png,in3.pdf ...
   ```
 
 #### pdfc: Extract specified pages from a PDF
-  Extracts corresponding pages from a PDF and generates a PDF file based on specified page numbers.
-  usage:
+Extracts corresponding pages from a PDF and generates a PDF file based on specified page numbers.
+usage:
   ```
   lwe pdfc [-m] in.pdf outDir 2,3,5,7-9,15 ...
   ```
 
-For detailed usage instructions, please refer to the Wiki.
+For detailed usage instructions, please refer to the [Wiki](https://github.com/yesAnd92/lwe/wiki/PDF%E5%B7%A5%E5%85%B7%EF%BC%9A%E5%90%88%E5%B9%B6%E5%A4%9A%E4%B8%AA%E5%9B%BE%E7%89%87%E6%88%96%E8%80%85PDF%E3%80%81%E6%88%AA%E5%8F%96PDF%E6%8C%87%E5%AE%9A%E9%A1%B5#pdfm-%E5%90%88%E5%B9%B6pdf%E6%88%96%E8%80%85%E5%9B%BE%E7%89%87)
 
-<h3 id="other">Other Small Tools</h3>
-Some very practical features:
+<h3 id="other">Other utilities</h3>
+Some highly practical and efficient tools
+
 <h4> Formatting request URLs</h4>
   Sometimes the URL for a request can be very long, making it difficult to find the target parameters. The `url` command can be used to format the URL, increasing the readability of the request.
-  usage:
+
+usage:
   ```
   lwe url yourUrl
   ```
+For detailed, [Wiki](https://github.com/yesAnd92/lwe/wiki/%E5%85%B6%E5%AE%83%E5%B0%8F%E5%B7%A5%E5%85%B7#%E6%A0%BC%E5%BC%8F%E5%8C%96%E8%AF%B7%E6%B1%82url)
+
 
 <h4>  Retrieving passwords from Navicat connection configurations</h4>
   If you want to retrieve the username/password for a corresponding database from a connection saved in Navicat, you can use the `ncx` file. The `ncx` file is a connection configuration file exported by Navicat, but the password in the `ncx` file is an encrypted hexadecimal string. The `ncx` command can retrieve the corresponding plaintext.
-  usage:
+
+usage:
   ```
   lwe ncx ncx-file-path
   ```
+For detailed, [Wiki](https://github.com/yesAnd92/lwe/wiki/%E5%85%B6%E5%AE%83%E5%B0%8F%E5%B7%A5%E5%85%B7#%E8%8E%B7%E5%8F%96navicat%E8%BF%9E%E6%8E%A5%E9%85%8D%E7%BD%AE%E4%B8%AD%E7%9A%84%E5%AF%86%E7%A0%81)
 
 <h4> Synchronizing files between two directories </h4>
   If you have a habit of backing up files, this tool might help you. It can synchronize newly added files from the source directory to the backup directory, saving you the trouble of manually syncing each folder and file one by one.
-  usage:
+
+usage:
   ```
   lwe fsync sourceDir targetDir [-d=true]
   ```
+For detailed, [Wiki](https://github.com/yesAnd92/lwe/wiki/%E5%85%B6%E5%AE%83%E5%B0%8F%E5%B7%A5%E5%85%B7#%E5%90%8C%E6%AD%A5%E4%B8%A4%E4%B8%AA%E7%9B%AE%E5%BD%95%E4%B8%8B%E6%96%87%E4%BB%B6)
 
-For detailed usage instructions, please refer to the Wiki.
 
 ## Disclaimer
 1. The spf13/cobra library is used to conveniently build command-line tools.
@@ -143,5 +153,5 @@ For detailed usage instructions, please refer to the Wiki.
 - `es`: Add support for insert, update, delete operations as required.
 - ...
 
-## Open Source License
+## License
 MIT License
