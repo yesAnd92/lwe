@@ -91,24 +91,6 @@ lwe es 'select * from user where age >18' [-p=true]
 
 For detailed usage instructions, please refer to the [Wiki](https://github.com/yesAnd92/lwe/wiki/2.%E5%B0%86SQL%E8%AF%AD%E5%8F%A5%E8%BD%AC%E6%8D%A2%E6%88%90ElasticSearch%E6%9F%A5%E8%AF%A2%E7%9A%84DSL%E8%AF%AD%E8%A8%80)
 
-<h3 id="pdf">PDF Tools: Merging Multiple Images or PDFs, Extracting Specific Pages from PDFs</h3>
-Simple editing of PDFs is a rather common feature, such as merging several PDFs or images into one, or extracting specific pages from a PDF. While this is a paid feature in many office software, LWE provides the capability for simple PDF editing.
-
-#### pdfm: Merge PDFs or images
-Combines multiple PDF or image files into a single PDF file in a specified order.
-usage:
-  ```
-  lwe pdfm out.pdf in1.pdf,in2.jpg,*.png,in3.pdf ...
-  ```
-
-#### pdfc: Extract specified pages from a PDF
-Extracts corresponding pages from a PDF and generates a PDF file based on specified page numbers.
-usage:
-  ```
-  lwe pdfc [-m] in.pdf outDir 2,3,5,7-9,15 ...
-  ```
-
-For detailed usage instructions, please refer to the [Wiki](https://github.com/yesAnd92/lwe/wiki/PDF%E5%B7%A5%E5%85%B7%EF%BC%9A%E5%90%88%E5%B9%B6%E5%A4%9A%E4%B8%AA%E5%9B%BE%E7%89%87%E6%88%96%E8%80%85PDF%E3%80%81%E6%88%AA%E5%8F%96PDF%E6%8C%87%E5%AE%9A%E9%A1%B5#pdfm-%E5%90%88%E5%B9%B6pdf%E6%88%96%E8%80%85%E5%9B%BE%E7%89%87)
 
 <h3 id="other">Other utilities</h3>
 Some highly practical and efficient tools
