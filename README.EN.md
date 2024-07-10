@@ -19,6 +19,7 @@ In short, feel free to submit issues, fun features, or usage feedback. It would 
 [Other utilities](#other)
 - Retrieving passwords from Navicat connection configurations
 - Synchronizing files between two directories
+- Show the environmental variables you configured
 - Formatting request URLs
 
 ## Installation
