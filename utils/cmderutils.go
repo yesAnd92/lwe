@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
-	"runtime"
 	"time"
 	"unsafe"
 )
@@ -20,7 +19,7 @@ var cmdArg = make([]string, 2)
 
 // 根据操作系统环境初始化cmd关闭命令行的参数
 func init() {
-	if runtime.GOOS == "windows" {
+	if OsEnv() == Win {
 		cmdArg[0] = "cmd"
 		cmdArg[1] = "/c"
 	} else {

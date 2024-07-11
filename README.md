@@ -1,3 +1,4 @@
+**[English](README.EN.md)**
 ## lwe
 lwe是leave work early的缩写，也就是"早点下班"！🤣🤣🤣
 它是一个帮助开发者提高工作效率的跨平台命令行工具，当然你把它当做go入门学习的项目也是合适的！
@@ -12,11 +13,10 @@ lwe是leave work early的缩写，也就是"早点下班"！🤣🤣🤣
 
 [将SQL语句转换成ElasticSearch查询的DSL语言](#es)
 
-[PDF工具：合并多个图片或者PDF、截取PDF指定页](#pdf)
-
 [其它小工具](#other)
 - 获取Navicat连接配置中的密码
 - 同步两个目录下文件
+- 显示本机配置的环境变量
 - 格式化请求url
 
 
@@ -111,31 +111,6 @@ lwe es 'select * from user where age >18' [-p=true]
 
 ***
 
-<h3 id="pdf">PDF工具：合并多个图片或者PDF、截取PDF指定页</h3>
-
-对PDF进行简单的编辑还是挺常用的功能，比如把几个PDF、图片合并成一个PDF，从一个PDF中抽离出指定页等，但是在很多办公软件上收费的功能，lwe提供了简单编辑PDF的能力。
-
-#### pdfm 合并PDF或者图片
-按照指定的文件顺序，将多个PDF、图片文件合并成一个PDF文件
-
-使用方式：
-```text
-lwe pdfm out.pdf in1.pdf,in2.jpg,*.png,in3.pdf ...
-```
-详细使用说明，可以查阅[Wiki](https://github.com/yesAnd92/lwe/wiki/PDF%E5%B7%A5%E5%85%B7%EF%BC%9A%E5%90%88%E5%B9%B6%E5%A4%9A%E4%B8%AA%E5%9B%BE%E7%89%87%E6%88%96%E8%80%85PDF%E3%80%81%E6%88%AA%E5%8F%96PDF%E6%8C%87%E5%AE%9A%E9%A1%B5#pdfm-%E5%90%88%E5%B9%B6pdf%E6%88%96%E8%80%85%E5%9B%BE%E7%89%87)
-
-
-#### pdfc 从PDF中截取指定的页
-按照指定的页码，从PDF中截取对应的页生成PDF文件
-
-使用方式：
-```text
-lwe pdfc [-m] in.pdf outDir 2,3,5,7-9,15 ...
-```
-详细使用说明，可以查阅[Wiki](https://github.com/yesAnd92/lwe/wiki/PDF%E5%B7%A5%E5%85%B7%EF%BC%9A%E5%90%88%E5%B9%B6%E5%A4%9A%E4%B8%AA%E5%9B%BE%E7%89%87%E6%88%96%E8%80%85PDF%E3%80%81%E6%88%AA%E5%8F%96PDF%E6%8C%87%E5%AE%9A%E9%A1%B5#pdfc-%E4%BB%8Epdf%E4%B8%AD%E6%88%AA%E5%8F%96%E6%8C%87%E5%AE%9A%E7%9A%84%E9%A1%B5)
-
-***
-
 <h3 id="other">其它小工具</h3>
 一些非常实用的功能
 
@@ -170,6 +145,15 @@ lwe fsync sourceDir targetDir [-d=true]
 
 详细使用说明，可以查阅[Wiki](https://github.com/yesAnd92/lwe/wiki/%E5%85%B6%E5%AE%83%E5%B0%8F%E5%B7%A5%E5%85%B7#%E5%90%8C%E6%AD%A5%E4%B8%A4%E4%B8%AA%E7%9B%AE%E5%BD%95%E4%B8%8B%E6%96%87%E4%BB%B6)
 
+
+<h4>显示环境变量</h4>
+显示本机配置的环境变量，目前仅测试了mac平台
+
+使用方式：
+
+```text
+lwe env
+```
 
 
 ## 声明
