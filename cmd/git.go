@@ -24,7 +24,7 @@ var (
 		Use:     `glog`,
 		Short:   `Get all git repository commit log under the given dir `,
 		Long:    `Get all git repository commit log under the given dir ,and  specify author，date etc. supported!`,
-		Example: `lwe glog [git repo dir] [-a=yesAnd] [-n=50] [-s=2023-08-04] [-e=2023-08-04] [-ab=ture]`,
+		Example: `lwe glog [git repo dir] [-a=yesAnd] [-n=50] [-s=2023-08-04] [-e=2023-08-04] [-b=ture]`,
 		Args:    cobra.MatchAll(),
 		Run: func(cmd *cobra.Command, args []string) {
 

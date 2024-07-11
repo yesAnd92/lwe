@@ -17,7 +17,7 @@ var (
 	lock              sync.Mutex
 )
 
-// 文件访问次数增加的函数
+// add visit count
 func addAccessCount(filePath string) int {
 	lock.Lock()
 	defer lock.Unlock()
@@ -46,7 +46,7 @@ func ServerStart(port, rootDir string) {
 		//file access statistic
 		count := addAccessCount(filePath)
 
-		fmt.Printf("%s  - %d times\n", filePath, count)
+		fmt.Printf("%s  - %d visit\n", filePath, count)
 
 		http.ServeFile(w, r, rootDir+filePath)
 
