@@ -38,7 +38,7 @@ func executeCommand(cmd *cobra.Command, args ...string) (outBf *bytes.Buffer, er
 func init() {
 
 	rootCmd.AddCommand(versionCmd)
-	rootCmd.AddCommand(sqlCmd)
+	rootCmd.AddCommand(fmtCmd)
 	rootCmd.AddCommand(md5Cmd)
 	rootCmd.AddCommand(esCmd)
 	rootCmd.AddCommand(navicatCmd)
@@ -50,5 +50,6 @@ func init() {
 	rootCmd.AddCommand(fsyncCmd)
 	rootCmd.AddCommand(fileServerCmd)
 	rootCmd.AddCommand(envCmd)
+	rootCmd.AddCommand(sqlLogCmd)
 
 }

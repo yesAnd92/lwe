@@ -12,13 +12,13 @@ import (
 )
 
 /**
-* sql命令相关功能
+* fmt命令相关功能
  */
 
 var (
 	target string
 	author string
-	sqlCmd = &cobra.Command{
+	fmtCmd = &cobra.Command{
 		Use:     `fmt`,
 		Short:   `Generate the specified file based on SQL`,
 		Long:    `Generate the specified file based on SQL. Such as Java Entity,Go struct and so on`,
@@ -82,6 +82,6 @@ func DataCleansing(sqlFilePath string) (ctxList []string, err error) {
 
 func init() {
 
-	sqlCmd.PersistentFlags().StringVarP(&target, "target", "t", "java", "The type[java|json|go] of generate the sql")
-	sqlCmd.PersistentFlags().StringVarP(&author, "author", "a", "", "Comment for author information will be added to the generated file")
+	fmtCmd.PersistentFlags().StringVarP(&target, "target", "t", "java", "The type[java|json|go] of generate the sql")
+	fmtCmd.PersistentFlags().StringVarP(&author, "author", "a", "", "Comment for author information will be added to the generated file")
 }

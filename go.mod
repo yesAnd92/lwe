@@ -12,6 +12,7 @@ require (
 
 require (
 	github.com/clbanning/mxj v1.8.4 // indirect
+	github.com/dlclark/regexp2 v1.11.4 // indirect
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
 	github.com/mattn/go-runewidth v0.0.15 // indirect
 	github.com/rivo/uniseg v0.4.4 // indirect
