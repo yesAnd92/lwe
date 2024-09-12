@@ -51,6 +51,34 @@ func TestParseMybatisSqlLog(t *testing.T) {
 			expected: "",
 			hasError: true,
 		},
+		{
+			name: "Mismatch between placeholders and parameters",
+			input: `Preparing: SELECT * FROM users WHERE id = ? AND name = ?
+					Parameters: 1(Integer)`,
+			expected: "",
+			hasError: true,
+		},
+		{
+			name: "Like query",
+			input: `Preparing: SELECT * FROM users WHERE id  name LIKE CONCAT(?, '%')
+					Parameters: yesA(String)`,
+			expected: "SELECT * FROM users WHERE id  name LIKE CONCAT('yesA', '%')",
+			hasError: false,
+		},
+		{
+			name: "Insert SQL log",
+			input: `Preparing: INSERT INTO products (name, price, category) VALUES (?, ?, ?)
+					Parameters: New Product(String), 19.99(Double), Electronics(String)`,
+			expected: "INSERT INTO products (name, price, category) VALUES ('New Product', 19.99, 'Electronics')",
+			hasError: false,
+		},
+		{
+			name: "Update SQL log",
+			input: `Preparing: UPDATE orders SET status = ?, updated_at = ? WHERE id = ?
+					Parameters: Shipped(String), 2023-05-02 15:30:00(Timestamp), 1001(Integer)`,
+			expected: "UPDATE orders SET status = 'Shipped', updated_at = '2023-05-02 15:30:00' WHERE id = 1001",
+			hasError: false,
+		},
 	}
 
 	for _, tt := range tests {
