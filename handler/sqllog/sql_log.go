@@ -5,55 +5,60 @@ import (
 	"strings"
 
 	"github.com/dlclark/regexp2"
-	"github.com/pkg/errors"
 )
 
-/**
-* mybatis sql log parse
- */
-
-var (
+const (
 	separatorPreparing = "Preparing:"
 	separatorParameter = "Parameters:"
-	preparingPattern   = separatorPreparing + "(.*?)(?=\n|\r|\r\n)"
-	parameterPattern   = separatorParameter + "(.*?)(?=\n|\r|\r\n)"
 )
 
-func ParseMybatisSqlLog(sqlLog string) (string, error) {
+var (
+	preparingPattern = separatorPreparing + "(.*?)(?=\n|\r|\r\n)"
+	parameterPattern = separatorParameter + "(.*?)(?=\n|\r|\r\n)"
+)
 
-	if !(strings.HasSuffix(sqlLog, "\n") || strings.HasSuffix(sqlLog, "\r\n")) {
+// ParseMybatisSqlLog parses a Mybatis SQL log and returns the formatted SQL query.
+func ParseMybatisSqlLog(sqlLog string) (string, error) {
+	if !strings.HasSuffix(sqlLog, "\n") && !strings.HasSuffix(sqlLog, "\r\n") {
 		sqlLog += "\n"
 	}
 
 	prepare, err := extractPattern(preparingPattern, sqlLog)
 	if err != nil {
-		return "", errors.New("parsing Preparing fail!")
+		return "", fmt.Errorf("parsing Preparing section: %w", err)
 	}
 
-	prepare = strings.Replace(prepare, separatorPreparing, "", -1)
+	prepare = strings.ReplaceAll(prepare, separatorPreparing, "")
 
 	param, err := extractPattern(parameterPattern, sqlLog)
 	if err != nil {
-		return "", errors.New("parsing Parameters fail!")
+		return "", fmt.Errorf("parsing Parameters section: %w", err)
 	}
 
-	params := strings.Split(strings.Replace(param, separatorParameter, "", -1), ",")
+	params := strings.Split(strings.ReplaceAll(param, separatorParameter, ""), ",")
 
-	var values []string
+	values := make([]string, 0, len(params))
 	for _, p := range params {
-		value := extractValue(p)
-		values = append(values, value)
+		values = append(values, extractValue(p))
+	}
+
+	if strings.Count(prepare, "?") != len(values) {
+		return "", fmt.Errorf("mismatch between placeholders (?) and parameters count")
 	}
 
 	// Replace ? in prepare with values from values
-	for _, value := range values {
-		prepare = strings.Replace(prepare, "?", value, 1)
+	var result strings.Builder
+	paramIndex := 0
+	for _, char := range prepare {
+		if char == '?' {
+			result.WriteString(values[paramIndex])
+			paramIndex++
+		} else {
+			result.WriteRune(char)
+		}
 	}
 
-	//trim blank space
-	prepare = strings.TrimSpace(prepare)
-
-	return prepare, nil
+	return strings.TrimSpace(result.String()), nil
 }
 
 var typesNeedQuotes = []string{"String", "Timestamp", "Date", "Time"}

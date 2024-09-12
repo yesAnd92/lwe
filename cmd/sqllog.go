@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+
 	"github.com/spf13/cobra"
 	"github.com/yesAnd92/lwe/handler/sqllog"
 )
@@ -13,18 +14,20 @@ import (
 var (
 	sqlLogCmd = &cobra.Command{
 		Use:     `sqllog`,
-		Short:   `Generate the specified file based on SQL`,
-		Long:    `Generate the specified file based on SQL. Such as Java Entity,Go struct and so on`,
-		Example: `lwe fmt sql-file-path [-t=java|go|json] [-a=yesAnd]`,
+		Short:   `Parse mybatis sql logs and fill placeholders with parameters`,
+		Long:    `Copy mybatis sql log ,extract sql info and fill placeholders with parameters`,
+		Example: `lwe sqllog 'mybatis sql log'`,
 		Args:    cobra.MatchAll(cobra.ExactArgs(1)),
 		Run: func(cmd *cobra.Command, args []string) {
 			sqlLog := args[0]
+
 			sql, err := sqllog.ParseMybatisSqlLog(sqlLog)
 			if err != nil {
-				cobra.CheckErr(fmt.Errorf("can't parse SQL: %s", sqlLog))
+				cobra.CheckErr(err.Error())
 			}
 
-			fmt.Println("===>")
+			fmt.Println("======>")
+
 			fmt.Println(sql)
 		},
 	}
