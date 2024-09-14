@@ -13,6 +13,8 @@ lwe是leave work early的缩写，也就是"早点下班"！🤣🤣🤣
 
 [将SQL语句转换成ElasticSearch查询的DSL语言](#es)
 
+[解析mybaits的SQL输出日志，生成替换参数后的可执行SQL](#sqllog)
+
 [其它小工具](#other)
 - 获取Navicat连接配置中的密码
 - 同步两个目录下文件
@@ -112,6 +114,35 @@ lwe es 'select * from user where age >18' [-p=true]
 
 ***
 
+***
+
+<h3 id="sqllog">解析Mybatis的SQL输出日志,生成替换参数后的可执行SQL</h3>
+
+```bash
+lwe sqllog <mybatis sql log> 
+```
+
+Mybatis输出的日志，SQL语句和参数是分开的，调试SQL时，需要粘出来再去用参数替换对应的占位符，比较繁琐。这个命令可以快速解析出一个填充参数后的可执行SQL。
+
+使用方式：
+
+   ```text
+   lwe sqllog "Preparing: SELECT * FROM users WHERE name = ?
+   Parameters: John(String)"
+   ```
+输出：
+   ```
+   格式化的 SQL：
+   SELECT * FROM users WHERE name = 'John'
+   ```
+
+#### 注意事项
+- 确保输出的日志包含 "Preparing:" 和 "Parameters:" 两个部分。
+- 在将 SQL 日志作为参数传递时，确保用双引号将整个 SQL 日志括起来。
+
+***
+
+
 <h3 id="other">其它小工具</h3>
 一些非常实用的功能
 
@@ -193,3 +224,6 @@ lwe env
 ## 开源协议
 
 [MIT License](https://github.com/yesAnd92/lwe/blob/main/LICENSE)
+
+
+
