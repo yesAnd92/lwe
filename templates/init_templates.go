@@ -23,3 +23,6 @@ func InitJavaTpl() *template.Template {
 	tpl := template.Must(template.New("javaTpl").Funcs(utils.TemplateFunc).Parse(javaStructTpl))
 	return tpl
 }
+
+//go:embed git_log_summary.prompt
+var LogSummaryPrompt string
