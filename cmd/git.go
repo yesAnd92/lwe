@@ -106,6 +106,24 @@ var (
 
 		},
 	}
+
+	gSumCmd = &cobra.Command{
+		Use:     `gsum`,
+		Short:   `Summary git log with AI's help' `,
+		Long:    `With the help of AI, merge similar or streamline Git commit logs.`,
+		Example: `lwe gsum [git repo dir] [-a=yesAnd] [-s=2023-08-04] [-e=2023-08-04]`,
+		Args:    cobra.MatchAll(cobra.MinimumNArgs(0)),
+		Run: func(cmd *cobra.Command, args []string) {
+
+			var dir = "."
+			if len(args) > 0 {
+				dir = args[0]
+			}
+
+			gitcmd.GitLogSummary(detail, dir, committer, start, end)
+
+		},
+	}
 )
 
 func init() {

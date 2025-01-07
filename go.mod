@@ -3,6 +3,7 @@ module github.com/yesAnd92/lwe
 go 1.18
 
 require (
+	github.com/dlclark/regexp2 v1.11.4
 	github.com/jedib0t/go-pretty/v6 v6.4.6
 	github.com/micro-plat/lib4go v1.2.0
 	github.com/pkg/errors v0.9.1
@@ -12,7 +13,6 @@ require (
 
 require (
 	github.com/clbanning/mxj v1.8.4 // indirect
-	github.com/dlclark/regexp2 v1.11.4 // indirect
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
 	github.com/mattn/go-runewidth v0.0.15 // indirect
 	github.com/rivo/uniseg v0.4.4 // indirect
