@@ -46,7 +46,7 @@ func Test_logSubmitToAi(t *testing.T) {
 
 		{name: "pageHelper commit log",
 			args: args{ctx: `
-							/Users/wangyj/ideaProject/my/Mybatis-PageHelper
+							Mybatis-PageHelper
 							fix 兼容jakarta/javax的ServletRequest
 							补充注释信息
 							重载一个PageInfo.of方法，支持手动指定查询记录总数返回分页信息

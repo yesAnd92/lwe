@@ -4,14 +4,14 @@ type AIChat interface {
 	Chat(ctx string) (string, error)
 }
 
-type AIProxy struct {
+type AIAgent struct {
 	AiChat AIChat
 }
 
-func NewAIProxy() *AIProxy {
+func NewAIAgent() *AIAgent {
 
 	// TODO: 2025/1/7 Read the configuration file and decide which AI to use.
 
-	proxy := AIProxy{AiChat: &DeepSeek{}}
-	return &proxy
+	agent := AIAgent{AiChat: &DeepSeek{}}
+	return &agent
 }
