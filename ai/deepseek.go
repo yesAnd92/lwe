@@ -4,13 +4,9 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"github.com/yesAnd92/lwe/config"
 	"io/ioutil"
 	"net/http"
-)
-
-const (
-	url    = "https://api.deepseek.com/chat/completions"
-	apiKey = ""
 )
 
 type DeepSeek struct {
@@ -22,6 +18,9 @@ func (ds *DeepSeek) Chat(ctx string) (string, error) {
 }
 
 func Send(ctx string) string {
+	lweConfig := config.LoadingLweConfig("", "")
+	url := lweConfig.Ai.BaseUrl
+	apiKey := lweConfig.Ai.ApiKey
 
 	method := "POST"
 

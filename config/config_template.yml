@@ -1,0 +1,18 @@
+################################################
+# Lwe Configuration Template
+#
+# Configuration File Location : $HOME/.config/lwe/config.yml
+#
+################################################
+
+
+# ai config
+# name:
+# resp_language:
+ai:
+    lang: en                                #Reponse language en or en ,default en.
+    name: deepseek                          #Currently, only [deepseek] is supported
+    apikey: your_openai_api_key
+    baseurl: https://api.deepseek.com/chat/completions
+    model: gpt-4o-mini
+

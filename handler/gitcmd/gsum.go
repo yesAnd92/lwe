@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"github.com/spf13/cobra"
 	"github.com/yesAnd92/lwe/ai"
-	"github.com/yesAnd92/lwe/templates"
+	"github.com/yesAnd92/lwe/ai/prompt"
 	"github.com/yesAnd92/lwe/utils"
 	"strings"
 )
@@ -114,9 +114,9 @@ func buildGitLogReq(detail bool, dir string, committer string, start string, end
 
 func logSubmitToAi(ctx string) (string, error) {
 
-	content := templates.LogSummaryPrompt + "\n" + ctx
+	content := prompt.LogSummaryPrompt + "\n" + ctx
 	//submit to the AI using the preset prompt
-	ai := ai.NewAIProxy()
+	ai := ai.NewAIAgent()
 	resp, err := ai.AiChat.Chat(content)
 	return resp, err
 }
