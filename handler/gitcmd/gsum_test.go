@@ -2,6 +2,7 @@ package gitcmd
 
 import (
 	"fmt"
+	"github.com/yesAnd92/lwe/ai"
 	"reflect"
 	"testing"
 )
@@ -72,19 +73,6 @@ func Test_logSubmitToAi(t *testing.T) {
 			args: args{ctx: `
 							lwe
 							update readme
-							add sqllog readme
-							add command hit
-							add mybatis sql log parse
-							update readme
-							add sqllog readme
-							add command hit
-							add mybatis sql log parse
-							readme.md add filesserver
-							remove pdf command
-							update en readme.md
-							complete en readme.md
-							update no matching commit log prompt
-							调整 英文README格式
 							add a file server
 							add en readme.md
 							add env command
@@ -97,15 +85,15 @@ func Test_logSubmitToAi(t *testing.T) {
 							Fsync (#8)
 							Gcl command (#7)
 							Url command (#5)
-							完善Readme.md
 							Git command (#3)
 							Navi command (#2)
 							Initial commit`,
 			}},
 	}
+	aiAgent := ai.NewAIAgent()
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := logSubmitToAi(tt.args.ctx)
+			got, err := logSubmitToAi(tt.args.ctx, aiAgent)
 			if err != nil {
 				fmt.Println(err)
 				return
@@ -186,6 +174,35 @@ func Test_consoleResult(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			consoleResult(tt.args.promptResp)
+		})
+	}
+}
+
+func Test_buildGitLogReq(t *testing.T) {
+	type args struct {
+		detail    bool
+		dir       string
+		committer string
+		start     string
+		end       string
+	}
+	tests := []struct {
+		name string
+		args args
+	}{
+		{name: "test",
+			args: args{
+				detail:    false,
+				dir:       ".",
+				committer: "",
+				start:     "",
+				end:       "",
+			}},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := buildGitLogReq(tt.args.detail, tt.args.dir, tt.args.committer, tt.args.start, tt.args.end)
+			fmt.Println(got)
 		})
 	}
 }

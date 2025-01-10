@@ -24,10 +24,13 @@ type RepoSummary struct {
 // GitLogSummary summary commit log
 func GitLogSummary(detail bool, dir, committer, start, end string) {
 
+	//check and init agent
+	agent := ai.NewAIAgent()
+
 	sb := buildGitLogReq(detail, dir, committer, start, end)
 
 	//send ai to summary
-	resp, err := logSubmitToAi(sb)
+	resp, err := logSubmitToAi(sb, agent)
 	if err != nil {
 		cobra.CheckErr(err)
 	}
@@ -45,10 +48,10 @@ func consoleResult(promptResp *GitSummaryPromptResp) {
 
 		fmt.Print("\nEN:\n")
 		for no, s := range repoSum.Summary {
-			fmt.Printf("#%d. %s\n", no, s)
+			fmt.Printf("%d. %s\n", no, s)
 		}
 
-		fmt.Print("CN:\n")
+		fmt.Print("\nCN:\n")
 
 		for no, s := range repoSum.SummaryCN {
 			fmt.Printf("%d. %s\n", no, s)
@@ -112,11 +115,10 @@ func buildGitLogReq(detail bool, dir string, committer string, start string, end
 	return sb.String()
 }
 
-func logSubmitToAi(ctx string) (string, error) {
+func logSubmitToAi(ctx string, aiAgent *ai.AIAgent) (string, error) {
 
 	content := prompt.LogSummaryPrompt + "\n" + ctx
 	//submit to the AI using the preset prompt
-	ai := ai.NewAIAgent()
-	resp, err := ai.AiChat.Chat(content)
+	resp, err := aiAgent.AiChat.Chat(content)
 	return resp, err
 }
