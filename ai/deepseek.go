@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"github.com/spf13/cobra"
 	"github.com/yesAnd92/lwe/config"
 	"io/ioutil"
 	"net/http"
@@ -18,9 +19,11 @@ func (ds *DeepSeek) Chat(ctx string) (string, error) {
 }
 
 func Send(ctx string) string {
-	lweConfig := config.LoadingLweConfig("", "")
-	url := lweConfig.Ai.BaseUrl
-	apiKey := lweConfig.Ai.ApiKey
+
+	aiConfig := config.GlobalConfig.Ai
+	url := aiConfig.BaseUrl
+	apiKey := aiConfig.ApiKey
+	model := aiConfig.Model
 
 	method := "POST"
 
@@ -32,7 +35,7 @@ func Send(ctx string) string {
 				"role":    "user",
 			},
 		},
-		"model":             "deepseek-chat",
+		"model":             model,
 		"frequency_penalty": 0,
 		"max_tokens":        2048,
 		"presence_penalty":  0,
@@ -53,7 +56,7 @@ func Send(ctx string) string {
 	// 将map转换为JSON格式的字节切片
 	requestBody, err := json.Marshal(requestData)
 	if err != nil {
-		fmt.Println("Error marshaling JSON:", err)
+		cobra.CheckErr(err)
 		return ""
 	}
 
@@ -64,7 +67,7 @@ func Send(ctx string) string {
 	req, err := http.NewRequest(method, url, payload)
 
 	if err != nil {
-		fmt.Println(err)
+		cobra.CheckErr(err)
 		return ""
 	}
 
@@ -75,20 +78,20 @@ func Send(ctx string) string {
 
 	res, err := client.Do(req)
 	if err != nil {
-		fmt.Println(err)
+		cobra.CheckErr(err)
 		return ""
 	}
 	defer res.Body.Close()
 
 	body, err := ioutil.ReadAll(res.Body)
 	if err != nil {
-		fmt.Println(err)
+		cobra.CheckErr(err)
 		return ""
 	}
 	resp := &DeepSeekResponse{}
 	err = json.Unmarshal(body, resp)
 	if err != nil {
-		fmt.Println(err)
+		cobra.CheckErr(err)
 		return ""
 	}
 	return resp.Choices[0].Message.Content

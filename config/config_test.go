@@ -32,7 +32,7 @@ func Test_loadingLweConfig(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			config := LoadingLweConfig(tt.args.configPath, tt.args.configName)
+			config := loadingLweConfig(tt.args.configPath, tt.args.configName)
 			fmt.Println(config)
 		})
 	}

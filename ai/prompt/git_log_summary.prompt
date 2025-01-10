@@ -3,7 +3,7 @@ You will be provided with multiple git repositories. Each repository's informati
 Your task is to:
 1. Analyze the commit messages and summarize the logs in a clear, concise, and polished manner.
 2. Avoid redundant details and ensure the summary is well-structured and easy to understand. Prioritize logical grouping and readability while maintaining accuracy.
-3. Translate the English summary into Chinese.
+3. Summary response in English and Chinese.
 4. Summary not more than 6 concise bullet points.
 
 Respond strictly in this standard JSON format only,without any markdown tag such as json :
