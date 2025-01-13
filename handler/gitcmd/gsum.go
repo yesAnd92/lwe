@@ -117,8 +117,7 @@ func buildGitLogReq(detail bool, dir string, committer string, start string, end
 
 func logSubmitToAi(ctx string, aiAgent *ai.AIAgent) (string, error) {
 
-	content := prompt.LogSummaryPrompt + "\n" + ctx
 	//submit to the AI using the preset prompt
-	resp, err := aiAgent.AiChat.Chat(content)
+	resp, err := aiAgent.AiChat.Chat(ctx, prompt.LogSummaryPrompt)
 	return resp, err
 }
