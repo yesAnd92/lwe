@@ -4,21 +4,21 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"github.com/mitchellh/mapstructure"
 	"github.com/spf13/cobra"
 	"github.com/yesAnd92/lwe/config"
-	"io/ioutil"
 	"net/http"
 )
 
 type DeepSeek struct {
 }
 
-func (ds *DeepSeek) Chat(ctx string) (string, error) {
-	resp := Send(ctx)
+func (ds *DeepSeek) Chat(ctx, prompt string) (string, error) {
+	resp := Send(ctx, prompt)
 	return resp, nil
 }
 
-func Send(ctx string) string {
+func Send(ctx, prompt string) string {
 
 	aiConfig := config.GlobalConfig.Ai
 	url := aiConfig.BaseUrl
@@ -27,14 +27,19 @@ func Send(ctx string) string {
 
 	method := "POST"
 
-	// 使用map构建请求数据结构
-	requestData := map[string]interface{}{
-		"messages": []map[string]interface{}{
-			{
-				"content": ctx,
-				"role":    "user",
-			},
+	// to build message for request
+	message := []map[string]interface{}{
+		{
+			"content": ctx,
+			"role":    "user",
 		},
+		{
+			"content": prompt,
+			"role":    "system",
+		},
+	}
+	requestData := map[string]interface{}{
+		"messages":          message,
 		"model":             model,
 		"frequency_penalty": 0,
 		"max_tokens":        2048,
@@ -57,7 +62,6 @@ func Send(ctx string) string {
 	requestBody, err := json.Marshal(requestData)
 	if err != nil {
 		cobra.CheckErr(err)
-		return ""
 	}
 
 	// 创建一个io.Reader用于请求体
@@ -68,7 +72,6 @@ func Send(ctx string) string {
 
 	if err != nil {
 		cobra.CheckErr(err)
-		return ""
 	}
 
 	auth := fmt.Sprintf("Bearer %s", apiKey)
@@ -76,23 +79,28 @@ func Send(ctx string) string {
 	req.Header.Add("Accept", "application/json")
 	req.Header.Add("Authorization", auth)
 
-	res, err := client.Do(req)
+	resp, err := client.Do(req)
 	if err != nil {
 		cobra.CheckErr(err)
-		return ""
 	}
-	defer res.Body.Close()
+	defer resp.Body.Close()
 
-	body, err := ioutil.ReadAll(res.Body)
-	if err != nil {
-		cobra.CheckErr(err)
-		return ""
+	if resp.StatusCode != http.StatusOK {
+		cobra.CheckErr(fmt.Sprintf("request fail ,statusCode: %d", resp.StatusCode))
 	}
-	resp := &DeepSeekResponse{}
-	err = json.Unmarshal(body, resp)
-	if err != nil {
-		cobra.CheckErr(err)
-		return ""
+
+	var result map[string]interface{}
+	if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
+		cobra.CheckErr(fmt.Sprintf("parse fail: %v", err))
 	}
-	return resp.Choices[0].Message.Content
+
+	if errorData, ok := result["error"]; ok {
+		cobra.CheckErr(fmt.Sprintf("request error: %v", errorData))
+	}
+
+	dsResp := &DeepSeekResponse{}
+	if err := mapstructure.Decode(result, &dsResp); err != nil {
+		cobra.CheckErr(err)
+	}
+	return dsResp.Choices[0].Message.Content
 }

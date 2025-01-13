@@ -6,7 +6,7 @@ import (
 )
 
 type AIChat interface {
-	Chat(ctx string) (string, error)
+	Chat(ctx, prompt string) (string, error)
 }
 
 type AIAgent struct {
