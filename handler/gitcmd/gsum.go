@@ -51,7 +51,7 @@ func consoleResult(promptResp *GitSummaryPromptResp) {
 			fmt.Printf("%d. %s\n", no, s)
 		}
 
-		fmt.Print("\nCN:\n")
+		fmt.Print("\nZH:\n")
 
 		for no, s := range repoSum.SummaryCN {
 			fmt.Printf("%d. %s\n", no, s)
