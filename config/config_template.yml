@@ -13,5 +13,5 @@ ai:
     name: deepseek                          #Currently, only [deepseek] is supported
     apikey: your_openai_api_key
     baseurl: https://api.deepseek.com/chat/completions
-    model: gpt-4o-mini
+    model: deepseek-chat
 
