@@ -32,7 +32,7 @@ func GitCommitMsg() {
 func buildGitDiffReq() string {
 	//获取git diff
 
-	var cmdline = fmt.Sprintf("%s %s %s", "git", "diff", "HEAD")
+	var cmdline = GIT_DIFF
 	result := utils.RunCmd(cmdline, time.Second*30)
 	if result.Err() != nil {
 		cobra.CheckErr(result.Err())

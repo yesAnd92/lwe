@@ -36,4 +36,7 @@ var (
 
 	//git Branch
 	GIT_BRANCH = `git branch`
+
+	//git diff
+	GIT_DIFF = `git diff -w -b --ignore-cr-at-eol --diff-filter=d | grep -vE '^(index|diff|\+\+\+)'`
 )

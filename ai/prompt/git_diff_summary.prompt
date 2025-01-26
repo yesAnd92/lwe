@@ -1,25 +1,13 @@
-遵循 Angular Commit Message 规范
-```
-格式：
-<type>(<scope>): <subject>
-
-<body>
-
-<footer>
-
-其中 subject 必填，body 和 footer 可选
-
-type: feat|fix|docs|style|refactor|test|chore|perf
-scope: 可选，表示影响范围（如模块名）
-subject: 简明扼要的提交说明
-body: 详细描述，可多行
-footer: 通常用于关联 Issue 或破坏性变更说明
-
-示例：
-feat(auth): 添加微信登录功能
-
-- 支持微信扫码登录
-- 支持微信账号绑定
-- 添加微信用户信息同步
-
-Closes #123
+"Analyze the provided git diff output and generate a concise commit message that:
+Language Consistency: Match the response language to the dominant language of code comments (e.g., English comments → English message, 中文注释 → 中文提交信息).
+Structure:
+Start with a conventional type prefix (feat:, fix:, etc.)
+Respond strictly in this standard JSON format only,without any markdown tag such as json :
+{
+  "commit_msg": [
+    {
+      "prefix": "feat",
+      "msg": "commit message",
+    }
+  ]
+}
