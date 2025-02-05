@@ -6,10 +6,10 @@ import (
 	"testing"
 )
 
-func TestDeepSeek_Chat(t *testing.T) {
+func TestSiliconFlow_Chat(t *testing.T) {
 	config.InitConfig()
-	ds := &DeepSeek{}
-	chat, err := ds.Chat("hello,deepseek", "")
+	sf := &SiliconFlow{}
+	chat, err := sf.Chat("hello,siliconflow", "")
 	if err != nil {
 		fmt.Println(err)
 	}
