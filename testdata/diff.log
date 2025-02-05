@@ -1,138 +1,65 @@
---- a/ai/prompt/git_diff_summary.prompt
-@@ -1,25 +1,13 @@
--遵循 Angular Commit Message 规范
--```
--格式：
--<type>(<scope>): <subject>
--
--<body>
--
--<footer>
--
--其中 subject 必填，body 和 footer 可选
--
--type: feat|fix|docs|style|refactor|test|chore|perf
--scope: 可选，表示影响范围（如模块名）
--subject: 简明扼要的提交说明
--body: 详细描述，可多行
--footer: 通常用于关联 Issue 或破坏性变更说明
--
--示例：
--feat(auth): 添加微信登录功能
--
--- 支持微信扫码登录
--- 支持微信账号绑定
--- 添加微信用户信息同步
--
--Closes #123
-\ No newline at end of file
-+"Analyze the provided git diff output and generate a concise commit message that:
-+Language Consistency: Match the response language to the dominant language of code comments (e.g., English comments → English message, 中文注释 → 中文提交信息).
-+Structure:
-+Start with a conventional type prefix (feat:, fix:, etc.)
-+Respond strictly in this standard JSON format only,without any markdown tag such as json :
-+{
-+  "commit_msg": [
-+    {
-+      "prefix": "feat",
-+      "msg": "commit message",
-+    }
-+  ]
-+}
-\ No newline at end of file
---- a/handler/gitcmd/gcms.go
-@@ -32,10 +32,10 @@ func GitCommitMsg() {
- func buildGitDiffReq() string {
- 	//获取git diff
- 
--	var cmdline = fmt.Sprintf("%s %s %s", "git", "diff", "HEAD")
-+	var cmdline = GIT_DIFF
- 	result := utils.RunCmd(cmdline, time.Second*30)
- 	if result.Err() != nil {
- 		cobra.CheckErr(result.Err())
- 	}
- 	return result.String()
- }
---- a/handler/gitcmd/gcms_test.go
-@@ -3,6 +3,7 @@ package gitcmd
- import (
- 	"fmt"
- 	"github.com/yesAnd92/lwe/ai"
-+	"os"
- 	"testing"
+--- a/ai/ai_chat.go
+@@ -17,6 +17,7 @@ type AIName string
+
+ const (
+        Deepseek    = "deepseek"
++       Siliconflow = "siliconflow"
  )
- 
-@@ -12,24 +13,30 @@ func TestGitCommitMsg(t *testing.T) {
- 
- func Test_gitDiffSubmitToAi(t *testing.T) {
- 	type args struct {
--		ctx     string
-+		diffFile string
- 		aiAgent  *ai.AIAgent
- 	}
- 	tests := []struct {
- 		name string
- 		args args
- 	}{
- 		// TODO: Add test cases.
- 		{name: "demo",
--			args: args{ctx: "",
-+			args: args{diffFile: "",
- 				aiAgent: ai.NewAIAgent()},
- 		},
- 	}
- 	for _, tt := range tests {
--		got, err := gitDiffSubmitToAi(tt.args.ctx, tt.args.aiAgent)
-+		content, err := os.ReadFile(tt.args.diffFile)
-+		if err != nil {
-+			panic(err)
-+		}
-+		ctx := string(content)
-+		fmt.Println(ctx)
-+		got, err := gitDiffSubmitToAi(ctx, tt.args.aiAgent)
- 		if err != nil {
- 			fmt.Println(err)
- 		}
- 		fmt.Println(got)
- 	}
+
+ func NewAIAgent() *AIAgent {
+@@ -31,7 +32,9 @@ func NewAIAgent() *AIAgent {
+        case Deepseek:
+                agent = AIAgent{AiChat: &DeepSeek{}}
+                break
+-
++       case Siliconflow:
++               agent = AIAgent{AiChat: &SiliconFlow{}}
++               break
+        default:
+                cobra.CheckErr("AI configuration is missing or incorrect.")
+        }
+--- a/ai/deepseek.go
+@@ -14,11 +14,11 @@ type DeepSeek struct {
  }
---- a/handler/gitcmd/git_cmd_tpl.go
-@@ -5,35 +5,38 @@ package gitcmd
- var (
- 
- 	//git log
- 	LOG_TPL            = "git -C %s --no-pager log %s --no-merges "
- 	LOG_FORMAT_TPL     = `--format=format:'%h*-*%an*-*%ct*-*%s' ` //使用*-*作为分隔符
- 	LOG_AUTHOR_TPL     = `--author=%s `
- 	LOG_START_DATE_TPL = `--since=%s `
- 	LOG_END_DATE_TPL   = `--until=%s `
- 	LOG_RECENTN_TPL    = `-n %d `
- 
- 	// git show
- 	SHOW_TPL = "git show %s"
- 
- 	// git status
- 	STATUS_TPL = "git -C %s status"
- 
- 	// git status in short result
- 	STATUS_CHECK_TPL = "git -C %s status -s"
- 
- 	//git pull
- 	GIT_PULL = `git -C %s pull --rebase`
- 
- 	// git clone
- 	CLONE_TPL = "git clone %s %s"
- 
- 	// git lab group api
- 	// gitlab doc  https://docs.gitlab.com/ee/api/groups.html#details-of-a-group
- 	GITLAB_GROUP_DETAIL = "%s://%s/api/v4/groups%s?private_token=%s"
- 
- 	// Determine if the current directory is a git repository
- 	EXIST_GIT_REPO = "git rev-parse --is-inside-work-tree"
- 
- 	//git Branch
- 	GIT_BRANCH = `git branch`
-+
-+	//git diff
-+	GIT_DIFF = `git diff -w -b --ignore-cr-at-eol --diff-filter=d | grep -vE '^(index|diff|\+\+\+)'`
- )
+
+ func (ds *DeepSeek) Chat(ctx, prompt string) (string, error) {
+-       resp := Send(ctx, prompt)
++       resp := dsSend(ctx, prompt)
+        return resp, nil
+ }
+
+-func Send(ctx, prompt string) string {
++func dsSend(ctx, prompt string) string {
+
+        aiConfig := config.GlobalConfig.Ai
+        url := aiConfig.BaseUrl
+@@ -98,7 +98,7 @@ func Send(ctx, prompt string) string {
+                cobra.CheckErr(fmt.Sprintf("request error: %v", errorData))
+        }
+
+-       dsResp := &DeepSeekResponse{}
++       dsResp := &CommonResponse{}
+        if err := mapstructure.Decode(result, &dsResp); err != nil {
+                cobra.CheckErr(err)
+        }
+--- a/ai/deepseek_test.go
+@@ -1,8 +1,17 @@
+ package ai
+
+-import "testing"
++import (
++       "fmt"
++       "github.com/yesAnd92/lwe/config"
++       "testing"
++)
+
+ func TestDeepSeek_Chat(t *testing.T) {
++       config.InitConfig()
+        ds := &DeepSeek{}
+-       ds.Chat("hh", "") // 添加第二个参数为空字符串以满足函数签名要求
++       chat, err := ds.Chat("hello,deepseek", "")
++       if err != nil {
++               fmt.Println(err)
++       }
++       fmt.Println(chat)
+ }
