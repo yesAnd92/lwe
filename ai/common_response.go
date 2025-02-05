@@ -1,6 +1,6 @@
 package ai
 
-type DeepSeekResponse struct {
+type CommonResponse struct {
 	ID                string   `json:"id"`
 	Choices           []Choice `json:"choices"`
 	Created           int64    `json:"created"`

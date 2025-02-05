@@ -10,15 +10,15 @@ import (
 	"net/http"
 )
 
-type DeepSeek struct {
+type SiliconFlow struct {
 }
 
-func (ds *DeepSeek) Chat(ctx, prompt string) (string, error) {
-	resp := dsSend(ctx, prompt)
+func (ds *SiliconFlow) Chat(ctx, prompt string) (string, error) {
+	resp := sfSend(ctx, prompt)
 	return resp, nil
 }
 
-func dsSend(ctx, prompt string) string {
+func sfSend(ctx, prompt string) string {
 
 	aiConfig := config.GlobalConfig.Ai
 	url := aiConfig.BaseUrl
@@ -41,21 +41,13 @@ func dsSend(ctx, prompt string) string {
 	requestData := map[string]interface{}{
 		"messages":          message,
 		"model":             model,
-		"frequency_penalty": 0,
+		"frequency_penalty": 0.5,
 		"max_tokens":        2048,
-		"presence_penalty":  0,
 		"response_format": map[string]interface{}{
 			"type": "text",
 		},
-		"stop":           nil,
-		"stream":         false,
-		"stream_options": nil,
-		"temperature":    1,
-		"top_p":          1,
-		"tools":          nil,
-		"tool_choice":    "none",
-		"logprobs":       false,
-		"top_logprobs":   nil,
+		"stop":   nil,
+		"stream": false,
 	}
 
 	// 将map转换为JSON格式的字节切片
@@ -76,7 +68,6 @@ func dsSend(ctx, prompt string) string {
 
 	auth := fmt.Sprintf("Bearer %s", apiKey)
 	req.Header.Add("Content-Type", "application/json")
-	req.Header.Add("Accept", "application/json")
 	req.Header.Add("Authorization", auth)
 
 	resp, err := client.Do(req)

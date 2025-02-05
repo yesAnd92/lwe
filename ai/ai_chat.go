@@ -16,7 +16,8 @@ type AIAgent struct {
 type AIName string
 
 const (
-	Deepseek = "deepseek"
+	Deepseek    = "deepseek"
+	Siliconflow = "siliconflow"
 )
 
 func NewAIAgent() *AIAgent {
@@ -31,7 +32,9 @@ func NewAIAgent() *AIAgent {
 	case Deepseek:
 		agent = AIAgent{AiChat: &DeepSeek{}}
 		break
-
+	case Siliconflow:
+		agent = AIAgent{AiChat: &SiliconFlow{}}
+		break
 	default:
 		cobra.CheckErr("AI configuration is missing or incorrect.")
 	}
