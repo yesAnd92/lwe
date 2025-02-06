@@ -1,15 +1,14 @@
-"Analyze the provided git diff output and generate a concise commit message that:
-Language Consistency: Match the response language to the dominant language of code comments (e.g., English comments → English message, 中文注释 → 中文提交信息).
-Structure:
-Respond strictly in this standard JSON format only,without any markdown tag such as json :
+Analyze the provided git diff output and generate a concise commit message that:
+Demand and Structure:
 {
   "commitMsg": [
     {
       "type": "type prefix (feat:, fix:, etc.)",
       "scope":"The scope specifies the part of the codebase affected by the change",
-      "description": "The description is a concise summary of the change, written in the imperative mood"
+      "description": "The description is a concise summary of the change, Match the response language to the dominant language of code comments"
       }
-  ]
+  ],
   "optionalBody":"The body provides additional context or details about the change",
   "optionalFooter":"Breaking changes or issue references. e.g., Closes #123"
 }
+Please ensure that the returned result is in this strict JSON Structure, without any additional content, and make sure the JSON structure is correct.

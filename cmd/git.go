@@ -124,6 +124,23 @@ var (
 
 		},
 	}
+
+	gcmsCmd = &cobra.Command{
+		Use:     `gcms`,
+		Short:   `Generate commit msg with AI's help `,
+		Long:    `Generate commit msg with AI's help`,
+		Example: `lwe gcms`,
+		Args:    cobra.MatchAll(cobra.MinimumNArgs(0)),
+		Run: func(cmd *cobra.Command, args []string) {
+
+			//git commit msg from ai
+			commit := gitcmd.GitCommitMsg()
+
+			//push to origin repo
+			gitcmd.PushCommit(commit)
+
+		},
+	}
 )
 
 func init() {
