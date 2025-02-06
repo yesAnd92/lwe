@@ -52,5 +52,6 @@ func init() {
 	rootCmd.AddCommand(envCmd)
 	rootCmd.AddCommand(sqlLogCmd)
 	rootCmd.AddCommand(gSumCmd)
+	rootCmd.AddCommand(gcmsCmd)
 
 }

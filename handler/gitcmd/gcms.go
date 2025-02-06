@@ -4,6 +4,8 @@ import (
 	_ "embed"
 	"encoding/json"
 	"fmt"
+	"github.com/AlecAivazis/survey/v2"
+	"strings"
 	"time"
 
 	"github.com/spf13/cobra"
@@ -24,33 +26,80 @@ type CommitData struct {
 	OptionalFooter string      `json:"optionalFooter"`
 }
 
-// GitCommitMsg git commit msg from ai and pull request to github
-func GitCommitMsg() {
+// GitCommitMsg git commit msg from ai
+func GitCommitMsg(dir string) string {
 
 	//check and init agent
 	agent := ai.NewAIAgent()
 
-	sb := buildGitDiffReq()
+	diff := buildGitDiffReq(dir)
+
+	if len(diff) == 0 {
+		cobra.CheckErr("There is no changes!")
+	}
 
 	//send ai to summary
-	resp, err := gitDiffSubmitToAi(sb, agent)
+	resp, err := gitDiffSubmitToAi(diff, agent)
 	if err != nil {
 		cobra.CheckErr(err)
 	}
 
-	var commitData CommitData
-
-	err = json.Unmarshal([]byte(resp), &commitData)
-	if err != nil {
-		cobra.CheckErr(fmt.Sprintf("parse response error:%v", err))
-	}
+	return buildCommitMsg(resp)
 
 }
 
-func buildGitDiffReq() string {
+func PushCommit(cmsg string) {
+
+	fmt.Println("")
+	//accept cmsg
+	var accept bool
+	promptConfirm := &survey.Confirm{
+		Message: fmt.Sprintf("Accept this commit and push to origin repo?"),
+	}
+	err := survey.AskOne(promptConfirm, &accept)
+	if err != nil {
+		fmt.Println("confirm commit msg err:", err)
+		return
+	}
+
+	if accept {
+		// yes
+		// TODO: 2025/2/6 push to origin repo
+	}
+	fmt.Println(accept)
+}
+
+func buildCommitMsg(resp string) string {
+	var commitData CommitData
+
+	err := json.Unmarshal([]byte(resp), &commitData)
+	if err != nil {
+		cobra.CheckErr(fmt.Sprintf("parse %s \n error:%v", resp, err))
+	}
+
+	var cmsg strings.Builder
+
+	for _, msg := range commitData.CommitMsg {
+		line := fmt.Sprintf("%s(%s): %s\n", msg.Type, msg.Scope, msg.Description)
+		cmsg.WriteString(line)
+	}
+
+	if len(commitData.OptionalBody) > 0 {
+		cmsg.WriteString("\n")
+		cmsg.WriteString(commitData.OptionalBody)
+	}
+
+	if len(commitData.OptionalFooter) > 0 {
+		cmsg.WriteString("\n")
+		cmsg.WriteString(commitData.OptionalFooter)
+	}
+	return cmsg.String()
+}
+
+func buildGitDiffReq(dir string) string {
 	//git diff result
 
-	var cmdline = GIT_DIFF
+	var cmdline = fmt.Sprintf(GIT_DIFF, dir)
 	result := utils.RunCmd(cmdline, time.Second*30)
 	if result.Err() != nil {
 		cobra.CheckErr(result.Err())
@@ -61,6 +110,6 @@ func buildGitDiffReq() string {
 func gitDiffSubmitToAi(ctx string, aiAgent *ai.AIAgent) (string, error) {
 
 	//submit to the AI using the preset prompt
-	resp, err := aiAgent.AiChat.Chat(ctx, prompt.GitDiffPrompt)
+	resp, err := aiAgent.Chat(ctx, prompt.GitDiffPrompt)
 	return resp, err
 }

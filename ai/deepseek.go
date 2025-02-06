@@ -86,7 +86,7 @@ func dsSend(ctx, prompt string) string {
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		cobra.CheckErr(fmt.Sprintf("request fail ,statusCode: %d", resp.StatusCode))
+		cobra.CheckErr(fmt.Sprintf("AI API request fail ,statusCode: %d", resp.StatusCode))
 	}
 
 	var result map[string]interface{}
