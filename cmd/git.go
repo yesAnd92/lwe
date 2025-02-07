@@ -3,6 +3,7 @@ package cmd
 import (
 	"github.com/spf13/cobra"
 	"github.com/yesAnd92/lwe/handler/gitcmd"
+	"github.com/yesAnd92/lwe/utils"
 )
 
 /**
@@ -125,19 +126,23 @@ var (
 		},
 	}
 
-	gcmsCmd = &cobra.Command{
-		Use:     `gcms`,
+	gcmsgCmd = &cobra.Command{
+		Use:     `gcmsg`,
 		Short:   `Generate commit msg with AI's help `,
 		Long:    `Generate commit msg with AI's help`,
-		Example: `lwe gcms`,
+		Example: `lwe gcmsg`,
 		Args:    cobra.MatchAll(cobra.MinimumNArgs(0)),
 		Run: func(cmd *cobra.Command, args []string) {
 
+			var dir = "."
+			//相对路径转换成绝对路径进行处理
+			dir = utils.ToAbsPath(dir)
+
 			//git commit msg from ai
-			commit := gitcmd.GitCommitMsg()
+			commit := gitcmd.GitCommitMsg(dir)
 
 			//push to origin repo
-			gitcmd.PushCommit(commit)
+			gitcmd.CommitAndPush(dir, commit)
 
 		},
 	}

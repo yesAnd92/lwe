@@ -48,7 +48,44 @@ func GitCommitMsg(dir string) string {
 
 }
 
-func PushCommit(cmsg string) {
+func CommitAndPush(dir, cmsg string) {
+
+	fmt.Println("AI suggested commit msg:")
+	fmt.Println(cmsg)
+	//accept cmsg
+	var accept bool
+	promptConfirm := &survey.Confirm{
+		Message: fmt.Sprintf("Accept this commit?"),
+	}
+	err := survey.AskOne(promptConfirm, &accept)
+	if err != nil {
+		fmt.Println("Commit msg err:", err)
+		return
+	}
+
+	if accept {
+		// yes git add and git commit
+
+		addCmd := fmt.Sprintf(GIT_ADD, dir)
+		addResult := utils.RunCmd(addCmd, time.Second*30)
+		if addResult.Err() != nil {
+			cobra.CheckErr(addResult.Err())
+		}
+
+		cmsgCmd := fmt.Sprintf(GIT_COMMIT, dir, cmsg)
+		fmt.Println(cmsgCmd)
+		gcmsgReulst := utils.RunCmd(cmsgCmd, time.Second*30)
+		if gcmsgReulst.Err() != nil {
+			cobra.CheckErr(gcmsgReulst.Err())
+		}
+	} else {
+		//结束
+		return
+	}
+	fmt.Println(accept)
+}
+
+func pushCommitOriginRepo(cmsg string) {
 
 	fmt.Println("")
 	//accept cmsg

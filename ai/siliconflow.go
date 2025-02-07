@@ -42,7 +42,8 @@ func sfSend(ctx, prompt string) string {
 		"messages":          message,
 		"model":             model,
 		"frequency_penalty": 0.5,
-		"max_tokens":        2048,
+		"temperature":       0.5,
+		"max_tokens":        4096,
 		"response_format": map[string]interface{}{
 			"type": "text",
 		},
@@ -77,7 +78,7 @@ func sfSend(ctx, prompt string) string {
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		cobra.CheckErr(fmt.Sprintf("request fail ,statusCode: %d", resp.StatusCode))
+		cobra.CheckErr(fmt.Sprintf("request fail ,statusCode: %d,%s", resp.StatusCode, resp.Body))
 	}
 
 	var result map[string]interface{}

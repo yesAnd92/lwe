@@ -39,4 +39,10 @@ var (
 
 	//git diff
 	GIT_DIFF = `git -C %s diff -w -b --ignore-cr-at-eol --diff-filter=d | grep -vE '^(index|diff|\+\+\+)'`
+
+	//git add
+	GIT_ADD = `git -C %s add .`
+
+	//git commit
+	GIT_COMMIT = `git -C %s commit -m "%s"`
 )

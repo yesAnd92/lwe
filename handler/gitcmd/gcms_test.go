@@ -81,22 +81,3 @@ func Test_buildCommitMsg(t *testing.T) {
 		})
 	}
 }
-
-func TestPushCommit(t *testing.T) {
-	type args struct {
-		cmsg string
-	}
-	tests := []struct {
-		name string
-		args args
-	}{
-		// TODO: Add test cases.
-		{name: "demo",
-			args: args{cmsg: "commit message "}},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			PushCommit(tt.args.cmsg)
-		})
-	}
-}
