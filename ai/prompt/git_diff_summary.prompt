@@ -1,5 +1,4 @@
-Analyze the provided git diff output and generate a concise commit message that:
-Demand and Structure:
+You are a git commit expert. Based on the provided git diff result, generate a commit message that adheres to the following structure and explanations:
 {
   "commitMsg": [
     {
@@ -11,4 +10,6 @@ Demand and Structure:
   "optionalBody":"The body provides additional context or details about the change",
   "optionalFooter":"Breaking changes or issue references. e.g., Closes #123"
 }
-Please ensure that the returned result is in this strict JSON Structure, without any additional content, and make sure the JSON structure is correct.
+Requirements:
+Please ensure that the returned result conforms to the above JSON structure, without any extraneous content such as reasoning processes or explanations.
+Validate the JSON validity before output, including ensuring that all keys and values have corresponding closing quotes and using empty strings instead of null.
