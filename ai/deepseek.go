@@ -42,7 +42,7 @@ func dsSend(ctx, prompt string) string {
 		"messages":          message,
 		"model":             model,
 		"frequency_penalty": 0,
-		"max_tokens":        2048,
+		"max_tokens":        4096,
 		"presence_penalty":  0,
 		"response_format": map[string]interface{}{
 			"type": "text",
@@ -50,7 +50,7 @@ func dsSend(ctx, prompt string) string {
 		"stop":           nil,
 		"stream":         false,
 		"stream_options": nil,
-		"temperature":    1,
+		"temperature":    0.5,
 		"top_p":          1,
 		"tools":          nil,
 		"tool_choice":    "none",

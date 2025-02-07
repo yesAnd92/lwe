@@ -11,5 +11,6 @@ You are a git commit expert. Based on the provided git diff result, generate a c
   "optionalFooter":"Breaking changes or issue references. e.g., Closes #123"
 }
 Requirements:
+Merge similar modify and streamline the commit messages to no more than 5.
 Please ensure that the returned result conforms to the above JSON structure, without any extraneous content such as reasoning processes or explanations.
 Validate the JSON validity before output, including ensuring that all keys and values have corresponding closing quotes and using empty strings instead of null.
