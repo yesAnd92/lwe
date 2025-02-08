@@ -73,7 +73,6 @@ func CommitAndPush(dir, cmsg string) {
 		}
 
 		cmsgCmd := fmt.Sprintf(GIT_COMMIT, dir, cmsg)
-		fmt.Println(cmsgCmd)
 		gcmsgReulst := utils.RunCmd(cmsgCmd, time.Second*30)
 		if gcmsgReulst.Err() != nil {
 			cobra.CheckErr(gcmsgReulst.Err())
@@ -82,7 +81,6 @@ func CommitAndPush(dir, cmsg string) {
 		//结束
 		return
 	}
-	fmt.Println(accept)
 }
 
 func pushCommitOriginRepo(cmsg string) {
