@@ -139,7 +139,7 @@ var (
 			dir = utils.ToAbsPath(dir)
 
 			//git commit msg from ai
-			commit := gitcmd.GitCommitMsg(dir)
+			commit := gitcmd.GetGitCommitMsg(dir)
 
 			//push to origin repo
 			gitcmd.CommitAndPush(dir, commit)

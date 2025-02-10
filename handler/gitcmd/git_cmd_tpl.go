@@ -18,6 +18,9 @@ var (
 	// git status
 	STATUS_TPL = "git -C %s status"
 
+	// git status short
+	STATUS_TPL_SHORT = "git -C %s status --short | grep '^[ MADRCU]' | awk '{print $2}'"
+
 	// git status in short result
 	STATUS_CHECK_TPL = "git -C %s status -s"
 

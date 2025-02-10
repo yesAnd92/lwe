@@ -5,6 +5,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/AlecAivazis/survey/v2"
+	"github.com/jedib0t/go-pretty/v6/table"
+	"github.com/jedib0t/go-pretty/v6/text"
+	"os"
 	"strings"
 	"time"
 
@@ -26,8 +29,8 @@ type CommitData struct {
 	OptionalFooter string      `json:"optionalFooter"`
 }
 
-// GitCommitMsg git commit msg from ai
-func GitCommitMsg(dir string) string {
+// GetGitCommitMsg git commit msg from ai
+func GetGitCommitMsg(dir string) string {
 
 	//check and init agent
 	agent := ai.NewAIAgent()
@@ -50,8 +53,10 @@ func GitCommitMsg(dir string) string {
 
 func CommitAndPush(dir, cmsg string) {
 
-	fmt.Println("AI suggested commit msg:")
-	fmt.Println(cmsg)
+	fmt.Print("AI suggested commit msg:\n\n")
+
+	printCommitMsg(dir, cmsg)
+
 	//accept cmsg
 	var accept bool
 	promptConfirm := &survey.Confirm{
@@ -81,6 +86,32 @@ func CommitAndPush(dir, cmsg string) {
 		//结束
 		return
 	}
+}
+
+func getAllChangedFiles(dir string) string {
+	var cmdline = fmt.Sprintf(STATUS_TPL_SHORT, dir)
+
+	result := utils.RunCmd(cmdline, time.Second*5)
+	if result.Err() != nil {
+		cobra.CheckErr(result.Err().Error())
+	}
+	return result.String()
+}
+
+func printCommitMsg(dir, msg string) {
+
+	files := getAllChangedFiles(dir)
+
+	t := table.NewWriter()
+	// Define the header row and set the style of the header cells, here the header color is set to blue
+	headerRow := table.Row{"Files", "Commit msg"}
+	for i := range headerRow {
+		headerRow[i] = text.Colors{text.FgGreen}.Sprint(headerRow[i])
+	}
+	t.AppendHeader(headerRow)
+	t.SetOutputMirror(os.Stdout)
+	t.AppendRow(table.Row{files, msg})
+	t.Render()
 }
 
 func pushCommitOriginRepo(cmsg string) {
