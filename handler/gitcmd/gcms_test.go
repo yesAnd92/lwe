@@ -8,7 +8,7 @@ import (
 )
 
 func TestGitCommitMsg(t *testing.T) {
-	msg := GitCommitMsg(".")
+	msg := GetGitCommitMsg(".")
 	fmt.Println(msg)
 
 }
@@ -80,4 +80,14 @@ func Test_buildCommitMsg(t *testing.T) {
 			fmt.Println(got)
 		})
 	}
+}
+
+func Test_printCommitMsg(t *testing.T) {
+	// 测试用例 1
+	msg1 := "Commit message 1"
+	printCommitMsg(".", msg1)
+
+	// 测试用例 2
+	msg2 := "Another commit message"
+	printCommitMsg(".", msg2)
 }
