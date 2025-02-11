@@ -45,7 +45,7 @@ func GetGitCommitMsg(dir string) string {
 	}
 
 	//send ai to summary
-	fmt.Print("AI is generating commit message...\n")
+	fmt.Printf("AI is generating commit message...\n\n")
 	resp, err := gitDiffSubmitToAi(diff, agent)
 	if err != nil {
 		cobra.CheckErr(err)
@@ -94,6 +94,9 @@ func addAndCommit(dir string, cmsg string) {
 		// no, exit
 		os.Exit(0)
 	}
+	//highlight hint
+	fmt.Println(text.Colors{text.FgGreen, text.Bold}.Sprint("\nSuccess commit!\n"))
+
 }
 
 func getAllChangedFiles(dir string) string {
@@ -141,6 +144,8 @@ func pushCommitOriginRepo(dir string) {
 		if addResult.Err() != nil {
 			cobra.CheckErr(addResult.Err())
 		}
+		//highlight hint
+		fmt.Println(text.Colors{text.FgGreen, text.Bold}.Sprint("\nSuccess push origin Repo!\n"))
 	} else {
 		// no, exit
 		os.Exit(0)
