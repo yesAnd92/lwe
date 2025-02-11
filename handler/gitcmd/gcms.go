@@ -4,12 +4,13 @@ import (
 	_ "embed"
 	"encoding/json"
 	"fmt"
-	"github.com/AlecAivazis/survey/v2"
-	"github.com/jedib0t/go-pretty/v6/table"
-	"github.com/jedib0t/go-pretty/v6/text"
 	"os"
 	"strings"
 	"time"
+
+	"github.com/AlecAivazis/survey/v2"
+	"github.com/jedib0t/go-pretty/v6/table"
+	"github.com/jedib0t/go-pretty/v6/text"
 
 	"github.com/spf13/cobra"
 	"github.com/yesAnd92/lwe/ai"
@@ -35,6 +36,8 @@ func GetGitCommitMsg(dir string) string {
 	//check and init agent
 	agent := ai.NewAIAgent()
 
+	//get git diff
+	fmt.Println("Get git diff...")
 	diff := buildGitDiffReq(dir)
 
 	if len(diff) == 0 {
@@ -42,6 +45,7 @@ func GetGitCommitMsg(dir string) string {
 	}
 
 	//send ai to summary
+	fmt.Print("AI is generating commit message...\n")
 	resp, err := gitDiffSubmitToAi(diff, agent)
 	if err != nil {
 		cobra.CheckErr(err)
@@ -53,24 +57,28 @@ func GetGitCommitMsg(dir string) string {
 
 func CommitAndPush(dir, cmsg string) {
 
-	fmt.Print("AI suggested commit msg:\n\n")
-
+	fmt.Println("AI suggested commit message:")
 	printCommitMsg(dir, cmsg)
 
+	// git add and git commit
+	addAndCommit(dir, cmsg)
+
+	//push origin repo
+	pushCommitOriginRepo(dir)
+}
+
+func addAndCommit(dir string, cmsg string) {
 	//accept cmsg
 	var accept bool
 	promptConfirm := &survey.Confirm{
-		Message: fmt.Sprintf("Accept this commit?"),
+		Message: "Accept this commit?",
 	}
 	err := survey.AskOne(promptConfirm, &accept)
 	if err != nil {
-		fmt.Println("Commit msg err:", err)
-		return
+		cobra.CheckErr(fmt.Sprintf("Commit msg err: %v", err))
 	}
 
 	if accept {
-		// yes git add and git commit
-
 		addCmd := fmt.Sprintf(GIT_ADD, dir)
 		addResult := utils.RunCmd(addCmd, time.Second*30)
 		if addResult.Err() != nil {
@@ -83,8 +91,8 @@ func CommitAndPush(dir, cmsg string) {
 			cobra.CheckErr(gcmsgReulst.Err())
 		}
 	} else {
-		//结束
-		return
+		// no, exit
+		os.Exit(0)
 	}
 }
 
@@ -114,25 +122,29 @@ func printCommitMsg(dir, msg string) {
 	t.Render()
 }
 
-func pushCommitOriginRepo(cmsg string) {
+func pushCommitOriginRepo(dir string) {
 
-	fmt.Println("")
 	//accept cmsg
 	var accept bool
 	promptConfirm := &survey.Confirm{
-		Message: fmt.Sprintf("Accept this commit and push to origin repo?"),
+		Message: "Accept this commit and push to origin repo?",
 	}
 	err := survey.AskOne(promptConfirm, &accept)
 	if err != nil {
-		fmt.Println("confirm commit msg err:", err)
-		return
+		cobra.CheckErr(fmt.Sprintf("Confirm Commit msg err: %v", err))
 	}
 
 	if accept {
-		// yes
-		// TODO: 2025/2/6 push to origin repo
+		// yes, push to origin repo
+		gitPushCmd := fmt.Sprintf(GIT_PUSH, dir)
+		addResult := utils.RunCmd(gitPushCmd, time.Second*30)
+		if addResult.Err() != nil {
+			cobra.CheckErr(addResult.Err())
+		}
+	} else {
+		// no, exit
+		os.Exit(0)
 	}
-	fmt.Println(accept)
 }
 
 func buildCommitMsg(resp string) string {
