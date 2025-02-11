@@ -82,8 +82,8 @@ lwe gcsmg
 ```text
 lwe glog [git repo dir] [-a=yesAnd] [-n=50] [-s=2023-08-04] [-e=2023-08-04]
 ```
-实例：
-![glog](doc/glog.webp)
+示例：
+![glog](doc/img/glog.webp)
 
 
 #### gl 增强拉取代码功能
@@ -134,17 +134,8 @@ lwe sqllog <mybatis sql log>
 
 Mybatis输出的日志，SQL语句和参数是分开的，调试SQL时，需要粘出来再去用参数替换对应的占位符，比较繁琐。这个命令可以快速解析出一个填充参数后的可执行SQL。
 
-使用方式：
-
-   ```text
-   lwe sqllog "Preparing: SELECT * FROM users WHERE name = ?
-   Parameters: John(String)"
-   ```
-输出：
-   ```
-   格式化的 SQL：
-   SELECT * FROM users WHERE name = 'John'
-   ```
+使用示例：
+![sqllog](doc/img/sqllog.webp)
 
 #### 注意事项
 - 确保输出的日志包含 "Preparing:" 和 "Parameters:" 两个部分。

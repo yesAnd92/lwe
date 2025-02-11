@@ -144,7 +144,8 @@ func pushCommitOriginRepo(dir string) {
 		if addResult.Err() != nil {
 			cobra.CheckErr(addResult.Err())
 		}
-		//highlight hint
+		//output push result
+		fmt.Printf("%s\n\n", addResult.String())
 		fmt.Println(text.Colors{text.FgGreen, text.Bold}.Sprint("\nSuccess push origin Repo!\n"))
 	} else {
 		// no, exit
