@@ -48,4 +48,7 @@ var (
 
 	//git commit
 	GIT_COMMIT = `git -C %s commit -m "%s"`
+
+	//git push
+	GIT_PUSH = `git -C %s push`
 )
