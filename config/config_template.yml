@@ -1,17 +1,21 @@
 ################################################
 # Lwe Configuration Template
 #
-# Configuration File Location : $HOME/.config/lwe/config.yml
+# Configuration File Location : 
+# Linux,Mac:
+# $HOME/.config/lwe/config.yml
+#
+# Windows:
+# %USER%\.config\lwe\config.yml
+#
 #
 ################################################
 
 
-# ai config
-# name:
-# resp_language:
+
 ai:
-    name: deepseek                          #Currently, only [deepseek] is supported
-    apikey: your_openai_api_key
-    baseurl: https://api.deepseek.com/chat/completions
-    model: deepseek-chat
+    name: siliconflow                                           #Currently, only [deepseek，siliconflow] is supported
+    apikey: your_api_key                                        #Your  API key
+    baseurl: https://api.siliconflow.cn/v1/chat/completions     #The API address of the model
+    model: Qwen/Qwen2.5-Coder-32B-Instruct                      #The model name
 
