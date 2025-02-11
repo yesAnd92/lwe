@@ -7,21 +7,20 @@ lwe是leave work early的缩写，也就是"早点下班"！🤣🤣🤣
 
 ## 功能
 
-[Git增强多仓库操作能力：glog、gl、gcl、gst](#git)
-
-[由建表SQL语句转换成Java Bean、Go结构体、Json等](#fmt)
-
-[将SQL语句转换成ElasticSearch查询的DSL语言](#es)
+[Git增强多仓库操作能力：gcmsg、gsum、glog、gl、gcl、gst](#git)
 
 [解析mybaits的SQL输出日志，生成替换参数后的可执行SQL](#sqllog)
 
+[由建表SQL语句转换成Java Bean、Go结构体、Json等文件](#fmt)
+
 [其它小工具](#other)
+
+- [将SQL语句转换成ElasticSearch查询的DSL语言](#es)
 - 获取Navicat连接配置中的密码
 - 同步两个目录下文件
 - 显示本机配置的环境变量
 - 静态资源代理
 - 格式化请求url
-
 
 ## 安装
 ### 下载编译后的可执行文件
@@ -32,6 +31,25 @@ lwe是leave work early的缩写，也就是"早点下班"！🤣🤣🤣
 
 更多的安装方式和注意事项，查查阅[Wiki](https://github.com/yesAnd92/lwe/wiki/0.%E5%AE%89%E8%A3%85%E3%80%81%E9%85%8D%E7%BD%AE%E4%BD%BF%E7%94%A8)
 
+
+## AI 配置说明
+
+如果使用的需要依赖ai能力，需要配置ai相关参数。
+
+### 配置文件位置
+
+- Linux/Mac: `$HOME/.config/lwe/config.yml`
+- Windows: `%USER%\.config\lwe\config.yml`
+
+### 示例配置
+可以将源码config/config_template.yml 复制一份，然后修改为自己的配置放到对应上述指定目录下即可
+```yaml
+ai:
+    name: siliconflow                                           # AI 服务提供商
+    apikey: your_api_key                                        # 您的 API 密钥
+    baseurl: https://api.siliconflow.cn/v1/chat/completions     # API 接口地址
+    model: Qwen/Qwen2.5-Coder-32B-Instruct                      # 模型名称
+```
 
 
 ## 使用
@@ -46,6 +64,15 @@ lwe是leave work early的缩写，也就是"早点下班"！🤣🤣🤣
 
 Git增强功能详细使用说明，可以查阅[Wiki](https://github.com/yesAnd92/lwe/wiki/3.Git%E5%A2%9E%E5%BC%BA%E5%8A%9F%E8%83%BD)
 
+#### gcmsg 借助ai能力增强Git提交信息功能
+`gcmsg` (Git Commit Message) 是一个使用 AI 技术自动生成 Git 提交信息的命令。它能够分析当前的代码变更，并生成合适的提交信息，然后自动完成提交和推送操作。
+
+使用方式：
+在git仓库下
+```text
+lwe gcsmg 
+```
+
 #### glog 增强Git日志功能
 查看给定目录下所有git仓库提交日志
 开发人员通常会在多个git仓库下工作，经常会有同时查看多个git仓库提交日志的需求，glog子命令就派上用场了。
@@ -55,11 +82,12 @@ Git增强功能详细使用说明，可以查阅[Wiki](https://github.com/yesAnd
 ```text
 lwe glog [git repo dir] [-a=yesAnd] [-n=50] [-s=2023-08-04] [-e=2023-08-04]
 ```
+实例：
+![glog](doc/glog.webp)
 
 
 #### gl 增强拉取代码功能
 拉取给定目录下的所有git仓库最新代码(使用的git pull --rebase的方式)
-
 
 
 使用方式：
@@ -96,23 +124,7 @@ lwe fmt sql-file-path [-t=java|go|json] [-a=yesAnd]
 
 ***
 
-<h3 id="es">SQL语句生成DSL语句</h3>
 
-```bash
-lwe es [可选参数] <SQL语句> 
-```
-
-这个命令可以帮我们从繁琐的ES查询语法中解脱出来，它可以将sql语句转换成响应的DSL，并且以curl命令的形式输出，这样服务器上也可以方便的使用。
-当前版本支持的SQL操作
-
-使用方式：
-
-```text
-lwe es 'select * from user where age >18' [-p=true]
-```
-详细使用说明，可以查阅[Wiki](https://github.com/yesAnd92/lwe/wiki/2.%E5%B0%86SQL%E8%AF%AD%E5%8F%A5%E8%BD%AC%E6%8D%A2%E6%88%90ElasticSearch%E6%9F%A5%E8%AF%A2%E7%9A%84DSL%E8%AF%AD%E8%A8%80)
-
-***
 
 <h3 id="sqllog">解析Mybatis的SQL输出日志,生成替换参数后的可执行SQL</h3>
 
@@ -143,6 +155,24 @@ Mybatis输出的日志，SQL语句和参数是分开的，调试SQL时，需要�
 
 <h3 id="other">其它小工具</h3>
 一些非常实用的功能
+
+<h4 id="es">SQL语句生成DSL语句</h4>
+
+```bash
+lwe es [可选参数] <SQL语句> 
+```
+
+这个命令可以帮我们从繁琐的ES查询语法中解脱出来，它可以将sql语句转换成响应的DSL，并且以curl命令的形式输出，这样服务器上也可以方便的使用。
+当前版本支持的SQL操作
+
+使用方式：
+
+```text
+lwe es 'select * from user where age >18' [-p=true]
+```
+详细使用说明，可以查阅[Wiki](https://github.com/yesAnd92/lwe/wiki/2.%E5%B0%86SQL%E8%AF%AD%E5%8F%A5%E8%BD%AC%E6%8D%A2%E6%88%90ElasticSearch%E6%9F%A5%E8%AF%A2%E7%9A%84DSL%E8%AF%AD%E8%A8%80)
+
+***
 
 <h4>格式化请求url</h4>
 有时请求的url很长，不利于我们找到目标参数，可以使用url命令进行格式化，增加请求的可读性
@@ -201,7 +231,6 @@ lwe fileserver your-file-dir [-p=8080]
 ```text
 lwe env
 ```
-
 
 ## 声明
 1.使用[spf13/cobra](github.com/spf13/cobra)库来方便的构建命令行工具

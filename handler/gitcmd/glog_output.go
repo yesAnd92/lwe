@@ -3,10 +3,12 @@ package gitcmd
 import (
 	"bytes"
 	"fmt"
-	"github.com/jedib0t/go-pretty/v6/table"
-	"github.com/spf13/cobra"
 	"os"
 	"path/filepath"
+
+	"github.com/jedib0t/go-pretty/v6/table"
+	"github.com/jedib0t/go-pretty/v6/text"
+	"github.com/spf13/cobra"
 )
 
 const REPORT_PATH = "./commit.log"
@@ -24,6 +26,17 @@ func (c *ConsoleOutput) Output(resLogs *[]ResultLog) {
 
 	t := table.NewWriter()
 	t.SetOutputMirror(os.Stdout)
+	// set column width
+	t.SetColumnConfigs([]table.ColumnConfig{
+		{
+			Number:   4,
+			WidthMax: 100,
+			WidthMaxEnforcer: func(col string, maxLen int) string {
+
+				return text.WrapText(col, maxLen)
+			},
+		},
+	})
 	t.AppendHeader(table.Row{"Branch", "Hash", "Author", "Commit", "Time"})
 
 	if *resLogs == nil {
@@ -78,11 +91,12 @@ func (c *FileOutput) Output(resLogs *[]ResultLog) {
 
 	path, _ := filepath.Abs(REPORT_PATH)
 	f, err := os.Create(path)
-	defer f.Close()
+	if f != nil {
+		defer f.Close()
+	}
 
 	if err != nil {
 		cobra.CheckErr(err)
-		return
 	}
 	f.Write(commitData.Bytes())
 
