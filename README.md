@@ -7,20 +7,20 @@ lwe是leave work early的缩写，也就是"早点下班"！🤣🤣🤣
 
 ## 功能
 
-[Git增强多仓库操作能力：gcmsg、gsum、glog、gl、gcl、gst](#git)
+增强Git命令，跨多仓库操作以及AI辅助能力
+- [gcmsg ai生成提交信息](#gcmsg)
+- [glog 增强Git日志功能](#glog)
+- [gl 增强拉取代码功能](#gl)
+- [gcl 增强git clone功能](#gcl)
+- [gst 查看指定目录下所有git仓库状态](#gst)
 
 [解析mybaits的SQL输出日志，生成替换参数后的可执行SQL](#sqllog)
-
 [由建表SQL语句转换成Java Bean、Go结构体、Json等文件](#fmt)
-
 [其它小工具](#other)
-
-- [将SQL语句转换成ElasticSearch查询的DSL语言](#es)
 - 获取Navicat连接配置中的密码
 - 同步两个目录下文件
 - 显示本机配置的环境变量
 - 静态资源代理
-- 格式化请求url
 
 ## 安装
 ### 下载编译后的可执行文件
@@ -59,21 +59,23 @@ ai:
 如果对某个子命令感兴趣，可以使用`-h`参数查看命令的使用示例 ，如：`lwe glog -h`
 
 
-<h3 id="git">Git增强多仓库操作能力：glog、gl、gcl、gst</h3>
+### Git增强多仓库操作能力：glog、gl、gcl、gst
 这里是几个围绕git相关的增强命令，基本都是在原语义上增加了一些跨git仓库的操作
 
 Git增强功能详细使用说明，可以查阅[Wiki](https://github.com/yesAnd92/lwe/wiki/3.Git%E5%A2%9E%E5%BC%BA%E5%8A%9F%E8%83%BD)
 
-#### gcmsg 借助ai能力增强Git提交信息功能
-`gcmsg` (Git Commit Message) 是一个使用 AI 技术自动生成 Git 提交信息的命令。它能够分析当前的代码变更，并生成合适的提交信息，然后自动完成提交和推送操作。
+<h4 id="gcmsg" >gcmsg ai生成提交信息</h4>
+`gcmsg` (Git Commit Message) 是一个借助 AI 能力生成 Git 提交信息的命令。它能够分析当前的代码变更，并生成合适的提交信息，然后自动完成提交和推送操作。
 
 使用方式：
 在git仓库下
 ```text
 lwe gcsmg 
 ```
+示例：
+![glog](doc/img/gcmsg.webp)
 
-#### glog 增强Git日志功能
+<h4 id="glog" >glog 增强Git日志功能</h4>
 查看给定目录下所有git仓库提交日志
 开发人员通常会在多个git仓库下工作，经常会有同时查看多个git仓库提交日志的需求，glog子命令就派上用场了。
 
@@ -86,7 +88,7 @@ lwe glog [git repo dir] [-a=yesAnd] [-n=50] [-s=2023-08-04] [-e=2023-08-04]
 ![glog](doc/img/glog.webp)
 
 
-#### gl 增强拉取代码功能
+<h4 id="gl" >gl 增强拉取代码功能</h4>
 拉取给定目录下的所有git仓库最新代码(使用的git pull --rebase的方式)
 
 
@@ -95,13 +97,13 @@ lwe glog [git repo dir] [-a=yesAnd] [-n=50] [-s=2023-08-04] [-e=2023-08-04]
 lwe gl [git repo dir]
 ```
 
-#### gcl 增强git clone功能
+<h4 id="gcl" >gcl 增强git clone功能</h4>
 使用方式：
 ```text
 lwe gcl gitGroupUrl [dir for this git group] -t=yourToken
 ```
 
-#### gst 查看指定目录下所有git仓库状态
+<h4 id="gst" >gst 查看指定目录下所有git仓库状态</h4>
 查看给定目录下的所有git仓库状态
 
 使用方式：
@@ -146,34 +148,6 @@ Mybatis输出的日志，SQL语句和参数是分开的，调试SQL时，需要�
 
 <h3 id="other">其它小工具</h3>
 一些非常实用的功能
-
-<h4 id="es">SQL语句生成DSL语句</h4>
-
-```bash
-lwe es [可选参数] <SQL语句> 
-```
-
-这个命令可以帮我们从繁琐的ES查询语法中解脱出来，它可以将sql语句转换成响应的DSL，并且以curl命令的形式输出，这样服务器上也可以方便的使用。
-当前版本支持的SQL操作
-
-使用方式：
-
-```text
-lwe es 'select * from user where age >18' [-p=true]
-```
-详细使用说明，可以查阅[Wiki](https://github.com/yesAnd92/lwe/wiki/2.%E5%B0%86SQL%E8%AF%AD%E5%8F%A5%E8%BD%AC%E6%8D%A2%E6%88%90ElasticSearch%E6%9F%A5%E8%AF%A2%E7%9A%84DSL%E8%AF%AD%E8%A8%80)
-
-***
-
-<h4>格式化请求url</h4>
-有时请求的url很长，不利于我们找到目标参数，可以使用url命令进行格式化，增加请求的可读性
-
-使用方式：
-
-```text
-lwe url yourUrl
-```
-详细使用说明，可以查阅[Wiki](https://github.com/yesAnd92/lwe/wiki/%E5%85%B6%E5%AE%83%E5%B0%8F%E5%B7%A5%E5%85%B7#%E6%A0%BC%E5%BC%8F%E5%8C%96%E8%AF%B7%E6%B1%82url)
 
 
 <h4>获取Navicat连接配置中的密码</h4>
