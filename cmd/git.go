@@ -135,7 +135,7 @@ var (
 		Run: func(cmd *cobra.Command, args []string) {
 
 			var dir = "."
-			//相对路径转换成绝对路径进行处理
+			//trans to abslute path
 			dir = utils.ToAbsPath(dir)
 
 			//git commit msg from ai

@@ -36,6 +36,11 @@ func GetGitCommitMsg(dir string) string {
 	//check and init agent
 	agent := ai.NewAIAgent()
 
+	//check git repo
+	if !checkExistGitRepo(dir) {
+		cobra.CheckErr(fmt.Sprintf("%s Not a git repo!", dir))
+	}
+
 	//get git diff
 	fmt.Println("Get git diff...")
 	diff := buildGitDiffReq(dir)
@@ -142,10 +147,11 @@ func pushCommitOriginRepo(dir string) {
 		gitPushCmd := fmt.Sprintf(GIT_PUSH, dir)
 		addResult := utils.RunCmd(gitPushCmd, time.Second*30)
 		if addResult.Err() != nil {
+			fmt.Print(addResult.String())
 			cobra.CheckErr(addResult.Err())
 		}
 		//output push result
-		fmt.Printf("%s\n\n", addResult.String())
+		fmt.Printf("\n%s\n", addResult.String())
 		fmt.Println(text.Colors{text.FgGreen, text.Bold}.Sprint("\nSuccess push origin Repo!\n"))
 	} else {
 		// no, exit

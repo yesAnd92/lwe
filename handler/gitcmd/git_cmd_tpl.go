@@ -35,7 +35,7 @@ var (
 	GITLAB_GROUP_DETAIL = "%s://%s/api/v4/groups%s?private_token=%s"
 
 	// Determine if the current directory is a git repository
-	EXIST_GIT_REPO = "git rev-parse --is-inside-work-tree"
+	EXIST_GIT_REPO = "git -C %s rev-parse --is-inside-work-tree"
 
 	//git Branch
 	GIT_BRANCH = `git branch`

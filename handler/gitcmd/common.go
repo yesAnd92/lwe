@@ -16,9 +16,8 @@ func findGitRepo(dir string, res *[]string) {
 	// Search for git repo dir recursively
 	nextGitRepo(dir, res)
 
-	//not fund git repo under dir
 	//check the dir is under git repo
-	if result := utils.RunCmd(EXIST_GIT_REPO, time.Second*10); len(*res) == 0 && result.String() == "true" {
+	if len(*res) == 0 && checkExistGitRepo(".") {
 
 		*res = append(*res, dir)
 	}
@@ -91,4 +90,13 @@ func ListRepoAllBranch(repo string) (re *branchInfo) {
 		}
 	}
 	return
+}
+
+func checkExistGitRepo(dir string) bool {
+	//check the dir is under git repo
+	cmd := fmt.Sprintf(EXIST_GIT_REPO, dir)
+	if result := utils.RunCmd(cmd, time.Second*10); result.String() == "true" {
+		return true
+	}
+	return false
 }

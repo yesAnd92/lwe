@@ -4,10 +4,12 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"io"
+	"net/http"
+
 	"github.com/mitchellh/mapstructure"
 	"github.com/spf13/cobra"
 	"github.com/yesAnd92/lwe/config"
-	"net/http"
 )
 
 type DeepSeek struct {
@@ -86,7 +88,8 @@ func dsSend(ctx, prompt string) string {
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		cobra.CheckErr(fmt.Sprintf("AI API request fail ,statusCode: %d", resp.StatusCode))
+		bodyBytes, _ := io.ReadAll(resp.Body)
+		cobra.CheckErr(fmt.Sprintf("request fail, statusCode: %d, body: %s", resp.StatusCode, string(bodyBytes)))
 	}
 
 	var result map[string]interface{}
