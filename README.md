@@ -15,7 +15,9 @@ lwe是leave work early的缩写，也就是"早点下班"！，早完活，早�
 - [gst 查看指定目录下所有git仓库状态](#gst)
 
 [解析mybaits的SQL输出日志，生成替换参数后的可执行SQL](#sqllog)
+
 [由建表SQL语句转换成Java Bean、Go结构体、Json等文件](#fmt)
+
 [其它小工具](#other)
 
 - 获取Navicat连接配置中的密码
