@@ -82,12 +82,37 @@ func Test_buildCommitMsg(t *testing.T) {
 	}
 }
 
-func Test_printCommitMsg(t *testing.T) {
-	// 测试用例 1
-	msg1 := "Commit message 1"
-	printCommitMsg(".", msg1)
+func Test_optimizeDiff(t *testing.T) {
+	type args struct {
+		diff string
+	}
+	tests := []struct {
+		name string
+		args args
+	}{
+		// TODO: Add test cases.
+		{name: "",
+			args: args{
+				diff: `diff --git a/main.go b/main.go
+index 1234567..89abcde 100644
+--- a/main.go
++++ b/main.go
+@@ -5,6 +5,7 @@ import (
+ )
 
-	// 测试用例 2
-	msg2 := "Another commit message"
-	printCommitMsg(".", msg2)
+ func main() {
++    api_key := "sk-1234567890abcdef"
+     fmt.Println("Hello, World!")
+-    password = "secret123"
++    authToken := "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.xxxxxx"
+ }`,
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := optimizeDiff(tt.args.diff)
+			fmt.Println(got)
+		})
+	}
 }

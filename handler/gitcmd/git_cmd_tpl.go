@@ -41,7 +41,7 @@ var (
 	GIT_BRANCH = `git branch`
 
 	//git diff
-	GIT_DIFF = `git -C %s diff -w -b --ignore-cr-at-eol --diff-filter=d | grep -vE '^(index|diff|\+\+\+)'`
+	GIT_DIFF = `git -C %s diff`
 
 	//git add
 	GIT_ADD = `git -C %s add .`

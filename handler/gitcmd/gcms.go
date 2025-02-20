@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"regexp"
 	"strings"
 	"time"
 
@@ -16,6 +17,15 @@ import (
 	"github.com/yesAnd92/lwe/ai"
 	"github.com/yesAnd92/lwe/ai/prompt"
 	"github.com/yesAnd92/lwe/utils"
+)
+
+var (
+	//  Match common sensitive key-value pairs, such as password=xxx, token: xxx
+	sensitiveKeyValueRegex = regexp.MustCompile(`(?i)(\b(?:password|token|secret|api[_-]?key|auth)\b\s*[:=]{1}\s*["']?)([^"'\s]+)(["']?)`)
+	// Match Bearer Token
+	bearerTokenRegex = regexp.MustCompile(`(?i)(Bearer\s+)([a-zA-Z0-9\-_]+\.[a-zA-Z0-9\-_]+\.[a-zA-Z0-9\-_]+)`)
+	// Match long hash values
+	longHashRegex = regexp.MustCompile(`\b[a-f0-9]{32,}\b`)
 )
 
 type CommitMsg struct {
@@ -194,7 +204,7 @@ func buildGitDiffReq(dir string) string {
 	if result.Err() != nil {
 		cobra.CheckErr(result.Err())
 	}
-	return result.String()
+	return optimizeDiff(result.String())
 }
 
 func gitDiffSubmitToAi(ctx string, aiAgent *ai.AIAgent) (string, error) {
@@ -202,4 +212,60 @@ func gitDiffSubmitToAi(ctx string, aiAgent *ai.AIAgent) (string, error) {
 	//submit to the AI using the preset prompt
 	resp, err := aiAgent.Chat(ctx, prompt.GitDiffPrompt)
 	return resp, err
+}
+
+func optimizeDiff(diffctx string) string {
+	lines := strings.Split(diffctx, "\n")
+	var result []string
+
+	for _, line := range lines {
+		// filter metadata
+		if isMetadataLine(line) {
+			continue
+		}
+
+		// filter structural line
+		if isStructuralLine(line) {
+			result = append(result, line)
+			continue
+		}
+
+		if isCodeChangeLine(line) {
+			filtered := filterSensitiveInfo(line)
+			result = append(result, filtered)
+		}
+	}
+
+	return strings.Join(result, "\n")
+}
+
+func isMetadataLine(line string) bool {
+	return strings.HasPrefix(line, "index ") ||
+		strings.HasPrefix(line, "old mode ") ||
+		strings.HasPrefix(line, "new mode ") ||
+		strings.HasPrefix(line, "similarity index") ||
+		strings.HasPrefix(line, "rename from") ||
+		strings.HasPrefix(line, "rename to")
+}
+
+func isStructuralLine(line string) bool {
+	return strings.HasPrefix(line, "diff --git") ||
+		strings.HasPrefix(line, "--- ") ||
+		strings.HasPrefix(line, "+++ ") ||
+		strings.HasPrefix(line, "@@ ") ||
+		strings.HasPrefix(line, "Binary files ")
+}
+
+func isCodeChangeLine(line string) bool {
+	return len(line) > 0 && (line[0] == '+' || line[0] == '-' || line[0] == ' ')
+}
+
+func filterSensitiveInfo(line string) string {
+	line = sensitiveKeyValueRegex.ReplaceAllString(line, "${1}<REDACTED>${3}")
+
+	line = bearerTokenRegex.ReplaceAllString(line, "${1}<REDACTED>")
+
+	line = longHashRegex.ReplaceAllString(line, "<REDACTED>")
+
+	return line
 }
