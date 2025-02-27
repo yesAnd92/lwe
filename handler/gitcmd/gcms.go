@@ -2,7 +2,6 @@ package gitcmd
 
 import (
 	_ "embed"
-	"encoding/json"
 	"fmt"
 	"os"
 	"regexp"
@@ -16,6 +15,7 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/yesAnd92/lwe/ai"
 	"github.com/yesAnd92/lwe/ai/prompt"
+	"github.com/yesAnd92/lwe/config"
 	"github.com/yesAnd92/lwe/utils"
 )
 
@@ -27,18 +27,6 @@ var (
 	// Match long hash values
 	longHashRegex = regexp.MustCompile(`\b[a-f0-9]{32,}\b`)
 )
-
-type CommitMsg struct {
-	Type        string `json:"type"`        // Type of the commit, e.g., feat, fix, docs, etc.
-	Scope       string `json:"scope"`       // Scope of the impact (optional)
-	Description string `json:"description"` // Brief description of the commit
-}
-
-type CommitData struct {
-	CommitMsg      []CommitMsg `json:"commitMsg"` // List of commit messages
-	OptionalBody   string      `json:"optionalBody"`
-	OptionalFooter string      `json:"optionalFooter"`
-}
 
 // GetGitCommitMsg git commit msg from ai
 func GetGitCommitMsg(dir string) string {
@@ -60,19 +48,22 @@ func GetGitCommitMsg(dir string) string {
 	}
 
 	//send ai to summary
-	fmt.Printf("AI is generating commit message...\n\n")
+	fmt.Printf("AI is generating commit message...\n")
 	resp, err := gitDiffSubmitToAi(diff, agent)
 	if err != nil {
 		cobra.CheckErr(err)
 	}
 
-	return buildCommitMsg(resp)
+	return resp
 
 }
 
 func CommitAndPush(dir, cmsg string) {
 
-	fmt.Println("AI suggested commit message:")
+	//ai model name
+	aiModel := config.GlobalConfig.Ai.Model
+	fmt.Printf("\n%s suggested :\n", aiModel)
+
 	printCommitMsg(dir, cmsg)
 
 	// git add and git commit
@@ -167,33 +158,6 @@ func pushCommitOriginRepo(dir string) {
 		// no, exit
 		os.Exit(0)
 	}
-}
-
-func buildCommitMsg(resp string) string {
-	var commitData CommitData
-
-	err := json.Unmarshal([]byte(resp), &commitData)
-	if err != nil {
-		cobra.CheckErr(fmt.Sprintf("parse %s \n error:%v", resp, err))
-	}
-
-	var cmsg strings.Builder
-
-	for _, msg := range commitData.CommitMsg {
-		line := fmt.Sprintf("%s(%s): %s\n", msg.Type, msg.Scope, msg.Description)
-		cmsg.WriteString(line)
-	}
-
-	if len(commitData.OptionalBody) > 0 {
-		cmsg.WriteString("\n")
-		cmsg.WriteString(commitData.OptionalBody)
-	}
-
-	if len(commitData.OptionalFooter) > 0 {
-		cmsg.WriteString("\n")
-		cmsg.WriteString(commitData.OptionalFooter)
-	}
-	return cmsg.String()
 }
 
 func buildGitDiffReq(dir string) string {

@@ -43,45 +43,6 @@ func Test_gitDiffSubmitToAi(t *testing.T) {
 	}
 }
 
-func Test_buildCommitMsg(t *testing.T) {
-	type args struct {
-		resp string
-	}
-	tests := []struct {
-		name string
-		args args
-	}{
-		// TODO: Add test cases.
-		{name: "",
-			args: args{resp: `{
-						  "commitMsg": [
-							{
-							  "type": "feat",
-							  "scope": "ai",
-							  "description": "Add Siliconflow as a new AI agent type"
-							},
-							{
-							  "type": "refactor",
-							  "scope": "deepseek",
-							  "description": "Rename Send function to dsSend and update response struct to CommonResponse"
-							},
-							{
-							  "type": "test",
-							  "scope": "deepseek",
-							  "description": "Enhance DeepSeek Chat test with config initialization and proper error handling"
-							}
-						  ]
-				}`},
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			got := buildCommitMsg(tt.args.resp)
-			fmt.Println(got)
-		})
-	}
-}
-
 func Test_optimizeDiff(t *testing.T) {
 	type args struct {
 		diff string
