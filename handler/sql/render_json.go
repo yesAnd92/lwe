@@ -15,7 +15,7 @@ func NewJsonRenderData() *JsonRenderData {
 	return &JsonRenderData{}
 }
 
-func (j *JsonRenderData) RenderData(objInfos []*ObjInfo) {
+func (j *JsonRenderData) RenderData(objInfos []*ObjInfo) error {
 	for _, objInfo := range objInfos {
 		infos := objInfo.FieldInfos
 		filedMap := make(map[string]interface{}, len(infos))
@@ -37,11 +37,15 @@ func (j *JsonRenderData) RenderData(objInfos []*ObjInfo) {
 				filedMap[info.FieldName] = time.Now().Format("2006-01-02 15:04:05")
 			}
 		}
-		marshal, _ := json.MarshalIndent(filedMap, "", "  ")
+		marshal, err := json.MarshalIndent(filedMap, "", "  ")
+		if err != nil {
+			return fmt.Errorf("marshal json failed: %w", err)
+		}
 		fmt.Println(string(marshal))
 	}
+	return nil
 }
-func (j *JsonRenderData) CovertSyntax(objInfos []*ObjInfo) {
+func (j *JsonRenderData) CovertSyntax(objInfos []*ObjInfo) error {
 
 	for _, objInfo := range objInfos {
 		//sql类型映射成java类型
@@ -51,4 +55,5 @@ func (j *JsonRenderData) CovertSyntax(objInfos []*ObjInfo) {
 			f.FieldName = utils.UderscoreToLowerCamelCase(f.ColumnName)
 		}
 	}
+	return nil
 }

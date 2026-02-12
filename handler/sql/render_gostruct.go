@@ -2,10 +2,10 @@ package sql
 
 import (
 	"bytes"
+	"fmt"
 	"github.com/yesAnd92/lwe/templates"
 	"github.com/yesAnd92/lwe/utils"
 	"go/format"
-	"log"
 	"os"
 	path2 "path"
 	"path/filepath"
@@ -25,7 +25,7 @@ func NewGoStructRenderData() *GoStructRenderData {
 	}
 }
 
-func (g *GoStructRenderData) CovertSyntax(objInfos []*ObjInfo) {
+func (g *GoStructRenderData) CovertSyntax(objInfos []*ObjInfo) error {
 	for _, objInfo := range objInfos {
 		for _, f := range objInfo.FieldInfos {
 			//sql类型映射成java类型
@@ -34,9 +34,10 @@ func (g *GoStructRenderData) CovertSyntax(objInfos []*ObjInfo) {
 			f.FieldName = utils.UderscoreToLowerCamelCase(f.ColumnName)
 		}
 	}
+	return nil
 }
 
-func (g *GoStructRenderData) RenderData(objInfos []*ObjInfo) {
+func (g *GoStructRenderData) RenderData(objInfos []*ObjInfo) error {
 
 	utils.MkdirIfNotExist(GENERATE_DIR)
 
@@ -46,21 +47,31 @@ func (g *GoStructRenderData) RenderData(objInfos []*ObjInfo) {
 	//追加package import信息
 	bf.Write([]byte(GO_TPL_HEAD))
 	for _, objInfo := range objInfos {
-		g.goStructTpl.Execute(bf, objInfo)
+		if err := g.goStructTpl.Execute(bf, objInfo); err != nil {
+			return fmt.Errorf("execute template failed: %w", err)
+		}
 	}
 
 	//使用objName作为生成的文件名
 	fileName := path2.Join(GENERATE_DIR, GENERATE_GO_FILENAME)
-	path, _ := filepath.Abs(fileName)
+	path, err := filepath.Abs(fileName)
+	if err != nil {
+		return fmt.Errorf("get abs path failed: %w", err)
+	}
 	f, err := os.Create(path)
+	if err != nil {
+		return fmt.Errorf("create go file failed: %w", err)
+	}
 	defer f.Close()
 
-	if err != nil {
-		log.Println("Create go file err", err)
-		return
-	}
 	//按照go的风格进行格式化
-	fmtBfBytes, _ := format.Source(bf.Bytes())
+	fmtBfBytes, err := format.Source(bf.Bytes())
+	if err != nil {
+		return fmt.Errorf("format source failed: %w", err)
+	}
 
-	f.Write(fmtBfBytes)
+	if _, err := f.Write(fmtBfBytes); err != nil {
+		return fmt.Errorf("write file failed: %w", err)
+	}
+	return nil
 }

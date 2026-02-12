@@ -3,11 +3,12 @@ package sql
 import (
 	"errors"
 	"fmt"
-	"github.com/spf13/cobra"
-	"github.com/yesAnd92/lwe/utils"
 	"regexp"
 	"strings"
 	"time"
+
+	"github.com/yesAnd92/lwe/pkg/err"
+	"github.com/yesAnd92/lwe/utils"
 )
 
 // BaseParseDDL IParseDDL 接口抽象实现
@@ -15,12 +16,12 @@ type BaseParseDDL struct {
 }
 
 // DoParse 定义了整个解析、生成的流程
-func (a *BaseParseDDL) DoParse(target string, sqlTextArr []string, args map[string]interface{}) {
+func (a *BaseParseDDL) DoParse(target string, sqlTextArr []string, args map[string]interface{}) error {
 
 	//由target参数找到对应的handle
 	handle, err := GetParser(target)
 	if err != nil {
-		cobra.CheckErr(err)
+		return err
 	}
 
 	//解析ddl文本
@@ -28,17 +29,22 @@ func (a *BaseParseDDL) DoParse(target string, sqlTextArr []string, args map[stri
 	for _, sqlText := range sqlTextArr {
 		objInfo, err := handle.ParseDDL(sqlText, args)
 		if err != nil {
-			fmt.Println(err)
+			return fmt.Errorf("parse ddl failed: %w", err)
 		}
 		objInfos = append(objInfos, objInfo)
 	}
 	//适配不同的生成类型，由子类实现
-	handle.CovertSyntax(objInfos)
+	if err := handle.CovertSyntax(objInfos); err != nil {
+		return fmt.Errorf("convert syntax failed: %w", err)
+	}
 
 	//渲染数据
-	handle.RenderData(objInfos)
+	if err := handle.RenderData(objInfos); err != nil {
+		return fmt.Errorf("render data failed: %w", err)
+	}
 
 	fmt.Println("Parse result >> " + utils.ToAbsPath(GENERATE_DIR))
+	return nil
 }
 
 func GetParser(target string) (IParseDDL, error) {
@@ -194,12 +200,10 @@ func (a *BaseParseDDL) ParseDDL(sqlText string, args map[string]interface{}) (*O
 	return obj, nil
 }
 
-func (a *BaseParseDDL) CovertSyntax(info *ObjInfo) {
-	//TODO implement me
-	panic("implement me")
+func (a *BaseParseDDL) CovertSyntax(info []*ObjInfo) error {
+	return err.ErrNotImplemented
 }
 
-func (a *BaseParseDDL) RenderData(info *ObjInfo) {
-	//TODO implement me
-	panic("implement me")
+func (a *BaseParseDDL) RenderData(info []*ObjInfo) error {
+	return err.ErrNotImplemented
 }

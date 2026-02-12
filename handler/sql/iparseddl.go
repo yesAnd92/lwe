@@ -9,10 +9,10 @@ type IParseDDL interface {
 
 	// CovertSyntax 转换到不同语言的字段类型
 	// 比如sql中int对应到Java中的Integer，对应到go中的int32等
-	CovertSyntax(info []*ObjInfo)
+	CovertSyntax(info []*ObjInfo) error
 
 	// RenderData 根据模版渲染数据
-	RenderData(info []*ObjInfo)
+	RenderData(info []*ObjInfo) error
 }
 
 // 定义sql所用的常量
